@@ -1,15 +1,20 @@
+// في ملف static/js/cart.js (النسخة النهائية)
+
 document.addEventListener('DOMContentLoaded', () => {
-    const cartItemsBody = document.getElementById('cart-items-body');
+    // تأكد من أن HTML يحتوي على tbody بهذا الـ id
+    const cartItemsBody = document.getElementById('cart-items-body'); 
+    // تأكد من أن HTML يحتوي على span أو div بهذا الـ id
     const cartTotalSpan = document.getElementById('cart-total');
-    const mainContainer = document.querySelector('.cart-container');
+    // تأكد من أن HTML يحتوي على العنصر الرئيسي للسلة بهذا الـ class
+    const mainContainer = document.querySelector('.cart-container'); 
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
     async function displayCart() {
+        if (!mainContainer) return; // إذا لم نكن في صفحة السلة، لا تفعل شيئًا
+
         try {
-            // **هذا هو الرابط الصحيح الذي سنقوم بتعريفه في Django**
             const response = await fetch('/api/cart/');
             
-            // إذا كان المستخدم غير مسجل دخوله، الخادم سيرد بـ 401 أو 403
             if (response.status === 401 || response.status === 403) {
                 mainContainer.innerHTML = '<h3>يرجى <a href="/login/">تسجيل الدخول</a> لعرض سلة المشتريات.</h3>';
                 return;
@@ -19,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const data = await response.json();
-            // الـ API يرجع قائمة، وفي حالتنا تحتوي على سلة واحدة فقط
             const cart = data.length > 0 ? data[0] : null;
 
             if (!cart || cart.items.length === 0) {
@@ -29,50 +33,55 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             cartItemsBody.innerHTML = '';
-            // استخدام toFixed(2) لعرض السعر بشكل صحيح
-            cartTotalSpan.textContent = parseFloat(cart.total_price || 0).toFixed(2);
-            
+            let grandTotal = 0; // <-- **الإصلاح 1**: متغير لحساب المجموع الإجمالي
+
             cart.items.forEach(item => {
-                const itemTotal = (item.product.price * item.quantity).toFixed(2);
+                // ▼▼▼ **الإصلاح 2**: طريقة الوصول الصحيحة للصورة ▼▼▼
+                const imageUrl = item.product.images && item.product.images.length > 0
+                    ? item.product.images[0].image
+                    : 'https://placehold.co/100x100?text=No+Image';
+
+                const itemTotal = item.product.price * item.quantity;
+                grandTotal += itemTotal; // <-- **الإصلاح 1**: إضافة إجمالي العنصر للمجموع الكلي
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
                         <div class="cart-product-info">
-                            <img src="${item.product.image || 'https://placehold.co/100x100?text=No+Image'}" alt="${item.product.name}" width="50">
+                            <img src="${imageUrl}" alt="${item.product.name}" width="50">
                             <span>${item.product.name}</span>
                         </div>
                     </td>
-                    <td>${item.product.price} درهم</td>
+                    <td>${parseFloat(item.product.price).toFixed(2)} درهم</td>
                     <td>${item.quantity}</td>
-                    <td>${itemTotal} درهم</td>
+                    <td>${itemTotal.toFixed(2)} درهم</td>
                     <td><button class="remove-btn" data-item-id="${item.id}">حذف</button></td>
                 `;
                 cartItemsBody.appendChild(row);
             });
+
+            // <-- **الإصلاح 1**: عرض المجموع الإجمالي بعد حسابه
+            cartTotalSpan.textContent = grandTotal.toFixed(2);
 
         } catch (error) {
             mainContainer.innerHTML = `<h3>عذرًا، حدث خطأ أثناء عرض السلة.</h3><p>${error.message}</p>`;
         }
     }
     
-    // إدارة عملية الحذف
+    // (جزء الحذف يبقى كما هو، فهو سليم)
     if (cartItemsBody) {
         cartItemsBody.addEventListener('click', async (event) => {
             if (event.target.classList.contains('remove-btn')) {
                 const itemId = event.target.dataset.itemId;
-                
                 try {
                     const response = await fetch(`/api/cart-items/${itemId}/`, {
                         method: 'DELETE',
                         headers: { 'X-CSRFToken': csrfToken }
                     });
-
                     if (response.ok) {
-                        // نعيد عرض السلة لتحديث البيانات بعد الحذف
-                        displayCart();
+                        displayCart(); // نعيد عرض السلة لتحديث البيانات
                     } else {
-                        const errorData = await response.json();
-                        alert(`فشل حذف المنتج: ${JSON.stringify(errorData)}`);
+                        alert(`فشل حذف المنتج.`);
                     }
                 } catch (error) {
                     alert('فشل الاتصال بالخادم.');
@@ -81,6 +90,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // عرض السلة عند تحميل الصفحة
     displayCart();
 });

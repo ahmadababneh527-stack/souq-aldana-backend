@@ -1,55 +1,39 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ملفي الشخصي - سوق الدانة</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <header class="main-header">
-        <div class="container">
-            <h1 class="logo">سوق الدانة</h1>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="{% url 'index' %}">الرئيسية</a></li>
-                    <li><a href="#">المنتجات</a></li>
-                    <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
-                    <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
-                    <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
-                    <li id="user-info" style="display: none;">
-                        <span id="user-email" style="color: white; margin-left: 15px;"></span>
-                        <a href="#" id="logout-link">تسجيل الخروج</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <main class="container">
-        <h2>ملفي الشخصي</h2>
-        <div class="profile-container">
-            <p><strong>الاسم الأول:</strong> <span id="profile-first-name"></span></p>
-            <p><strong>الاسم الأخير:</strong> <span id="profile-last-name"></span></p>
-            <p><strong>البريد الإلكتروني:</strong> <span id="profile-email"></span></p>
-            <p><strong>اسم المستخدم:</strong> <span id="profile-username"></span></p>
-            <p><strong>تاريخ الميلاد:</strong> <span id="profile-dob"></span></p>
-            <p><strong>الجنس:</strong> <span id="profile-gender"></span></p>
-            <p><strong>البلد:</strong> <span id="profile-country"></span></p>
-            <p><strong>العنوان:</strong> <span id="profile-address"></span></p>
-            <p><strong>الرمز البريدي:</strong> <span id="profile-postal-code"></span></p>
-            <p><strong>رقم الهاتف:</strong> <span id="profile-phone"></span></p>
-        </div>
-    </main>
+{% block title %}ملفي الشخصي{% endblock %}
 
-    <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2025 سوق الدانة. كل الحقوق محفوظة.</p>
+{% block content %}
+{% csrf_token %}
+<div class="profile-container">
+    <h2>ملفي الشخصي</h2>
+    <form id="profile-form">
+        <div class="form-group">
+            <label for="first_name">الاسم الأول:</label>
+            <input type="text" id="first_name" name="first_name" placeholder="أدخل اسمك الأول">
         </div>
-    </footer>
-    
-    <script src="{% static 'js/nav-manager.js' %}"></script>
+        <div class="form-group">
+            <label for="last_name">الاسم الأخير:</label>
+            <input type="text" id="last_name" name="last_name" placeholder="أدخل اسمك الأخير">
+        </div>
+        <div class="form-group">
+            <label for="email">البريد الإلكتروني:</label>
+            <input type="email" id="email" name="email" placeholder="أدخل بريدك الإلكتروني">
+        </div>
+        <div class="form-group">
+            <label for="username">اسم المستخدم:</label>
+            <input type="text" id="username" name="username" readonly>
+            <small>اسم المستخدم لا يمكن تغييره.</small>
+        </div>
+        
+        <button type="submit" id="save-profile-btn" class="btn-primary">حفظ التغييرات</button>
+    </form>
+    <div id="success-message" style="display: none; color: green; margin-top: 15px;">
+        تم حفظ التغييرات بنجاح!
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
     <script src="{% static 'js/profile.js' %}"></script>
-</body>
-</html>
+{% endblock %}

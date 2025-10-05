@@ -82,7 +82,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert(data.message); // عرض رسالة نجاح
+                alert('تمت إضافة المنتج إلى السلة بنجاح!');
+// عرض رسالة نجاح
                 updateCartCount();   // تحديث عدد السلة في القائمة العلوية
             } else {
                 alert(`حدث خطأ: ${data.error}`);

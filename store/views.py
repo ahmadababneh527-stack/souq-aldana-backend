@@ -175,9 +175,26 @@ class CartItemViewSet(viewsets.ModelViewSet):
 class ProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    # هذه الدالة لجلب البيانات (تبقى كما هي)
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+    # ▼▼▼ أضف هذه الدالة الجديدة ▼▼▼
+    # هذه الدالة لتحديث البيانات
+    def patch(self, request):
+        """
+        تسمح للمستخدم بتحديث بياناته.
+        partial=True تعني أن المستخدم يستطيع إرسال الحقول التي يريد تغييرها فقط.
+        """
+        user = request.user
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # هذا الـ View سيعرض صفحة HTML الخاصة بالملف الشخصي
 class ProfileView(TemplateView):
