@@ -1,3 +1,5 @@
+console.log('--- تم تحميل النسخة الجديدة من السكريبت بنجاح ---');
+
 document.addEventListener('DOMContentLoaded', async () => {
     // --- الجزء الأول: جلب وعرض تفاصيل المنتج ---
 
