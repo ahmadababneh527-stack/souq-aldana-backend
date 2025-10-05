@@ -7,23 +7,33 @@ from .views import (
     CartItemViewSet,
     LoginAPIView,
     AddToCartAPIView,
-    ProfileAPIView
+    ProfileAPIView,
+    IndexView,
+    ProductDetailView
 )
 
-# إنشاء الراوتر الذي سيقوم بتوليد الروابط للـ ViewSets تلقائيًا
+# 1. إعداد الراوتر الخاص بالـ API
 router = DefaultRouter()
 router.register(r'products', ProductViewSet, basename='product')
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'cart', CartViewSet, basename='cart')
 router.register(r'cart-items', CartItemViewSet, basename='cartitem')
 
-# قائمة الروابط للتطبيق
+# 2. قائمة الروابط الرئيسية للتطبيق
 urlpatterns = [
-    # إضافة الروابط التي تم توليدها بواسطة الراوتر
-    path('', include(router.urls)),
-    
-    # إضافة روابط الـ APIViews العادية يدويًا
-    path('login/', LoginAPIView.as_view(), name='api-login'),
-    path('add-to-cart/', AddToCartAPIView.as_view(), name='api-add-to-cart'),
-    path('profile/', ProfileAPIView.as_view(), name='api-profile'),
+    # ==================================
+    # أولًا: روابط صفحات الويب (HTML)
+    # ==================================
+    path('', IndexView.as_view(), name='index'),
+    path('product/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
+
+    # ========================================================
+    # ثانيًا: كل روابط الـ API مجمعة تحت مسار /api/
+    # ========================================================
+    path('api/', include([
+        path('', include(router.urls)),
+        path('login/', LoginAPIView.as_view(), name='api-login'),
+        path('add-to-cart/', AddToCartAPIView.as_view(), name='api-add-to-cart'),
+        path('profile/', ProfileAPIView.as_view(), name='api-profile'),
+    ])),
 ]
