@@ -93,4 +93,93 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert('فشل الاتصال بالخادم.');
         }
     });
+
+
+    // في نهاية ملف static/js/product-detail.js
+
+// --- الجزء الثالث: وظائف التقييمات ---
+const reviewsList = document.getElementById('reviews-list');
+const reviewForm = document.getElementById('review-form');
+const reviewStatus = document.getElementById('review-status');
+
+// دالة لجلب وعرض التقييمات
+async function loadReviews(productId) {
+    try {
+        const response = await fetch(`/api/reviews/?product_id=${productId}`);
+        const reviews = await response.json();
+        reviewsList.innerHTML = '';
+        if (reviews.length === 0) {
+            reviewsList.innerHTML = '<p>لا توجد تقييمات لهذا المنتج بعد.</p>';
+            return;
+        }
+        reviews.forEach(review => {
+            const reviewElement = document.createElement('div');
+            reviewElement.classList.add('review-card');
+            reviewElement.innerHTML = `
+                <div class="review-header">
+                    <strong>${review.name}</strong>
+                    <span>${'⭐'.repeat(review.rating)}</span>
+                </div>
+                <p class="review-comment">${review.comment}</p>
+                <small class="review-meta">من ${review.country || 'غير محدد'} - ${new Date(review.created_at).toLocaleDateString()}</small>
+            `;
+            reviewsList.appendChild(reviewElement);
+        });
+    } catch (error) {
+        reviewsList.innerHTML = '<p>فشل في تحميل التقييمات.</p>';
+    }
+}
+
+// استدعاء دالة عرض التقييمات عند تحميل الصفحة
+// (productId معرف من بداية الملف)
+if(productId) {
+    loadReviews(productId);
+}
+
+// إضافة وظيفة لنموذج إضافة تقييم
+reviewForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    // التحقق من أن المستخدم مسجل دخوله
+    if (!localStorage.getItem('userFirstName')) {
+        alert('يرجى تسجيل الدخول أولاً لإضافة تقييم.');
+        return;
+    }
+
+    const name = document.getElementById('review-name').value;
+    const country = document.getElementById('review-country').value;
+    const rating = document.getElementById('review-rating').value;
+    const comment = document.getElementById('review-comment').value;
+
+    try {
+        const response = await fetch('/api/reviews/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                name: name,
+                country: country,
+                rating: rating,
+                comment: comment,
+                product: productId
+            })
+        });
+
+        if (response.ok) {
+            reviewStatus.textContent = 'شكرًا لك! تم إرسال تقييمك بنجاح.';
+            reviewStatus.style.color = 'green';
+            reviewForm.reset();
+            loadReviews(productId); // إعادة تحميل التقييمات لتظهر الجديدة
+        } else {
+            const errorData = await response.json();
+            throw new Error(JSON.stringify(errorData));
+        }
+    } catch (error) {
+        reviewStatus.textContent = `فشل إرسال التقييم: ${error.message}`;
+        reviewStatus.style.color = 'red';
+    }
+});
+
 });

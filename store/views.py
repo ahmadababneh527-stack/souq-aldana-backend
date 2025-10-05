@@ -8,12 +8,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # استيراد كل النماذج التي تحتاجها
-from .models import Product, User, Cart, CartItem
+from .models import Product, User, Cart, CartItem, Review # <-- أضف Review هنا
 
 # استيراد كل المترجمات التي تحتاجها
-from .serializers import ProductSerializer, UserSerializer, CartSerializer, CartItemSerializer
+from .serializers import ProductSerializer, UserSerializer, CartSerializer, CartItemSerializer, ReviewSerializer # <-- أضف ReviewSerializer هنا
 
 
 # ProductViewSet سيتعامل مع كل الطلبات الخاصة بالمنتجات
@@ -199,3 +200,28 @@ class ProfileAPIView(APIView):
 # هذا الـ View سيعرض صفحة HTML الخاصة بالملف الشخصي
 class ProfileView(TemplateView):
     template_name = 'profile.html'
+
+
+
+    # في ملف store/views.py
+
+# ... (باقي الاستيرادات)
+
+# ▼▼▼ أضف هذا الكلاس الجديد ▼▼▼
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all().order_by('-created_at')
+    serializer_class = ReviewSerializer
+    # يمكن لأي شخص رؤية التقييمات، لكن فقط المستخدم المسجل يمكنه الإضافة
+    permission_classes = [IsAuthenticatedOrReadOnly] 
+
+    # دالة لجلب التقييمات الخاصة بمنتج معين فقط
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        product_id = self.request.query_params.get('product_id')
+        if product_id:
+            queryset = queryset.filter(product_id=product_id)
+        return queryset
+
+    # دالة لربط التقييم الجديد بالمستخدم المسجل دخوله تلقائيًا
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

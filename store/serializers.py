@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, User, Cart, CartItem, ProductImage
+from .models import Product, User, Cart, CartItem, ProductImage, Review
 
 # --- serializer جديد للصور ---
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -47,3 +47,20 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['id', 'user', 'createdAt', 'items']
+
+
+        # في ملف store/serializers.py
+
+# ... (استيرادات وباقي الكلاسات تبقى كما هي)
+
+class ReviewSerializer(serializers.ModelSerializer):
+    # لجلب اسم المستخدم بدلًا من رقمه فقط
+    user = serializers.StringRelatedField(read_only=True) 
+
+    class Meta:
+        model = Review
+        fields = ['id', 'user', 'name', 'country', 'rating', 'comment', 'created_at', 'product']
+        # product سنجعله حقل للكتابة فقط عند إنشاء تقييم جديد
+        extra_kwargs = {
+            'product': {'write_only': True}
+        }

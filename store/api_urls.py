@@ -4,7 +4,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     ProductViewSet, UserViewSet, CartViewSet, CartItemViewSet,
-    LoginAPIView, AddToCartAPIView, ProfileAPIView
+    LoginAPIView, AddToCartAPIView, ProfileAPIView , ReviewViewSet
 )
 
 router = DefaultRouter()
@@ -12,6 +12,8 @@ router.register(r'products', ProductViewSet, basename='product')
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'cart', CartViewSet, basename='cart')
 router.register(r'cart-items', CartItemViewSet, basename='cartitem')
+router.register(r'reviews', ReviewViewSet, basename='review') # <-- أضف هذا السطر
+
 
 # هذا الملف يحتوي فقط على روابط الـ API
 urlpatterns = [

@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Product, ProductImage, Cart, CartItem
+from .models import User, Product, ProductImage, Cart, CartItem, Review # <-- أضف Review هنا
 
 # هذا الكود يجعل عرض المستخدمين في لوحة التحكم أفضل
 # ويضيف الحقول المخصصة التي أنشأناها
@@ -24,8 +24,27 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'createdAt')
     search_fields = ('name',)
 
+
+
+# في ملف store/admin.py
+
+
+# ... (الكود السابق يبقى كما هو)
+
+# كلاس لعرض التقييمات بشكل أفضل
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('name', 'product', 'rating', 'created_at')
+    list_filter = ('product', 'rating')
+    search_fields = ('name', 'comment')
+
+# تسجيل الموديلات
+# ... (admin.site.register السابقة تبقى كما هي)
+
+
+
 # تسجيل كل الموديلات لتظهر في لوحة التحكم
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Cart)
 admin.site.register(CartItem)
+admin.site.register(Review, ReviewAdmin) # <-- أضف هذا السطر

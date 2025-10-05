@@ -20,8 +20,48 @@
             <button id="add-to-cart-btn" class="add-to-cart-btn">أضف إلى السلة</button>
         </div>
     </div>
+
+    <hr style="margin: 40px 0;">
+
+<div class="reviews-section">
+    <h3>تقييمات المنتج</h3>
+    <div id="reviews-list">
+        </div>
+</div>
+
+<div class="add-review-section">
+    <h3>أضف تقييمك</h3>
+    <form id="review-form">
+        <div class="form-group">
+            <label for="review-name">اسمك:</label>
+            <input type="text" id="review-name" required>
+        </div>
+        <div class="form-group">
+            <label for="review-country">بلدك (اختياري):</label>
+            <input type="text" id="review-country">
+        </div>
+        <div class="form-group">
+            <label for="review-rating">تقييمك (من 5):</label>
+            <select id="review-rating" required>
+                <option value="5">⭐⭐⭐⭐⭐ (ممتاز)</option>
+                <option value="4">⭐⭐⭐⭐ (جيد جدًا)</option>
+                <option value="3">⭐⭐⭐ (جيد)</option>
+                <option value="2">⭐⭐ (مقبول)</option>
+                <option value="1">⭐ (سيء)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="review-comment">تعليقك:</label>
+            <textarea id="review-comment" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn-primary">إرسال التقييم</button>
+    </form>
+    <div id="review-status"></div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
     <script src="{% static 'js/product-detail.js' %}"></script>
 {% endblock %}
+
