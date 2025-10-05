@@ -115,9 +115,10 @@ AUTH_USER_MODEL = 'store.User'
 
 # ... باقي الإعدادات ...
 
-MEDIA_URL = '/media/'
-# المسار القديم
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# settings.py
 
-# ▼▼▼ المسار الجديد والمهم ▼▼▼
-MEDIA_ROOT = '/var/data/media'
+MEDIA_URL = '/media/'
+
+# ▼▼▼ قم بالتعديل ليصبح هكذا ▼▼▼
+# MEDIA_ROOT = '/var/data/media'  # <--- تعطيل مؤقت
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # <--- إعادة السطر القديم مؤقتًا
