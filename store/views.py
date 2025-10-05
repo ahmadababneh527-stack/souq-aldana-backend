@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView # <--- قم بإضافة DetailView هنا
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
 
@@ -40,9 +40,10 @@ class IndexView(TemplateView):
     template_name = 'index.html'
 
 # هذا الكلاس سيعرض صفحة تفاصيل المنتج
-class ProductDetailView(TemplateView):
-    template_name = 'product.html'
-
+class ProductDetailView(DetailView):
+    model = Product                # <-- نخبره أننا نتعامل مع موديل المنتج
+    template_name = 'product.html' # <-- هذا هو اسم ملف القالب
+    context_object_name = 'product'  # <-- هذا ه
 
 
     # ... (الكود الموجود مسبقًا)
