@@ -504,3 +504,9 @@ main.container {
     color: #d9534f; /* لون أحمر للعرض */
     font-weight: bold;
 }
+
+/* --- كود لتغيير لون الشعار في الهيدر --- */
+.main-header .logo a {
+    color: #FFFFFF;           /* هذا يغير اللون إلى الأبيض */
+    text-decoration: none;    /* هذا يزيل الخط تحت الشعار */
+}
