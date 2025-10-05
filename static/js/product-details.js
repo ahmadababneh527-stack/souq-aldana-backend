@@ -11,24 +11,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    try {
-        // طلب بيانات المنتج المحدد من الـ API
+   try {
         const response = await fetch(`/api/products/${productId}/`);
         if (!response.ok) { throw new Error('فشل في جلب تفاصيل المنتج'); }
         const product = await response.json();
 
-        // تحقق من وجود صور واستخدم الصورة الأولى كصورة رئيسية
-        // إذا لم تكن هناك صور، استخدم صورة احتياطية
         const mainImageUrl = product.images && product.images.length > 0
             ? product.images[0].image
             : 'https://placehold.co/500x500?text=No+Image';
-
-        // ملء بيانات الصفحة بالمعلومات التي تم جلبها
+        
+        // ملء البيانات
         document.getElementById('product-image').src = mainImageUrl;
         document.getElementById('product-image').alt = product.name;
         document.getElementById('product-name').textContent = product.name;
-        document.getElementById('product-price').textContent = `${product.price} درهم`;
         document.getElementById('product-description').textContent = product.description;
+
+        // **منطق جديد لعرض السعر**
+        const priceElement = document.getElementById('product-price');
+        const originalPriceElement = document.getElementById('product-original-price');
+
+        if (product.original_price && parseFloat(product.original_price) > parseFloat(product.price)) {
+            priceElement.textContent = `${product.price} درهم`;
+            priceElement.classList.add('offer');
+            originalPriceElement.textContent = `${product.original_price} درهم`;
+        } else {
+            priceElement.textContent = `${product.price} درهم`;
+            originalPriceElement.style.display = 'none'; // إخفاء السعر الأصلي إذا لم يكن هناك عرض
+        }
 
     } catch (error) {
         console.error('Error:', error);

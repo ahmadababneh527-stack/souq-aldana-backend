@@ -492,3 +492,15 @@ main.container {
     border-radius: 4px;
     text-align: center;
 }
+
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+    margin: 0;
+}
+.product-price.offer {
+    color: #d9534f; /* لون أحمر للعرض */
+    font-weight: bold;
+}

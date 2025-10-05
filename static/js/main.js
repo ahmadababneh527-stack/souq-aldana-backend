@@ -17,13 +17,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+         // (الكود في بداية الملف يبقى كما هو)
+// ...
             products.forEach(product => {
-                // تحقق من وجود صور واستخدم الصورة الأولى أو صورة احتياطية
                 const imageUrl = product.images && product.images.length > 0
                     ? product.images[0].image 
                     : 'https://placehold.co/300x300?text=No+Image';
 
-                // إنشاء بطاقة المنتج بالروابط الصحيحة لـ Django
+                // **منطق جديد لعرض السعر**
+                let priceHTML = `<p class="product-price">${product.price} درهم</p>`;
+                if (product.original_price && parseFloat(product.original_price) > parseFloat(product.price)) {
+                    priceHTML = `
+                        <p class="product-price offer">${product.price} درهم</p>
+                        <p class="original-price">${product.original_price} درهم</p>
+                    `;
+                }
+
                 const productCardHTML = `
                 <div class="product-card">
                     <a href="/products/${product.id}/">
@@ -31,11 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     </a>
                     <div class="product-info">
                         <h4><a href="/products/${product.id}/">${product.name}</a></h4>
-                        <p class="product-price">${product.price} درهم</p>
+                        ${priceHTML} 
                         <button class="add-to-cart-btn" data-product-id="${product.id}">أضف إلى السلة</button>
                     </div>
                 </div>`;
                 productsGrid.innerHTML += productCardHTML;
+            
+// ... (باقي الكود في نهاية الملف يبقى كما هو)
             });
         } catch (error) {
             productsGrid.innerHTML = `<p>حدث خطأ في عرض المنتجات: ${error.message}</p>`;

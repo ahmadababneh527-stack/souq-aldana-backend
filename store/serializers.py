@@ -10,13 +10,16 @@ class ProductImageSerializer(serializers.ModelSerializer):
 # --- ProductSerializer محدّث ---
 # --- ProductSerializer محدّث ---
 class ProductSerializer(serializers.ModelSerializer):
-    # سنقوم بتضمين قائمة الصور هنا
     images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
-        # ▼▼▼ قمنا بإضافة الحقول الجديدة هنا ▼▼▼
-        fields = ['id', 'name', 'description', 'price', 'original_price', 'offer_end_date', 'images', 'createdAt']
+        # أضفنا الحقول الجديدة هنا
+        fields = [
+            'id', 'name', 'description', 'price', 
+            'original_price', 'offer_end_date', # <-- الحقول الجديدة
+            'images', 'createdAt'
+        ]
 
 # --- باقي الـ serializers تبقى كما هي ---
 class UserSerializer(serializers.ModelSerializer):
