@@ -1,55 +1,23 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سوق الدانة - متجرك الأول في الإمارات</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <header class="main-header">
-        <div class="container">
-            <h1 class="logo">سوق الدانة</h1>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="{% url 'index' %}">الرئيسية</a></li>
-                    <li><a href="#">المنتجات</a></li>
-                    <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
-                    <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
-                    <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
-                    <li id="user-info" style="display: none;">
-                        <span id="user-email" style="color: white; margin-left: 15px;"></span>
-                        <a href="#" id="logout-link">تسجيل الخروج</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <main class="container">
-        {% csrf_token %}
-        <section class="hero-section">
-            <h2>أهلاً بك في متجرك المفضل</h2>
-            <p>أفضل المنتجات المحلية والعالمية، تصلك أينما كنت في الإمارات.</p>
-            <a href="#" class="btn-primary">اكتشف المنتجات</a>
-        </section>
+{% block title %}سوق الدانة - متجرك الأول في الإمارات{% endblock %}
 
-        <section class="featured-products">
-            <h3>أبرز المنتجات</h3>
-            <div class="products-grid">
-                </div>
-        </section>
-    </main>
+{% block content %}
+    {% csrf_token %}
+    <section class="hero-section">
+        <h2>أهلاً بك في متجرك المفضل</h2>
+        <p>أفضل المنتجات المحلية والعالمية، تصلك أينما كنت في الإمارات.</p>
+        <a href="#" class="btn-primary">اكتشف المنتجات</a>
+    </section>
 
-    <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2025 سوق الدانة. كل الحقوق محفوظة.</p>
-        </div>
-    </footer>
+    <section class="featured-products">
+        <h3>أبرز المنتجات</h3>
+        <div class="products-grid">
+            </div>
+    </section>
+{% endblock %}
 
+{% block scripts %}
     <script src="{% static 'js/main.js' %}"></script>
-    <script src="{% static 'js/nav-manager.js' %}"></script>
-
-</body>
-</html>
+{% endblock %}

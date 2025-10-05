@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}سوق الدانة{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <h1 class="logo"><a href="{% url 'index' %}">سوق الدانة</a></h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="{% url 'index' %}">الرئيسية</a></li>
+                    <li><a href="#">المنتجات</a></li>
+                    <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
+                    <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
+                    <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
+                    <li id="user-info" style="display: none;">
+                        <span id="user-email" style="color: white; margin-left: 15px;"></span>
+                        <a href="#" id="logout-link">تسجيل الخروج</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 سوق الدانة. كل الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/nav-manager.js' %}"></script>
+    
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
