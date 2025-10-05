@@ -18,7 +18,13 @@ from .serializers import ProductSerializer, UserSerializer, CartSerializer, Cart
 
 # ProductViewSet سيتعامل مع كل الطلبات الخاصة بالمنتجات
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    # queryset = Product.objects.all() # <- السطر القديم
+    
+    # ▼▼▼ السطر الجديد والمُحسّن ▼▼▼
+    # هذا السطر يجلب كل المنتجات مع الصور المرتبطة بها في طلب واحد فقط
+    # ملاحظة: استبدل 'images' بالاسم الصحيح للعلاقة العكسية للصور في موديل المنتج لديك
+    queryset = Product.objects.prefetch_related('images') 
+    
     serializer_class = ProductSerializer
 
 # UserViewSet سيتعامل مع كل الطلبات الخاصة بالمستخدمين
@@ -128,23 +134,20 @@ class AddToCartAPIView(APIView):
         except Product.DoesNotExist:
             return Response({'error': 'المنتج غير موجود.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # ابحث عن سلة المستخدم، أو قم بإنشائها إذا لم تكن موجودة
-        cart, created = Cart.objects.get_or_create(user=request.user)
-
-        # ابحث عن المنتج في السلة، أو قم بإنشائه
+        cart, _ = Cart.objects.get_or_create(user=request.user)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
         if not created:
-            # إذا كان المنتج موجودًا بالفعل، قم بزيادة الكمية
             cart_item.quantity += quantity
         else:
-            # إذا كان منتجًا جديدًا، اضبط الكمية
             cart_item.quantity = quantity
-
+        
         cart_item.save()
 
-        return Response({'message': f"تمت إضافة '{product.name}' إلى السلة بنجاح."}, status=status.HTTP_200_OK)
-    
+        # ▼▼▼ هذا هو التعديل الأهم ▼▼▼
+        # بدلاً من إرجاع رسالة، نقوم بإرجاع بيانات السلة المحدثة
+        serializer = CartSerializer(cart)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     # ... (الكود الموجود مسبقًا)
 class CartView(TemplateView):
