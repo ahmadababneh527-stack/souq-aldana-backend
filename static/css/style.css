@@ -392,3 +392,37 @@ main.container {
     margin-left: 15px;
     border-radius: 4px;
 }
+
+
+/* === كود التصميم المتجاوب (Responsive) === */
+
+/* للشاشات الصغيرة مثل الهواتف (عرض 768 بكسل أو أقل) */
+@media (max-width: 768px) {
+    /* اجعل القائمة العلوية قابلة للالتفاف */
+    .main-nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px 15px;
+    }
+
+    /* اجعل شبكة المنتجات عمودًا واحدًا */
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* اجعل عناصر صفحة المنتج تتكدس عموديًا */
+    .product-page-container {
+        flex-direction: column;
+    }
+    
+    .product-image-container,
+    .product-details-container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* قلل حجم الخطوط قليلًا */
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.8em; }
+    h3 { font-size: 1.5em; }
+}

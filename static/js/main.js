@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const productsGrid = document.querySelector('.products-grid');
 
-    // --- الجزء الأول: جلب وعرض المنتجات (موجود مسبقًا) ---
     async function fetchAndDisplayProducts() {
-        // ... (هذا الجزء يبقى كما هو تمامًا)
         if (!productsGrid) return;
         try {
             const response = await fetch('/api/products/');
@@ -15,10 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             products.forEach(product => {
+                // **تعديل جديد**: استخدم صورة احتياطية إذا كانت صورة المنتج فارغة
+                const imageUrl = product.image ? product.image : 'https://placehold.co/300x300?text=No+Image';
+                
                 const productCardHTML = `
                 <div class="product-card">
                     <a href="/products/${product.id}/">
-                        <img src="${product.image}" alt="${product.name}">
+                        <img src="${imageUrl}" alt="${product.name}">
                     </a>
                     <div class="product-info">
                         <h4><a href="/products/${product.id}/">${product.name}</a></h4>
@@ -35,12 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchAndDisplayProducts();
 
-    // --- الجزء الثاني: وظيفة زر "أضف إلى السلة" (جديد) ---
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
     productsGrid.addEventListener('click', async (event) => {
-        // تأكد من أن العنصر الذي تم الضغط عليه هو زر الإضافة للسلة
         if (event.target.classList.contains('add-to-cart-btn')) {
+            if (!csrfToken) {
+                console.error('CSRF Token not found!');
+                alert('حدث خطأ في الصفحة. يرجى إعادة تحميلها.');
+                return;
+            }
             const userEmail = localStorage.getItem('userEmail');
             if (!userEmail) {
                 alert('يرجى تسجيل الدخول أولاً لإضافة منتجات إلى السلة.');
@@ -66,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 if (response.ok) {
                     alert(data.message);
-                    updateCartCount(); // تحديث العدد في القائمة العلوية
+                    updateCartCount();
                 } else {
                     alert(`حدث خطأ: ${data.error}`);
                 }
