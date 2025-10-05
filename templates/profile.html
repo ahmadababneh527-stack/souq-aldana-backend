@@ -26,6 +26,37 @@
             <small>اسم المستخدم لا يمكن تغييره.</small>
         </div>
         
+        <hr>
+
+        <div class="form-group">
+            <label for="date_of_birth">تاريخ الميلاد:</label>
+            <input type="date" id="date_of_birth" name="date_of_birth">
+        </div>
+
+        <div class="form-group">
+            <label for="gender">الجنس:</label>
+            <select id="gender" name="gender">
+                <option value="">-- اختر --</option>
+                <option value="M">ذكر</option>
+                <option value="F">أنثى</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="country">البلد:</label>
+            <input type="text" id="country" name="country" placeholder="أدخل اسم بلدك">
+        </div>
+        
+        <div class="form-group">
+            <label for="address">عنوان التوصيل:</label>
+            <textarea id="address" name="address" placeholder="أدخل عنوانك بالتفصيل"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">رقم الهاتف:</label>
+            <input type="tel" id="phone_number" name="phone_number" placeholder="أدخل رقم هاتفك">
+        </div>
+
         <button type="submit" id="save-profile-btn" class="btn-primary">حفظ التغييرات</button>
     </form>
     <div id="success-message" style="display: none; color: green; margin-top: 15px;">

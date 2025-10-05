@@ -1,18 +1,12 @@
-// في ملف static/js/profile.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('profile-form');
     const saveBtn = document.getElementById('save-profile-btn');
     const successMessage = document.getElementById('success-message');
-    // لا نحتاج لـ csrfToken هنا لأننا وضعناه في ملف profile.html مباشرة
-    // لكن من الجيد التأكد من وجوده في القالب
 
     // --- المهمة الأولى: جلب البيانات الحالية وعرضها في النموذج ---
     async function loadProfileData() {
         try {
             const response = await fetch('/api/profile/');
-            
-            // التحقق من تسجيل الدخول
             if (response.status === 401 || response.status === 403) {
                 window.location.href = '/login/';
                 return;
@@ -21,21 +15,28 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const userData = await response.json();
 
-            // ملء حقول النموذج بالبيانات الموجودة
+            // ملء حقول النموذج بالبيانات
             document.getElementById('first_name').value = userData.first_name || '';
             document.getElementById('last_name').value = userData.last_name || '';
             document.getElementById('email').value = userData.email || '';
             document.getElementById('username').value = userData.username || '';
-            
+
+            // ▼▼▼ تحديث الكود ليملأ الحقول الجديدة ▼▼▼
+            document.getElementById('date_of_birth').value = userData.date_of_birth || '';
+            document.getElementById('gender').value = userData.gender || '';
+            document.getElementById('country').value = userData.country || '';
+            document.getElementById('address').value = userData.address || '';
+            document.getElementById('phone_number').value = userData.phone_number || '';
+
         } catch (error) {
             console.error(error);
             alert(error.message);
         }
     }
 
-    // --- المهمة الثانية: حفظ التغييرات عند الضغط على الزر ---
+    // --- المهمة الثانية: حفظ التغييرات (هذا الجزء لا يحتاج لأي تعديل!) ---
     form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // منع الإرسال التقليدي للنموذج
+        event.preventDefault(); 
         
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
         const formData = new FormData(form);
@@ -60,15 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const updatedUserData = await response.json();
-
             successMessage.style.display = 'block';
             setTimeout(() => { successMessage.style.display = 'none'; }, 3000);
 
-            // تحديث الاسم في localStorage ليظهر في شريط التنقل
             localStorage.setItem('userFirstName', updatedUserData.first_name);
             localStorage.setItem('userLastName', updatedUserData.last_name);
             
-            // تحديث الاسم في شريط التنقل مباشرة بدون إعادة تحميل
             const userEmailSpan = document.getElementById('user-email');
             if(userEmailSpan) {
                  userEmailSpan.innerHTML = `مرحباً، <a href="/profile/" style="color: #fff; text-decoration: underline;">${updatedUserData.first_name} ${updatedUserData.last_name}</a>`;
