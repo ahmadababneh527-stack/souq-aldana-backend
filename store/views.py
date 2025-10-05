@@ -1,0 +1,159 @@
+from django.shortcuts import render
+from django.views.generic import TemplateView
+from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
+
+from rest_framework import viewsets, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+
+# استيراد كل النماذج التي تحتاجها
+from .models import Product, User, Cart, CartItem
+
+# استيراد كل المترجمات التي تحتاجها
+from .serializers import ProductSerializer, UserSerializer, CartSerializer, CartItemSerializer
+
+
+# ProductViewSet سيتعامل مع كل الطلبات الخاصة بالمنتجات
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+# UserViewSet سيتعامل مع كل الطلبات الخاصة بالمستخدمين
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+
+
+# هذا الكلاس سيعرض الصفحة الرئيسية
+class IndexView(TemplateView):
+    template_name = 'index.html'
+
+# هذا الكلاس سيعرض صفحة تفاصيل المنتج
+class ProductDetailView(TemplateView):
+    template_name = 'product.html'
+
+
+
+    # ... (الكود الموجود مسبقًا)
+
+class SignupView(TemplateView):
+    template_name = 'signup.html'
+
+    # ... (الكود الموجود مسبقًا)
+
+class LoginView(TemplateView):
+    template_name = 'login.html'
+
+
+class LoginAPIView(APIView):
+    def post(self, request):
+        # لاحظ أننا نستخدم username الآن، وهو مطلوب افتراضيًا
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        if not username or not password:
+            return Response({'error': 'اسم المستخدم وكلمة المرور مطلوبان.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # استخدم دالة authenticate الرسمية من Django
+        user = authenticate(username=username, password=password)
+
+        if user:
+            return Response({'message': 'تم تسجيل الدخول بنجاح.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'بيانات الاعتماد غير صالحة.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# أضف هذا الكلاس الجديد
+class CartViewSet(viewsets.ModelViewSet):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    # هذه هي الأهم: لا يمكن لأحد الوصول إلى هذا الـ API إلا إذا كان مسجل دخوله
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # نعرض فقط السلة الخاصة بالمستخدم الذي قام بتسجيل الدخول
+        return self.queryset.filter(user=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def add_item(self, request, pk=None):
+        cart = self.get_object()
+        product_id = request.data.get('product_id')
+        quantity = int(request.data.get('quantity', 1))
+
+        if not product_id:
+            return Response({'error': 'معرف المنتج مطلوب.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            return Response({'error': 'المنتج غير موجود.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # ابحث عن المنتج في السلة، أو قم بإنشائه
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+        
+        if not created:
+            # إذا كان المنتج موجودًا بالفعل، قم بزيادة الكمية
+            cart_item.quantity += quantity
+        else:
+            # إذا كان منتجًا جديدًا، اضبط الكمية
+            cart_item.quantity = quantity
+        
+        cart_item.save()
+        serializer = CartSerializer(cart)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class AddToCartAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        product_id = request.data.get('product_id')
+        quantity = int(request.data.get('quantity', 1))
+
+        if not product_id:
+            return Response({'error': 'معرف المنتج مطلوب.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            return Response({'error': 'المنتج غير موجود.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # ابحث عن سلة المستخدم، أو قم بإنشائها إذا لم تكن موجودة
+        cart, created = Cart.objects.get_or_create(user=request.user)
+
+        # ابحث عن المنتج في السلة، أو قم بإنشائه
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+        if not created:
+            # إذا كان المنتج موجودًا بالفعل، قم بزيادة الكمية
+            cart_item.quantity += quantity
+        else:
+            # إذا كان منتجًا جديدًا، اضبط الكمية
+            cart_item.quantity = quantity
+
+        cart_item.save()
+
+        return Response({'message': f"تمت إضافة '{product.name}' إلى السلة بنجاح."}, status=status.HTTP_200_OK)
+    
+
+    # ... (الكود الموجود مسبقًا)
+class CartView(TemplateView):
+    template_name = 'cart.html'
+
+
+    # ... (الكود الموجود مسبقًا)
+
+# أضف هذا الكلاس الجديد في نهاية الملف
+class CartItemViewSet(viewsets.ModelViewSet):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    # دالة مهمة جدًا للأمان: تأكد من أن المستخدم يمكنه فقط حذف العناصر من سلته الخاصة
+    def get_queryset(self):
+        return self.queryset.filter(cart__user=self.request.user)

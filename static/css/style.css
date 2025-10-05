@@ -1,0 +1,344 @@
+/* --- إعدادات عامة --- */
+body {
+    font-family: 'Arial', sans-serif; /* يمكنك تغيير الخط لاحقاً */
+    margin: 0;
+    background-color: #FDFBF5; /* الأبيض اللؤلؤي للخلفية */
+    color: #333333; /* الرمادي الداكن للنصوص */
+    direction: rtl; /* اتجاه من اليمين لليسار */
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- تصميم الشريط العلوي --- */
+.main-header {
+    background-color: #00426A; /* الأزرق الداكن */
+    color: #FFFFFF;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 28px;
+    margin: 0;
+}
+
+.main-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.main-nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.main-nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.main-nav a:hover {
+    color: #D4AF37; /* الذهبي الرملي عند مرور الماوس */
+}
+
+/* --- تصميم القسم الرئيسي --- */
+.hero-section {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero-section h2 {
+    font-size: 40px;
+    color: #00426A; /* الأزرق الداكن */
+}
+
+.hero-section p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    background-color: #D4AF37; /* الذهبي الرملي */
+    color: #FFFFFF;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #c09e32; /* درجة أغمق من الذهبي */
+}
+
+/* --- تصميم قسم المنتجات --- */
+.featured-products {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.featured-products h3 {
+    font-size: 32px;
+    color: #00426A;
+    margin-bottom: 40px;
+}
+
+/* --- تصميم تذييل الصفحة --- */
+.main-footer {
+    background-color: #333333; /* الرمادي الداكن */
+    color: #FFFFFF;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+
+/* --- تصميم شبكة المنتجات --- */
+.products-grid {
+    display: flex; /* نستخدم Flexbox لتنظيم العناصر */
+    justify-content: center; /* توسيط البطاقات */
+    flex-wrap: wrap; /* السماح للبطاقات بالنزول لسطر جديد عند ضيق الشاشة */
+    gap: 20px; /* مسافة بين البطاقات */
+}
+
+/* --- تصميم بطاقة المنتج الواحدة --- */
+.product-card {
+    background-color: #FFFFFF; /* خلفية بيضاء للبطاقة */
+    border: 1px solid #ddd;
+    border-radius: 8px; /* حواف دائرية */
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* ظل خفيف لإعطاء عمق */
+    transition: transform 0.3s; /* حركة ناعمة عند مرور الماوس */
+}
+
+.product-card:hover {
+    transform: translateY(-5px); /* رفع البطاقة قليلاً للأعلى عند مرور الماوس */
+}
+
+.product-card img {
+    width: 100%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.product-card .product-info {
+    padding: 20px;
+}
+
+.product-card h4 {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #00426A; /* اللون الأزرق الداكن لاسم المنتج */
+}
+
+.product-price {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.add-to-cart-btn {
+    background-color: #00426A; /* اللون الأزرق الداكن */
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer; /* تغيير شكل المؤشر للإشارة إلى أنه زر */
+    transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #D4AF37; /* اللون الذهبي عند مرور الماوس */
+}
+
+/* --- تصميم صفحة تفاصيل المنتج --- */
+.product-page-container {
+    display: flex;
+    gap: 40px; /* مسافة بين الصورة والتفاصيل */
+    margin-top: 50px;
+}
+
+.product-image-container {
+    flex: 1; /* يأخذ نصف المساحة */
+}
+
+.product-image-container img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.product-details-container {
+    flex: 1; /* يأخذ النصف الآخر من المساحة */
+}
+
+.product-details-container h1 {
+    font-size: 42px;
+    color: #00426A;
+    margin-top: 0;
+}
+
+.product-page-price {
+    font-size: 28px;
+    font-weight: bold;
+    color: #D4AF37; /* اللون الذهبي للسعر */
+    margin-bottom: 20px;
+}
+
+.product-description {
+    font-size: 16px;
+    line-height: 1.6; /* لسهولة القراءة */
+    margin-bottom: 30px;
+}
+
+
+
+
+/* --- تصميم صفحة سلة المشتريات --- */
+.cart-page {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.cart-items-container {
+    flex: 2; /* تأخذ ثلثي المساحة */
+    min-width: 300px;
+}
+
+.cart-summary {
+    flex: 1; /* تأخذ ثلث المساحة */
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    height: fit-content;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.cart-item-details {
+    flex-grow: 1;
+}
+
+.cart-item-name {
+    margin: 0 0 10px 0;
+}
+
+.cart-item-price {
+    margin: 0;
+    font-weight: bold;
+}
+
+.remove-item-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cart-summary h2 {
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.total-row {
+    font-weight: bold;
+    font-size: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #D4AF37;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+}
+
+
+/* --- تصميم صفحة لوحة التحكم --- */
+.admin-form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.admin-form-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #00426A;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#status-message {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
