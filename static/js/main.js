@@ -25,18 +25,18 @@ const response = await fetch('/api/products/');
 
             // 3. قم بإنشاء بطاقة منتج لكل منتج تم جلبه
             products.forEach(product => {
-                const productCardHTML = `
-                    <div class="product-card">
-                        <a href="product.html?id=${product.id}">
-                            <img src="${product.imageUrl}" alt="${product.name}">
-                        </a>
-                        <div class="product-info">
-                            <h4><a href="product.html?id=${product.id}">${product.name}</a></h4>
-                            <p class="product-price">${product.price} درهم</p>
-                            <button class="add-to-cart-btn">أضف إلى السلة</button>
-                        </div>
-                    </div>
-                `;
+             const productCardHTML = `
+    <div class="product-card">
+        <a href="/products/${product.id}/">
+            <img src="${product.imageUrl}" alt="${product.name}">
+        </a>
+        <div class="product-info">
+            <h4><a href="/products/${product.id}/">${product.name}</a></h4>
+            <p class="product-price">${product.price} درهم</p>
+            <button class="add-to-cart-btn" data-product-id="${product.id}">أضف إلى السلة</button>
+        </div>
+    </div>
+`;
                 // 4. أضف البطاقة إلى الشبكة
                 productsGrid.innerHTML += productCardHTML;
             });
