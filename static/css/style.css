@@ -426,3 +426,39 @@ main.container {
     h2 { font-size: 1.8em; }
     h3 { font-size: 1.5em; }
 }
+
+
+
+/* === تصميم صفحة الملف الشخصي === */
+.profile-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    max-width: 700px;
+    margin: 20px auto;
+}
+
+.profile-container h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.profile-container p {
+    display: grid;
+    grid-template-columns: 150px 1fr; /* عمود للتسمية وعمود للقيمة */
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    border-bottom: 1px solid #f9f9f9;
+    padding-bottom: 15px;
+}
+
+.profile-container p:last-child {
+    border-bottom: none;
+}
+
+.profile-container p strong {
+    color: #333;
+}
