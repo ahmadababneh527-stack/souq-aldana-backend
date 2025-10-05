@@ -60,4 +60,33 @@ async function updateCartCount() {
     } catch (error) {
         console.error("Failed to update cart count:", error);
     }
+
+    // --- كود روابط الفوتر (يضاف في نهاية nav-manager.js) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const termsLink = document.getElementById('terms-link');
+    const privacyLink = document.getElementById('privacy-link');
+
+    if (termsLink) {
+        termsLink.addEventListener('click', (event) => {
+            event.preventDefault(); // منع الصفحة من الانتقال لأعلى
+            alert(
+                "شروط الاستخدام:\n\n" +
+                "1. مرحبًا بك في سوق الدانة.\n" +
+                "2. استخدامك للموقع يعني موافقتك على هذه الشروط.\n" +
+                "(يمكنك كتابة شروطك الكاملة هنا...)"
+            );
+        });
+    }
+
+    if (privacyLink) {
+        privacyLink.addEventListener('click', (event) => {
+            event.preventDefault(); // منع الصفحة من الانتقال لأعلى
+            alert(
+                "سياسة الخصوصية:\n\n" +
+                "نحن في سوق الدانة نلتزم بحماية خصوصيتك. نحن لا نشارك بياناتك مع أي طرف ثالث.\n" +
+                "(يمكنك كتابة سياستك الكاملة هنا...)"
+            );
+        });
+    }
+});
 }

@@ -2,13 +2,14 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django_countries.fields import CountryField
 
 # نموذج المستخدم
 class User(AbstractUser):
     GENDER_CHOICES = (('M', 'ذكر'), ('F', 'أنثى'))
     date_of_birth = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
-    country = models.CharField(max_length=100, null=True, blank=True)
+    country = CountryField(null=True, blank=True) # <-- قم بتعديل هذا السطر
     address = models.CharField(max_length=255, null=True, blank=True)
     postal_code = models.CharField(max_length=20, null=True, blank=True)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
@@ -58,9 +59,9 @@ class CartItem(models.Model):
 
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviews')
     name = models.CharField(max_length=100) # اسم المقيّم (يمكن ملؤه تلقائيًا)
-    country = models.CharField(max_length=100, blank=True) # بلد المقيّم
+    country = CountryField(blank=True, verbose_name="البلد")
     rating = models.IntegerField(
         default=5,
         validators=[MaxValueValidator(5), MinValueValidator(1)]
