@@ -1,20 +1,27 @@
 from rest_framework import serializers
-# 1. قم باستيراد أداة تشفير كلمة المرور
-from django.contrib.auth.hashers import make_password
-from .models import Product, User, Cart, CartItem
+from .models import Product, User, Cart, CartItem, ProductImage
 
-# ... (ProductSerializer يبقى كما هو)
+# --- serializer جديد للصور ---
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'image']
+
+# --- ProductSerializer محدّث ---
 class ProductSerializer(serializers.ModelSerializer):
+    # سنقوم بتضمين قائمة الصور هنا
+    images = ProductImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Product
-        # قمنا بتحديد الحقول وتغيير imageUrl إلى image
-        fields = ['id', 'name', 'description', 'price', 'image', 'createdAt']
+        # قمنا بإزالة 'image' وإضافة 'images'
+        fields = ['id', 'name', 'description', 'price', 'images', 'createdAt']
 
-# هذا هو الكود الذي سنقوم بتعديله
+
+# --- باقي الـ serializers تبقى كما هي ---
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        # أضفنا كل الحقول الجديدة هنا
         fields = [
             'id', 'username', 'email', 'password', 
             'first_name', 'last_name', 'date_of_birth', 'gender',
@@ -25,20 +32,15 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
-# ... (الكود الموجود مسبقًا لـ ProductSerializer و UserSerializer)
 
 class CartItemSerializer(serializers.ModelSerializer):
-    # سنقوم بعرض تفاصيل المنتج كاملة داخل عنصر السلة
     product = ProductSerializer(read_only=True)
-    
     class Meta:
         model = CartItem
         fields = ['id', 'product', 'quantity']
 
 class CartSerializer(serializers.ModelSerializer):
-    # items هو الاسم الذي حددناه في related_name في نموذج CartItem
     items = CartItemSerializer(many=True, read_only=True)
-
     class Meta:
         model = Cart
         fields = ['id', 'user', 'createdAt', 'items']

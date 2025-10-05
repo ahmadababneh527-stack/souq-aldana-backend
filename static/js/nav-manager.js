@@ -16,8 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if(userInfo) userInfo.style.display = 'list-item';
         // **هذا هو التعديل**: نعرض الاسم الأول والأخير
-        if(userEmailSpan) userEmailSpan.innerHTML = `مرحباً، <a href="{% url 'profile' %}" style="color: #fff;">${userFirstName} ${userLastName}</a>`;
-
+        if(userEmailSpan) userEmailSpan.innerHTML = `مرحباً، <a href="/profile/" style="color: #fff; text-decoration: underline;">${userFirstName} ${userLastName}</a>`;
 
         if(logoutLink) logoutLink.addEventListener('click', (event) => {
             event.preventDefault();
