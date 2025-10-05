@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch(`/api/products/${productId}/`);
         if (!response.ok) { throw new Error('فشل في جلب تفاصيل المنتج'); }
         const product = await response.json();
+            document.title = `${product.name} - سوق الدانة`;
 
         const mainImageUrl = product.images && product.images.length > 0
             ? product.images[0].image
