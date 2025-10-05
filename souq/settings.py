@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'store.apps.StoreConfig',
+    'django_countries', # <-- أضف هذا السطر
 ]
 
 MIDDLEWARE = [

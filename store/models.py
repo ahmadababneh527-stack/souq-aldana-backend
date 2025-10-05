@@ -9,26 +9,21 @@ class User(AbstractUser):
     GENDER_CHOICES = (('M', 'ذكر'), ('F', 'أنثى'))
     date_of_birth = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
-    country = CountryField(null=True, blank=True) # <-- قم بتعديل هذا السطر
+    country = CountryField(null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     postal_code = models.CharField(max_length=20, null=True, blank=True)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
     def __str__(self):
         return self.username
 
-# نموذج المنتج مع إضافة حقول العروض الجديدة
+# نموذج المنتج
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2) # السعر الحالي (بعد الخصم إن وجد)
-    
-    # ▼▼▼ حقول العروض الجديدة التي أضفتها أنت ▼▼▼
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     offer_end_date = models.DateTimeField(null=True, blank=True)
-    
-    # ▼▼▼ الحقل المهم الذي أعدناه ▼▼▼
     createdAt = models.DateTimeField(default=timezone.now)
-
     def __str__(self):
         return self.name
 
@@ -38,6 +33,18 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to='products/')
     def __str__(self):
         return f"صورة للمنتج: {self.product.name}"
+
+# نموذج التقييمات
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviews')
+    name = models.CharField(max_length=100)
+    country = CountryField(blank=True, verbose_name="البلد")
+    rating = models.IntegerField(default=5, validators=[MaxValueValidator(5), MinValueValidator(1)])
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"تقييم للمنتج {self.product.name} بواسطة {self.name}"
 
 # نماذج السلة
 class Cart(models.Model):
@@ -52,22 +59,3 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
-    
-
-    # في نهاية ملف store/models.py
-
-
-class Review(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviews')
-    name = models.CharField(max_length=100) # اسم المقيّم (يمكن ملؤه تلقائيًا)
-    country = CountryField(blank=True, verbose_name="البلد")
-    rating = models.IntegerField(
-        default=5,
-        validators=[MaxValueValidator(5), MinValueValidator(1)]
-    ) # التقييم من 1 إلى 5 نجوم
-    comment = models.TextField() # نص التعليق
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"تقييم للمنتج {self.product.name} بواسطة {self.name}"
