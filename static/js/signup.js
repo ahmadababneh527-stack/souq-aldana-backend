@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const signupForm = document.getElementById('signup-form');
     const statusMessage = document.getElementById('status-message');
-    // **جديد**: اقرأ الـ CSRF Token من الحقل المخفي
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     signupForm.addEventListener('submit', async (event) => {
@@ -18,10 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // **جديد**: أضف الـ Token إلى الـ Headers
                     'X-CSRFToken': csrfToken 
                 },
+                // **هذا هو التعديل**
+                // أضفنا username ليكون نفس قيمة email
                 body: JSON.stringify({
+                    username: email, // <-- السطر الجديد
                     email: email,
                     password: password
                 }),
@@ -34,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusMessage.classList.add('success');
                 signupForm.reset();
             } else {
-                const errorMessage = data.email || 'حدث خطأ غير متوقع.';
+                // نعرض رسائل الخطأ سواء كانت للاسم أو البريد الإلكتروني
+                const errorMessage = data.username || data.email || 'حدث خطأ غير متوقع.';
                 statusMessage.textContent = errorMessage;
                 statusMessage.classList.add('error');
             }

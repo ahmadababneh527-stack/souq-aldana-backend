@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // --- الجزء الأول: جلب وعرض تفاصيل المنتج (يبقى كما هو) ---
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
+    // --- الجزء الأول: جلب وعرض تفاصيل المنتج (تم تعديله) ---
+
+    // **هذه هي الطريقة الجديدة والصحيحة لقراءة الـ id من رابط مثل /products/1/**
+    const pathParts = window.location.pathname.split('/');
+    const productId = pathParts[2];
 
     if (!productId) {
         document.querySelector('.product-page-container').innerHTML = '<h1>لم يتم العثور على المنتج.</h1>';
@@ -24,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.product-page-container').innerHTML = `<h1>حدث خطأ: ${error.message}</h1>`;
     }
 
-    // --- الجزء الثاني: وظيفة زر "أضف إلى السلة" (جديد) ---
+    // --- الجزء الثاني: وظيفة زر "أضف إلى السلة" (يبقى كما هو) ---
     const addToCartBtn = document.querySelector('.add-to-cart-btn');
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
@@ -32,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const userEmail = localStorage.getItem('userEmail');
         if (!userEmail) {
             alert('يرجى تسجيل الدخول أولاً لإضافة منتجات إلى السلة.');
-            window.location.href = '/login/'; // توجيه المستخدم لصفحة تسجيل الدخول
+            window.location.href = '/login/';
             return;
         }
 
@@ -45,15 +47,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 },
                 body: JSON.stringify({
                     product_id: productId,
-                    quantity: 1 
+                    quantity: 1
                 }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                alert(data.message); // عرض رسالة نجاح
-                // يمكنك هنا تحديث عدد المنتجات في أيقونة السلة لاحقًا
+                alert(data.message);
                 updateCartCount();
             } else {
                 alert(`حدث خطأ: ${data.error}`);

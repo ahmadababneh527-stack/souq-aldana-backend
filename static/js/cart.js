@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // --- دالة لعرض محتويات السلة ---
     async function displayCart() {
         try {
             const response = await fetch('/api/cart/');
@@ -20,6 +19,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (!cart || cart.items.length === 0) {
                 mainContainer.innerHTML = '<h3>سلة المشتريات فارغة.</h3>';
+                // تأكد من تحديث الإجمالي إلى صفر
+                if(cartTotalSpan) cartTotalSpan.textContent = '0.00';
                 return;
             }
 
@@ -31,20 +32,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 total += itemTotal;
 
                 const row = document.createElement('tr');
-                row.setAttribute('id', `item-row-${item.id}`); // أضفنا ID للصف
+                row.setAttribute('id', `item-row-${item.id}`);
+                // **هذا هو الكود الكامل الذي يحل محل النص المؤقت**
                 row.innerHTML = `
-                    <td>... (نفس كود عرض المنتج) ...</td>
+                    <td>
+                        <div class="cart-product-info">
+                            <img src="${item.product.imageUrl}" alt="${item.product.name}" width="50">
+                            <span>${item.product.name}</span>
+                        </div>
+                    </td>
+                    <td>${item.product.price} درهم</td>
+                    <td>${item.quantity}</td>
+                    <td>${itemTotal.toFixed(2)} درهم</td>
                     <td><button class="remove-btn" data-item-id="${item.id}">حذف</button></td>
                 `;
                 cartItemsBody.appendChild(row);
             });
+
             cartTotalSpan.textContent = total.toFixed(2);
         } catch (error) {
             mainContainer.innerHTML = `<h3>حدث خطأ: ${error.message}</h3>`;
         }
     }
     
-    // --- وظيفة جديدة للاستماع لنقرات الحذف ---
     cartItemsBody.addEventListener('click', async (event) => {
         if (event.target.classList.contains('remove-btn')) {
             const itemId = event.target.dataset.itemId;
@@ -56,11 +66,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 if (response.ok) {
-                    // إذا نجح الحذف، أزل الصف من الجدول وأعد حساب الإجمالي
-                    document.getElementById(`item-row-${itemId}`).remove();
-                     updateCartCount();
-                    // أعد تحميل وعرض السلة لتحديث الإجمالي
+                    // أعد تحميل وعرض السلة بالكامل لتحديث كل شيء
                     displayCart(); 
+                    updateCartCount();
                 } else {
                     alert('فشل حذف المنتج.');
                 }
@@ -70,6 +78,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // عرض السلة عند تحميل الصفحة
     displayCart();
 });
