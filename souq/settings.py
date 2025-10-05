@@ -111,5 +111,13 @@ CORS_ALLOW_ALL_ORIGINS = True
 AUTH_USER_MODEL = 'store.User'
 
 # إعدادات لملفات الوسائط (الصور المرفوعة)
+# settings.py
+
+# ... باقي الإعدادات ...
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# المسار القديم
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# ▼▼▼ المسار الجديد والمهم ▼▼▼
+MEDIA_ROOT = '/var/data/media'
