@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملفي الشخصي - سوق الدانة</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="main-header">
+        </header>
+
+    <main class="container">
+        <h2>ملفي الشخصي</h2>
+        <div class="profile-container">
+            <p><strong>الاسم الأول:</strong> <span id="profile-first-name"></span></p>
+            <p><strong>الاسم الأخير:</strong> <span id="profile-last-name"></span></p>
+            <p><strong>البريد الإلكتروني:</strong> <span id="profile-email"></span></p>
+            <p><strong>اسم المستخدم:</strong> <span id="profile-username"></span></p>
+            <p><strong>تاريخ الميلاد:</strong> <span id="profile-dob"></span></p>
+            <p><strong>الجنس:</strong> <span id="profile-gender"></span></p>
+            <p><strong>البلد:</strong> <span id="profile-country"></span></p>
+            <p><strong>العنوان:</strong> <span id="profile-address"></span></p>
+            <p><strong>الرمز البريدي:</strong> <span id="profile-postal-code"></span></p>
+            <p><strong>رقم الهاتف:</strong> <span id="profile-phone"></span></p>
+        </div>
+    </main>
+    
+    <script src="{% static 'js/nav-manager.js' %}"></script>
+    <script src="{% static 'js/profile.js' %}"></script> </body>
+</html>

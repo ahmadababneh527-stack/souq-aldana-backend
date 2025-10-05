@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
         statusMessage.textContent = '';
         statusMessage.className = '';
         
-        // لا نزال نقرأ القيمة من حقل الإيميل
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
@@ -19,10 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken
                 },
-                // **هذا هو التعديل**
-                // نرسل قيمة الإيميل على أنها username
                 body: JSON.stringify({ 
-                    username: email, // <-- تم التغيير هنا
+                    username: email,
                     password: password 
                 }),
             });
@@ -30,8 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // عند النجاح، نحفظ الإيميل (الذي هو نفسه اسم المستخدم)
-                localStorage.setItem('userEmail', email);
+                // **هذا هو التعديل**
+                // نحفظ الآن كل البيانات التي نحتاجها
+                localStorage.setItem('userEmail', data.email);
+                localStorage.setItem('userFirstName', data.first_name);
+                localStorage.setItem('userLastName', data.last_name);
 
                 statusMessage.textContent = data.message;
                 statusMessage.classList.add('success');

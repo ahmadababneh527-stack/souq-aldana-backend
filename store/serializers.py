@@ -14,15 +14,17 @@ class ProductSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        # نحدد الحقول التي نريدها من نموذج المستخدم الجديد
-        fields = ['id', 'username', 'email', 'password'] 
+        # أضفنا كل الحقول الجديدة هنا
+        fields = [
+            'id', 'username', 'email', 'password', 
+            'first_name', 'last_name', 'date_of_birth', 'gender',
+            'country', 'address', 'postal_code', 'phone_number'
+        ]
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        # الآن نستخدم دالة create_user الرسمية التي تقوم بالتشفير تلقائيًا
         user = User.objects.create_user(**validated_data)
         return user
-
 # ... (الكود الموجود مسبقًا لـ ProductSerializer و UserSerializer)
 
 class CartItemSerializer(serializers.ModelSerializer):

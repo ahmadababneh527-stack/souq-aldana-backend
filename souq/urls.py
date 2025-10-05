@@ -3,7 +3,7 @@ from django.urls import path, include
 # استيرادات جديدة
 from django.conf import settings
 from django.conf.urls.static import static
-from store.views import IndexView, ProductDetailView, SignupView, LoginView, CartView
+from store.views import IndexView, ProductDetailView, SignupView, LoginView, CartView, ProfileView # <-- أضف ProfileView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,6 +13,7 @@ urlpatterns = [
     path('signup/', SignupView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
     path('cart/', CartView.as_view(), name='cart'),
+    path('profile/', ProfileView.as_view(), name='profile'),
 ]
 
 # سطر جديد لإضافة روابط الوسائط في وضع التطوير

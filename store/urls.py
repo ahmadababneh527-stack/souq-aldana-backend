@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ProductViewSet, UserViewSet, LoginAPIView, CartViewSet, AddToCartAPIView, CartItemViewSet
+from .views import ProductViewSet, UserViewSet, LoginAPIView, CartViewSet, AddToCartAPIView, CartItemViewSet, ProfileAPIView # <-- أضف ProfileAPIView
 
 # 1. إنشاء Router
 router = DefaultRouter()
@@ -20,4 +20,6 @@ urlpatterns = [
     # هذه هي الروابط الإضافية التي لا يتم إنشاؤها عبر الـ Router
     path('login/', LoginAPIView.as_view(), name='api-login'),
     path('add-to-cart/', AddToCartAPIView.as_view(), name='add-to-cart'),
+    path('profile/', ProfileAPIView.as_view(), name='api-profile'), # <-- أضف هذا السطر
+
 ]

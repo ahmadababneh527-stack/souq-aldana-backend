@@ -52,18 +52,23 @@ class LoginView(TemplateView):
 
 class LoginAPIView(APIView):
     def post(self, request):
-        # لاحظ أننا نستخدم username الآن، وهو مطلوب افتراضيًا
         username = request.data.get('username')
         password = request.data.get('password')
 
         if not username or not password:
             return Response({'error': 'اسم المستخدم وكلمة المرور مطلوبان.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # استخدم دالة authenticate الرسمية من Django
         user = authenticate(username=username, password=password)
 
         if user:
-            return Response({'message': 'تم تسجيل الدخول بنجاح.'}, status=status.HTTP_200_OK)
+            # **هذا هو التعديل**
+            # نرجع الآن بيانات إضافية مع رسالة النجاح
+            return Response({
+                'message': 'تم تسجيل الدخول بنجاح.',
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email
+            }, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'بيانات الاعتماد غير صالحة.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -157,3 +162,19 @@ class CartItemViewSet(viewsets.ModelViewSet):
     # دالة مهمة جدًا للأمان: تأكد من أن المستخدم يمكنه فقط حذف العناصر من سلته الخاصة
     def get_queryset(self):
         return self.queryset.filter(cart__user=self.request.user)
+    
+
+
+    # ... (الكود الموجود مسبقًا)
+
+# هذا الـ API سيجلب بيانات المستخدم المسجل دخوله فقط
+class ProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+# هذا الـ View سيعرض صفحة HTML الخاصة بالملف الشخصي
+class ProfileView(TemplateView):
+    template_name = 'profile.html'

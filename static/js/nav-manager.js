@@ -1,38 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const userEmail = localStorage.getItem('userEmail');
+    // نقرأ الآن الاسم والبريد الإلكتروني
+    const userFirstName = localStorage.getItem('userFirstName');
+    const userLastName = localStorage.getItem('userLastName');
 
     const signupLink = document.getElementById('signup-link');
     const loginLink = document.getElementById('login-link');
     const userInfo = document.getElementById('user-info');
-    const userEmailSpan = document.getElementById('user-email');
+    const userEmailSpan = document.getElementById('user-email'); // سنغير هذا العنصر ليعرض الاسم
     const logoutLink = document.getElementById('logout-link');
 
-    if (userEmail) {
+    if (userFirstName) { // نتأكد من وجود الاسم
         // المستخدم مسجل دخوله
-        signupLink.style.display = 'none';
-        loginLink.style.display = 'none';
+        if(signupLink) signupLink.style.display = 'none';
+        if(loginLink) loginLink.style.display = 'none';
         
-        userInfo.style.display = 'list-item'; // أو 'block' حسب التنسيق
-        userEmailSpan.textContent = `مرحباً، ${userEmail}`;
+        if(userInfo) userInfo.style.display = 'list-item';
+        // **هذا هو التعديل**: نعرض الاسم الأول والأخير
+        if(userEmailSpan) userEmailSpan.innerHTML = `مرحباً، <a href="{% url 'profile' %}" style="color: #fff;">${userFirstName} ${userLastName}</a>`;
 
-        logoutLink.addEventListener('click', (event) => {
+
+        if(logoutLink) logoutLink.addEventListener('click', (event) => {
             event.preventDefault();
-            // حذف معلومات المستخدم وتسجيل الخروج
+            // **تعديل**: نحذف كل بيانات المستخدم عند الخروج
             localStorage.removeItem('userEmail');
-            // إعادة توجيه للصفحة الرئيسية
+            localStorage.removeItem('userFirstName');
+            localStorage.removeItem('userLastName');
             window.location.href = '/';
         });
-           updateCartCount(); 
+
     } else {
         // المستخدم ليس مسجل دخوله
-        signupLink.style.display = 'list-item';
-        loginLink.style.display = 'list-item';
-        userInfo.style.display = 'none';
+        if(signupLink) signupLink.style.display = 'list-item';
+        if(loginLink) loginLink.style.display = 'list-item';
+        if(userInfo) userInfo.style.display = 'none';
     }
+
+    updateCartCount();
 });
 
 
-// دالة لجلب وتحديث عدد المنتجات في السلة
+// دالة جلب وتحديث عدد المنتجات في السلة (تبقى كما هي)
 async function updateCartCount() {
     const cartCountElement = document.getElementById('cart-count');
     if (!localStorage.getItem('userEmail') || !cartCountElement) {
@@ -47,7 +54,7 @@ async function updateCartCount() {
         const cart = data[0];
         if (cart) {
             const totalQuantity = cart.items.reduce((sum, item) => sum + item.quantity, 0);
-               cartCountElement.textContent = totalQuantity;
+            cartCountElement.textContent = totalQuantity;
         } else {
             cartCountElement.textContent = 0;
         }
