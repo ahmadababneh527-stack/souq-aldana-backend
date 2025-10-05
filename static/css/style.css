@@ -342,3 +342,53 @@ body {
     font-weight: bold;
     margin-top: 20px;
 }
+
+/* === إصلاح الشريط السفلي (Footer) ليكون ثابتًا === */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* يجعل الجسم يأخذ طول الشاشة بالكامل */
+}
+
+main.container {
+    flex-grow: 1; /* يجعل المحتوى الرئيسي يمتد ويملأ المساحة المتاحة */
+}
+
+/* === إصلاح تنسيق الشريط العلوي (Header) === */
+.main-nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 20px; /* يضيف مسافة بين العناصر */
+}
+
+/* === إصلاح تنسيق جدول سلة المشتريات === */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse; /* يدمج حدود الخلايا */
+    margin-bottom: 20px;
+}
+
+.cart-table th, .cart-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.cart-table th {
+    background-color: #f2f2f2;
+}
+
+.cart-product-info {
+    display: flex;
+    align-items: center;
+}
+
+.cart-product-info img {
+    margin-left: 15px;
+    border-radius: 4px;
+}
