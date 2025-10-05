@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/products/${productId}/`);
+        const response = await fetch(`/api/products/${productId}/`);
         if (!response.ok) { throw new Error('فشل في جلب تفاصيل المنتج'); }
         const product = await response.json();
 

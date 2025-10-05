@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // 1. اطلب المنتجات من الخادم
             // In main.js
-const response = await fetch('http://127.0.0.1:8000/api/products/');
+const response = await fetch('/api/products/');
 
             if (!response.ok) {
                 throw new Error('فشل تحميل المنتجات');
