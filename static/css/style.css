@@ -462,3 +462,33 @@ main.container {
 .profile-container p strong {
     color: #333;
 }
+
+/* --- تنسيقات الأسعار الجديدة --- */
+.price-container {
+    margin: 10px 0;
+}
+
+.original-price {
+    font-size: 0.9em;
+    color: #888;
+    text-decoration: line-through; /* هذا يضيف الخط على السعر القديم */
+    margin-left: 10px;
+}
+
+.sale-price {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #c0392b; /* لون أحمر للعرض */
+}
+
+/* --- تنسيق المؤقت --- */
+.countdown-timer {
+    font-size: 0.85em;
+    color: #3498db; /* لون أزرق للمؤقت */
+    font-weight: bold;
+    margin-top: 10px;
+    padding: 5px;
+    background-color: #f0f9ff;
+    border-radius: 4px;
+    text-align: center;
+}
