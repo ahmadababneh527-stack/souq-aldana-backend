@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productCardHTML = `
                 <div class="product-card">
                     <a href="/products/${product.id}/">
-                        <img src="${product.imageUrl}" alt="${product.name}">
+                        <img src="${product.image}" alt="${product.name}">
                     </a>
                     <div class="product-info">
                         <h4><a href="/products/${product.id}/">${product.name}</a></h4>

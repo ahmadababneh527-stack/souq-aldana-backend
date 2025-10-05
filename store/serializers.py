@@ -7,7 +7,8 @@ from .models import Product, User, Cart, CartItem
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = '__all__'
+        # قمنا بتحديد الحقول وتغيير imageUrl إلى image
+        fields = ['id', 'name', 'description', 'price', 'image', 'createdAt']
 
 # هذا هو الكود الذي سنقوم بتعديله
 class UserSerializer(serializers.ModelSerializer):

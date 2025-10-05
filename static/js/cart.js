@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 row.innerHTML = `
                     <td>
                         <div class="cart-product-info">
-                            <img src="${item.product.imageUrl}" alt="${item.product.name}" width="50">
+                            <img src="${item.product.image}" alt="${item.product.name}" width="50">
                             <span>${item.product.name}</span>
                         </div>
                     </td>

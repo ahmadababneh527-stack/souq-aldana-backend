@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!response.ok) { throw new Error('فشل في جلب تفاصيل المنتج'); }
         const product = await response.json();
 
-        document.getElementById('product-image').src = product.imageUrl;
+        document.getElementById('product-image').src = product.image;
         document.getElementById('product-image').alt = product.name;
         document.getElementById('product-name').textContent = product.name;
         document.getElementById('product-price').textContent = `${product.price} درهم`;
