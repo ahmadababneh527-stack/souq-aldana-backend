@@ -1,20 +1,29 @@
-from django.contrib import admin
 from django.urls import path, include
-# استيرادات جديدة
-from django.conf import settings
-from django.conf.urls.static import static
-from store.views import IndexView, ProductDetailView, SignupView, LoginView, CartView, ProfileView # <-- أضف ProfileView
+from rest_framework.routers import DefaultRouter
+from .views import (
+    ProductViewSet,
+    UserViewSet,
+    CartViewSet,
+    CartItemViewSet,
+    LoginAPIView,
+    AddToCartAPIView,
+    ProfileAPIView
+)
 
+# إنشاء الراوتر الذي سيقوم بتوليد الروابط للـ ViewSets تلقائيًا
+router = DefaultRouter()
+router.register(r'products', ProductViewSet, basename='product')
+router.register(r'users', UserViewSet, basename='user')
+router.register(r'cart', CartViewSet, basename='cart')
+router.register(r'cart-items', CartItemViewSet, basename='cartitem')
+
+# قائمة الروابط للتطبيق
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('store.urls')),
-    path('', IndexView.as_view(), name='index'),
-    path('products/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
-    path('signup/', SignupView.as_view(), name='signup'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('cart/', CartView.as_view(), name='cart'),
-    path('profile/', ProfileView.as_view(), name='profile'),
+    # إضافة الروابط التي تم توليدها بواسطة الراوتر
+    path('', include(router.urls)),
+    
+    # إضافة روابط الـ APIViews العادية يدويًا
+    path('login/', LoginAPIView.as_view(), name='api-login'),
+    path('add-to-cart/', AddToCartAPIView.as_view(), name='api-add-to-cart'),
+    path('profile/', ProfileAPIView.as_view(), name='api-profile'),
 ]
-
-# سطر جديد لإضافة روابط الوسائط في وضع التطوير
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

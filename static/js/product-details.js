@@ -1,66 +1,107 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    // --- الجزء الأول: جلب وعرض تفاصيل المنتج (تم تعديله) ---
+document.addEventListener('DOMContentLoaded', () => {
+    // --- تعريف العناصر الأساسية ---
+    const productNameH1 = document.getElementById('product-name');
+    const productPriceP = document.getElementById('product-price');
+    const productDescriptionP = document.getElementById('product-description');
+    const productImageImg = document.getElementById('product-image');
+    const addToCartButton = document.getElementById('add-to-cart-btn');
+    const cartCountSpan = document.getElementById('cart-count');
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
-    // **هذه هي الطريقة الجديدة والصحيحة لقراءة الـ id من رابط مثل /products/1/**
-    const pathParts = window.location.pathname.split('/');
-    const productId = pathParts[2];
-
-    if (!productId) {
-        document.querySelector('.product-page-container').innerHTML = '<h1>لم يتم العثور على المنتج.</h1>';
-        return;
-    }
-
-    try {
-        const response = await fetch(`/api/products/${productId}/`);
-        if (!response.ok) { throw new Error('فشل في جلب تفاصيل المنتج'); }
-        const product = await response.json();
-
-        document.getElementById('product-image').src = product.image;
-        document.getElementById('product-image').alt = product.name;
-        document.getElementById('product-name').textContent = product.name;
-        document.getElementById('product-price').textContent = `${product.price} درهم`;
-        document.getElementById('product-description').textContent = product.description;
-
-    } catch (error) {
-        console.error('Error:', error);
-        document.querySelector('.product-page-container').innerHTML = `<h1>حدث خطأ: ${error.message}</h1>`;
-    }
-
-    // --- الجزء الثاني: وظيفة زر "أضف إلى السلة" (يبقى كما هو) ---
-    const addToCartBtn = document.querySelector('.add-to-cart-btn');
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-    addToCartBtn.addEventListener('click', async () => {
-        const userEmail = localStorage.getItem('userEmail');
-        if (!userEmail) {
-            alert('يرجى تسجيل الدخول أولاً لإضافة منتجات إلى السلة.');
-            window.location.href = '/login/';
-            return;
-        }
-
+    // --- 1. جلب وعرض بيانات المنتج ---
+    async function fetchProductDetails() {
         try {
-            const response = await fetch('/api/add-to-cart/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: 1
-                }),
-            });
+            // استخراج ID المنتج من رابط الصفحة الحالي
+            const urlParts = window.location.pathname.split('/');
+            const productId = urlParts[urlParts.length - 2];
 
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(data.message);
-                updateCartCount();
-            } else {
-                alert(`حدث خطأ: ${data.error}`);
+            if (!productId) {
+                throw new Error("لم يتم العثور على معرّف المنتج.");
             }
+
+            const response = await fetch(`/api/products/${productId}/`);
+            if (!response.ok) {
+                throw new Error("المنتج غير موجود.");
+            }
+            const product = await response.json();
+
+            // ملء بيانات المنتج في الصفحة
+            productNameH1.textContent = product.name;
+            productPriceP.textContent = `${product.price} درهم`;
+            productDescriptionP.textContent = product.description;
+            productImageImg.src = product.image || 'https://placehold.co/400x400?text=No+Image';
+            
+            // **هنا نقوم بتعيين ID المنتج للزر ديناميكيًا**
+            if(addToCartButton) {
+                addToCartButton.dataset.productId = product.id;
+            }
+
         } catch (error) {
-            alert('فشل الاتصال بالخادم.');
+            productNameH1.textContent = "حدث خطأ";
+            productDescriptionP.textContent = error.message;
         }
-    });
+    }
+
+    // --- 2. إدارة وظيفة "أضف إلى السلة" ---
+    function updateCartCount(cartData) {
+        if (!cartCountSpan || !cartData || !cartData.items) return;
+        const totalItems = cartData.items.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountSpan.textContent = totalItems;
+    }
+
+    if (addToCartButton) {
+        addToCartButton.addEventListener('click', async () => {
+            const button = addToCartButton;
+            const productId = button.dataset.productId;
+            if (!productId) {
+                alert("خطأ: معرّف المنتج غير متوفر. يرجى تحديث الصفحة.");
+                return;
+            }
+            
+            const originalButtonText = button.textContent;
+
+            try {
+                button.textContent = 'جارٍ الإضافة...';
+                button.disabled = true;
+
+                const response = await fetch('/api/add-to-cart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ product_id: productId, quantity: 1 }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    updateCartCount(data);
+                    button.textContent = '✓ تمت الإضافة';
+                    button.style.backgroundColor = '#28a745';
+                    setTimeout(() => {
+                        button.textContent = originalButtonText;
+                        button.style.backgroundColor = '';
+                        button.disabled = false;
+                    }, 2000);
+                } else {
+                    if (response.status === 401 || response.status === 403) {
+                         alert('يجب تسجيل الدخول أولاً.');
+                         window.location.href = '/login/';
+                    } else {
+                        alert(`حدث خطأ: ${data.error || 'غير معروف'}`);
+                        button.textContent = originalButtonText;
+                        button.disabled = false;
+                    }
+                }
+            } catch (error) {
+                alert('فشل الاتصال بالخادم.');
+                button.textContent = originalButtonText;
+                button.disabled = false;
+            }
+        });
+    }
+
+    // --- تشغيل كل شيء ---
+    fetchProductDetails();
 });

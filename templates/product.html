@@ -16,10 +16,8 @@
                     <li><a href="{% url 'index' %}">الرئيسية</a></li>
                     <li><a href="#">المنتجات</a></li>
                     <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
-                    
                     <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
                     <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
-            
                     <li id="user-info" style="display: none;">
                         <span id="user-email" style="color: white; margin-left: 15px;"></span>
                         <a href="#" id="logout-link">تسجيل الخروج</a>
@@ -30,7 +28,7 @@
     </header>
 
     <main class="container">
-            {% csrf_token %}
+        {% csrf_token %}
         <div class="product-page-container">
             <div class="product-image-container">
                 <img src="" alt="صورة المنتج بالتفصيل" id="product-image">
@@ -39,7 +37,9 @@
                 <h1 id="product-name">جاري تحميل المنتج...</h1>
                 <p class="product-page-price" id="product-price"></p>
                 <p class="product-description" id="product-description"></p>
-                <button class="add-to-cart-btn">أضف إلى السلة</button>
+                
+                <button id="add-to-cart-btn" class="add-to-cart-btn">أضف إلى السلة</button>
+
             </div>
         </div>
     </main>
@@ -50,7 +50,7 @@
         </div>
     </footer>
     
-    <script src="{% static 'js/product-details.js' %}"></script>
+    <script src="{% static 'js/product-detail.js' %}"></script>
     <script src="{% static 'js/nav-manager.js' %}"></script>
 
 </body>

@@ -1,25 +1,29 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ProductViewSet, UserViewSet, LoginAPIView, CartViewSet, AddToCartAPIView, CartItemViewSet, ProfileAPIView # <-- أضف ProfileAPIView
+from .views import (
+    ProductViewSet,
+    UserViewSet,
+    CartViewSet,
+    CartItemViewSet,
+    LoginAPIView,
+    AddToCartAPIView,
+    ProfileAPIView
+)
 
-# 1. إنشاء Router
+# إنشاء الراوتر الذي سيقوم بتوليد الروابط للـ ViewSets تلقائيًا
 router = DefaultRouter()
-
-# 2. تسجيل كل الـ ViewSets مع الـ Router هنا
 router.register(r'products', ProductViewSet, basename='product')
 router.register(r'users', UserViewSet, basename='user')
 router.register(r'cart', CartViewSet, basename='cart')
-# تم نقل هذا السطر إلى هنا
-router.register(r'cart-items', CartItemViewSet, basename='cart-item') 
+router.register(r'cart-items', CartItemViewSet, basename='cartitem')
 
-# 3. تحديد الـ urlpatterns
+# قائمة الروابط للتطبيق
 urlpatterns = [
-    # هذا السطر يقوم بتضمين كل الروابط التي أنشأها الـ Router تلقائيًا
-    path('', include(router.urls)), 
+    # إضافة الروابط التي تم توليدها بواسطة الراوتر
+    path('', include(router.urls)),
     
-    # هذه هي الروابط الإضافية التي لا يتم إنشاؤها عبر الـ Router
+    # إضافة روابط الـ APIViews العادية يدويًا
     path('login/', LoginAPIView.as_view(), name='api-login'),
-    path('add-to-cart/', AddToCartAPIView.as_view(), name='add-to-cart'),
-    path('profile/', ProfileAPIView.as_view(), name='api-profile'), # <-- أضف هذا السطر
-
+    path('add-to-cart/', AddToCartAPIView.as_view(), name='api-add-to-cart'),
+    path('profile/', ProfileAPIView.as_view(), name='api-profile'),
 ]
