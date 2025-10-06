@@ -15,24 +15,31 @@
     {% block head_extra %}{% endblock %}
 </head>
 <body>
-    <header class="main-header">
-        <div class="container">
-            <h1 class="logo"><a href="{% url 'index' %}">سوق الدانة</a></h1>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="{% url 'index' %}">الرئيسية</a></li>
-                    <li><a href="#">المنتجات</a></li>
-                    <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
-                    <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
-                    <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
-                    <li id="user-info" style="display: none;">
-                        <span id="user-email" style="color: white; margin-left: 15px;"></span>
-                        <a href="#" id="logout-link">تسجيل الخروج</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+   <header class="main-header">
+    <div class="container">
+        <h1 class="logo"><a href="{% url 'index' %}">سوق الدانة</a></h1>
+        
+        <nav class="main-nav">
+            <ul>
+                <li><a href="{% url 'index' %}">الرئيسية</a></li>
+                <li><a href="#">المنتجات</a></li>
+                <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
+                <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
+                <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
+                <li id="user-info" style="display: none;">
+                    <span id="user-email" style="color: white; margin-left: 15px;"></span>
+                    <a href="#" id="logout-link">تسجيل الخروج</a>
+                </li>
+            </ul>
+        </nav>
+
+        <button class="hamburger-menu" id="hamburger-button">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</header>
 
     <main class="container">
         {% block content %}
