@@ -1,11 +1,10 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.contrib.auth import authenticate
 from rest_framework import viewsets, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django_countries import countries
-
 from .models import Product, User, Cart, CartItem, Review
 from .serializers import (
     ProductSerializer, UserSerializer, CartSerializer, 
@@ -147,8 +146,10 @@ class ReviewListCreateAPIView(generics.ListCreateAPIView):
 class IndexView(TemplateView):
     template_name = 'index.html'
 
-class ProductDetailView(TemplateView):
+class ProductDetailView(DetailView):
+    model = Product
     template_name = 'product.html'
+    context_object_name = 'product'
 
 class SignupView(TemplateView):
     template_name = 'signup.html'

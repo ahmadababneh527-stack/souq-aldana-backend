@@ -8,21 +8,30 @@
     <div class="product-page-container">
         <div class="product-gallery-container">
             <div class="main-image-wrapper">
-                <img src="" alt="صورة المنتج الرئيسية" id="main-product-image">
+                {% if product.images.all %}
+    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+{% else %}
+    <img src="https://placehold.co/500x500?text=No+Image" alt="لا توجد صورة">
+{% endif %}
             </div>
-            <div class="thumbnail-gallery" id="thumbnail-gallery">
-                </div>
+              <div class="thumbnail-gallery" id="thumbnail-gallery">
+    {% for image in product.images.all %}
+        <img src="{{ image.image.url }}" alt="صورة مصغرة" class="thumbnail-image">
+    {% endfor %}
+</div>
         </div>
         
         <div class="product-details-container">
-            <h1 id="product-name">جاري تحميل المنتج...</h1>
+            <h1>{{ product.name }}</h1>
             
             <div class="price-section">
-                <span class="product-price offer" id="product-price"></span>
-                <span class="original-price" id="product-original-price"></span>
+                <span class="product-price offer">{{ product.price }} درهم</span>
+                {% if product.original_price and product.original_price > product.price %}
+    <span class="original-price">{{ product.original_price }} درهم</span>
+{% endif %}
             </div>
 
-            <p class="product-description" id="product-description"></p>
+           <p class="product-description">{{ product.description }}</p>
             
             <div class="quantity-selector">
                 <label for="quantity">الكمية:</label>
