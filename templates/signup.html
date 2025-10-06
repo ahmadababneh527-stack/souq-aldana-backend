@@ -1,94 +1,71 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب جديد - سوق الدانة</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <header class="main-header">
-        <div class="container">
-            <h1 class="logo">سوق الدانة</h1>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="{% url 'index' %}">الرئيسية</a></li>
-                    <li><a href="#">المنتجات</a></li>
-                    <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
-                    <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
-                    <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
-                    <li id="user-info" style="display: none;">
-                        <span id="user-email" style="color: white; margin-left: 15px;"></span>
-                        <a href="#" id="logout-link">تسجيل الخروج</a>
-                    </li>
-                </ul>
-            </nav>
+
+{% block title %}إنشاء حساب جديد - سوق الدانة{% endblock %}
+
+{% block content %}
+<div class="admin-form-container">
+    <h2>إنشاء حساب جديد</h2>
+    <form id="signup-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">الاسم الأول:</label>
+            <input type="text" id="first_name" name="first_name" required>
         </div>
-    </header>
-
-    <main class="container">
-        <div class="admin-form-container">
-            <h2>إنشاء حساب جديد</h2>
-            <form id="signup-form">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="first_name">الاسم الأول:</label>
-                    <input type="text" id="first_name" name="first_name" required>
-                </div>
-                <div class="form-group">
-                    <label for="last_name">الاسم الأخير:</label>
-                    <input type="text" id="last_name" name="last_name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">البريد الإلكتروني:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">كلمة المرور:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <label for="date_of_birth">تاريخ الميلاد:</label>
-                    <input type="date" id="date_of_birth" name="date_of_birth">
-                </div>
-                <div class="form-group">
-                    <label for="gender">الجنس:</label>
-                    <select id="gender" name="gender">
-                        <option value="">-- اختر --</option>
-                        <option value="M">ذكر</option>
-                        <option value="F">أنثى</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="country">البلد:</label>
-                    <input type="text" id="country" name="country">
-                </div>
-                <div class="form-group">
-                    <label for="address">العنوان:</label>
-                    <input type="text" id="address" name="address">
-                </div>
-                <div class="form-group">
-                    <label for="postal_code">الرمز البريدي:</label>
-                    <input type="text" id="postal_code" name="postal_code">
-                </div>
-                <div class="form-group">
-                    <label for="phone_number">رقم الهاتف:</label>
-                    <input type="tel" id="phone_number" name="phone_number">
-                </div>
-                <div class="form-group-checkbox">
-                    <input type="checkbox" id="terms" name="terms" required>
-                    <label for="terms">أوافق على <a href="#">الشروط والأحكام</a></label>
-                </div>
-
-                <button type="submit" class="btn-primary">إنشاء الحساب</button>
-            </form>
-            <p id="status-message"></p>
+        <div class="form-group">
+            <label for="last_name">الاسم الأخير:</label>
+            <input type="text" id="last_name" name="last_name" required>
         </div>
-    </main>
+        <div class="form-group">
+            <label for="email">البريد الإلكتروني:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">كلمة المرور:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <label for="date_of_birth">تاريخ الميلاد:</label>
+            <input type="date" id="date_of_birth" name="date_of_birth">
+        </div>
+        <div class="form-group">
+            <label for="gender">الجنس:</label>
+            <select id="gender" name="gender">
+                <option value="">-- اختر --</option>
+                <option value="M">ذكر</option>
+                <option value="F">أنثى</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="country">البلد:</label>
+            <input type="text" id="country" name="country">
+        </div>
+        <div class="form-group">
+            <label for="address">العنوان:</label>
+            <input type="text" id="address" name="address">
+        </div>
+        <div class="form-group">
+            <label for="postal_code">الرمز البريدي:</label>
+            <input type="text" id="postal_code" name="postal_code">
+        </div>
+        <div class="form-group">
+            <label for="phone_number">رقم الهاتف:</label>
+            <input type="tel" id="phone_number" name="phone_number">
+        </div>
+        <div class="form-group-checkbox">
+            <input type="checkbox" id="terms" name="terms" required>
+            <label for="terms">أوافق على <a href="{% url 'terms' %}">الشروط والأحكام</a></label>
+        </div>
 
+        <button type="submit" class="btn-primary">إنشاء الحساب</button>
+    </form>
+    <p id="status-message"></p>
+    <p style="text-align: center; margin-top: 20px;">
+        لديك حساب بالفعل؟ <a href="{% url 'login' %}">سجل دخولك الآن</a>
+    </p>
+</div>
+{% endblock %}
+
+{% block scripts %}
     <script src="{% static 'js/signup.js' %}"></script>
-    <script src="{% static 'js/nav-manager.js' %}"></script>
-
-</body>
-</html>
+{% endblock %}
