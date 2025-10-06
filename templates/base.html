@@ -15,22 +15,13 @@
     {% block head_extra %}{% endblock %}
 </head>
 <body>
-   <header class="main-header">
+<header class="main-header">
     <div class="container">
         <h1 class="logo"><a href="{% url 'index' %}">سوق الدانة</a></h1>
         
-        <nav class="main-nav">
+        <nav class="main-nav desktop-nav">
             <ul>
-                <li><a href="{% url 'index' %}">الرئيسية</a></li>
-                <li><a href="#">المنتجات</a></li>
-                <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
-                <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
-                <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
-                <li id="user-info" style="display: none;">
-                    <span id="user-email" style="color: white; margin-left: 15px;"></span>
-                    <a href="#" id="logout-link">تسجيل الخروج</a>
-                </li>
-            </ul>
+                </ul>
         </nav>
 
         <button class="hamburger-menu" id="hamburger-button">
@@ -40,6 +31,23 @@
         </button>
     </div>
 </header>
+
+<div class="mobile-nav" id="mobile-nav">
+    <nav>
+        <ul>
+            <li><a href="{% url 'index' %}">الرئيسية</a></li>
+            <li><a href="#">المنتجات</a></li>
+            <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count-mobile">0</span>)</a></li>
+            <li id="signup-link-mobile"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
+            <li id="login-link-mobile"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
+            <li id="user-info-mobile" style="display: none;">
+                <span id="user-email-mobile"></span>
+                <a href="#" id="logout-link-mobile">تسجيل الخروج</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<div class="nav-overlay" id="nav-overlay"></div>
 
     <main class="container">
         {% block content %}

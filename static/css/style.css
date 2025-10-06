@@ -588,3 +588,117 @@ main.container {
     transform: translateY(-5px); /* يرتفع قليلاً للأعلى */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* يضيف ظلًا أكبر */
 }
+
+
+/* === تصميم القائمة الجانبية للهاتف === */
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -100%; /* ابدأ من خارج الشاشة */
+    width: 280px;
+    height: 100%;
+    background-color: var(--primary-color, #00426A);
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    z-index: 100;
+    transition: right 0.3s ease-in-out;
+    padding-top: 80px;
+}
+
+.mobile-nav.is-open {
+    right: 0; /* عند الفتح، حركه إلى داخل الشاشة */
+}
+
+.mobile-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mobile-nav ul li a, .mobile-nav ul li span {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.mobile-nav ul li span a {
+    display: inline;
+    padding: 0;
+    border: none;
+}
+
+.nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.nav-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* === تصميم أيقونة الهامبرغر وتحويلها إلى X === */
+.hamburger-menu {
+    display: none;
+    z-index: 101;
+}
+
+.hamburger-menu span {
+    width: 2rem;
+    height: 0.25rem;
+    background: white;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.hamburger-menu.is-active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 6px);
+}
+
+.hamburger-menu.is-active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.is-active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -6px);
+}
+
+
+/* === تعديل بطاقات المنتجات === */
+.product-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* للسماح بالتمدد */
+}
+
+.product-info .add-to-cart-btn {
+    margin-top: auto; /* يدفع الزر دائمًا إلى الأسفل */
+}
+
+/* === إخفاء وإظهار القوائم حسب حجم الشاشة === */
+@media (max-width: 768px) {
+    .desktop-nav {
+        display: none;
+    }
+    .hamburger-menu {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 2rem;
+        height: 2rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+}

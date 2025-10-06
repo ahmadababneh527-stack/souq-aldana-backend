@@ -1,26 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // نقرأ الآن الاسم والبريد الإلكتروني
+    // --- الجزء الأول: إدارة القائمة العلوية ---
     const userFirstName = localStorage.getItem('userFirstName');
     const userLastName = localStorage.getItem('userLastName');
 
     const signupLink = document.getElementById('signup-link');
     const loginLink = document.getElementById('login-link');
     const userInfo = document.getElementById('user-info');
-    const userEmailSpan = document.getElementById('user-email'); // سنغير هذا العنصر ليعرض الاسم
+    const userEmailSpan = document.getElementById('user-email');
     const logoutLink = document.getElementById('logout-link');
 
     if (userFirstName) { // نتأكد من وجود الاسم
-        // المستخدم مسجل دخوله
         if(signupLink) signupLink.style.display = 'none';
         if(loginLink) loginLink.style.display = 'none';
         
         if(userInfo) userInfo.style.display = 'list-item';
-        // **هذا هو التعديل**: نعرض الاسم الأول والأخير
         if(userEmailSpan) userEmailSpan.innerHTML = `مرحباً، <a href="/profile/" style="color: #fff; text-decoration: underline;">${userFirstName} ${userLastName}</a>`;
 
         if(logoutLink) logoutLink.addEventListener('click', (event) => {
             event.preventDefault();
-            // **تعديل**: نحذف كل بيانات المستخدم عند الخروج
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userFirstName');
             localStorage.removeItem('userLastName');
@@ -34,11 +31,30 @@ document.addEventListener('DOMContentLoaded', () => {
         if(userInfo) userInfo.style.display = 'none';
     }
 
+    // استدعاء دالة تحديث السلة عند تحميل أي صفحة
     updateCartCount();
+
+    // --- الجزء الثاني: تفعيل روابط الشريط السفلي ---
+    const termsLink = document.getElementById('terms-link');
+    const privacyLink = document.getElementById('privacy-link');
+
+    if (termsLink) {
+        termsLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.href = '/terms/'; // توجيه المستخدم إلى صفحة الشروط
+        });
+    }
+
+    if (privacyLink) {
+        privacyLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.href = '/privacy/'; // توجيه المستخدم إلى صفحة الخصوصية
+        });
+    }
 });
 
 
-// دالة جلب وتحديث عدد المنتجات في السلة (تبقى كما هي)
+// --- دالة تحديث عدد السلة (تبقى منفصلة في الخارج) ---
 async function updateCartCount() {
     const cartCountElement = document.getElementById('cart-count');
     if (!localStorage.getItem('userEmail') || !cartCountElement) {
@@ -60,33 +76,4 @@ async function updateCartCount() {
     } catch (error) {
         console.error("Failed to update cart count:", error);
     }
-
-    // --- كود روابط الفوتر (يضاف في نهاية nav-manager.js) ---
-document.addEventListener('DOMContentLoaded', () => {
-    const termsLink = document.getElementById('terms-link');
-    const privacyLink = document.getElementById('privacy-link');
-
-    if (termsLink) {
-        termsLink.addEventListener('click', (event) => {
-            event.preventDefault(); // منع الصفحة من الانتقال لأعلى
-            alert(
-                "شروط الاستخدام:\n\n" +
-                "1. مرحبًا بك في سوق الدانة.\n" +
-                "2. استخدامك للموقع يعني موافقتك على هذه الشروط.\n" +
-                "(يمكنك كتابة شروطك الكاملة هنا...)"
-            );
-        });
-    }
-
-    if (privacyLink) {
-        privacyLink.addEventListener('click', (event) => {
-            event.preventDefault(); // منع الصفحة من الانتقال لأعلى
-            alert(
-                "سياسة الخصوصية:\n\n" +
-                "نحن في سوق الدانة نلتزم بحماية خصوصيتك. نحن لا نشارك بياناتك مع أي طرف ثالث.\n" +
-                "(يمكنك كتابة سياستك الكاملة هنا...)"
-            );
-        });
-    }
-});
 }
