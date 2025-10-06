@@ -17,6 +17,12 @@ from .models import Product, User, Cart, CartItem, Review # <-- أضف Review ه
 from .serializers import ProductSerializer, UserSerializer, CartSerializer, CartItemSerializer, ReviewSerializer # <-- أضف ReviewSerializer هنا
 
 
+
+
+from rest_framework import generics
+
+
+
 # ProductViewSet سيتعامل مع كل الطلبات الخاصة بالمنتجات
 class ProductViewSet(viewsets.ModelViewSet):
     # queryset = Product.objects.all() # <- السطر القديم
@@ -234,3 +240,28 @@ class TermsView(TemplateView):
 
 class PrivacyView(TemplateView):
     template_name = 'privacy.html'
+
+
+
+    class ReviewListCreateAPIView(generics.ListCreateAPIView):
+     queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    # الصلاحيات: أي شخص يمكنه القراءة، لكن المسجل دخوله فقط يمكنه الكتابة (إضافة تقييم)
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    # هذه الدالة تجلب فقط التقييمات الخاصة بالمنتج المطلوب
+    def get_queryset(self):
+        product_id = self.kwargs['product_id']
+        return Review.objects.filter(product_id=product_id)
+
+    # هذه الدالة تقوم بربط التقييم الجديد بالمستخدم الحالي تلقائيًا
+    def perform_create(self, serializer):
+        product_id = self.kwargs['product_id']
+        product = Product.objects.get(id=product_id)
+        # نملأ البيانات تلقائيًا
+        serializer.save(
+            user=self.request.user,
+            product=product,
+            name=f"{self.request.user.first_name} {self.request.user.last_name}",
+            country=self.request.user.country
+        )

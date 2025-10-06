@@ -64,3 +64,17 @@ class ReviewSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'product': {'write_only': True}
         }
+
+
+
+        # ... (الكود الموجود مسبقًا)
+
+# --- serializer جديد للتقييمات ---
+class ReviewSerializer(serializers.ModelSerializer):
+    # سنعرض اسم المستخدم فقط بدلاً من كل معلوماته
+    user = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Review
+        fields = ['id', 'user', 'name', 'country', 'rating', 'comment', 'created_at']
+        read_only_fields = ['user', 'created_at'] # هذه الحقول لا يمكن للمستخدم إدخالها مباشرة

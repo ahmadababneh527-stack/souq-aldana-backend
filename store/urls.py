@@ -1,7 +1,7 @@
 # في ملف store/urls.py
 
 from django.urls import path
-from .views import IndexView, ProductDetailView, SignupView, LoginView, CartView, ProfileView
+from .views import IndexView, ProductDetailView, SignupView, LoginView, CartView, ProfileView, ReviewListCreateAPIView
 
 # هذا الملف يحتوي فقط على روابط صفحات الويب (HTML)
 urlpatterns = [
@@ -11,4 +11,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('cart/', CartView.as_view(), name='cart'),
     path('profile/', ProfileView.as_view(), name='profile'),
+    path('products/<int:product_id>/reviews/', ReviewListCreateAPIView.as_view(), name='product-reviews'),
+
 ]
