@@ -540,3 +540,19 @@ a {
 .notification.error {
     background-color: #dc3545; /* أحمر للخطأ */
 }
+
+
+/* === تحسينات إضافية للتصميم المتجاوب === */
+
+@media (max-width: 768px) {
+    /* تصغير ارتفاع الـ Slider على الهاتف */
+    .main-slider {
+        height: 250px;
+    }
+}
+
+/* توحيد لون نقاط وأسهم الـ Slider */
+:root {
+    --swiper-navigation-color: #fff;
+    --swiper-pagination-color: #fff;
+}
