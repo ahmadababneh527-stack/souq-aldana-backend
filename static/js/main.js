@@ -1,18 +1,17 @@
-// static/js/main.js (النسخة النهائية والمعدلة)
-
 document.addEventListener('DOMContentLoaded', () => {
     const productsGrid = document.querySelector('.products-grid');
 
     // --- الجزء الأول: جلب وعرض المنتجات ---
     async function fetchAndDisplayProducts() {
         if (!productsGrid) return;
+        
+        showSpinner(); // <-- إظهار المؤشر
         try {
-            // استخدام رابط نسبي لجلب المنتجات
             const response = await fetch('/api/products/');
-            if (!response.ok) { throw new Error('فشل تحميل المنتجات'); }
+            if (!response.ok) { throw new Error('فشل تحميل المنتج'); }
             
             const products = await response.json();
-            productsGrid.innerHTML = ''; // إفراغ الشبكة قبل العرض
+            productsGrid.innerHTML = '';
 
             if (products.length === 0) {
                 productsGrid.innerHTML = '<p>لم يتم إضافة أي منتجات بعد.</p>';
@@ -32,17 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                 }
 
-                // =================================================================
-                // ▼▼▼ هذا هو التعديل الوحيد والمطلوب ▼▼▼
-                // قمنا بتغيير الرابط من /products/ إلى /product/
-                // =================================================================
+                // **تم تصحيح الرابط هنا**
                 const productCardHTML = `
                 <div class="product-card">
-                    <a href="/product/${product.id}/">
+                    <a href="/products/${product.id}/">
                         <img src="${imageUrl}" alt="${product.name}">
                     </a>
                     <div class="product-info">
-                        <h4><a href="/product/${product.id}/">${product.name}</a></h4>
+                        <h4><a href="/products/${product.id}/">${product.name}</a></h4>
                         ${priceHTML} 
                         <button class="add-to-cart-btn" data-product-id="${product.id}">أضف إلى السلة</button>
                     </div>
@@ -51,33 +47,32 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } catch (error) {
             productsGrid.innerHTML = `<p>حدث خطأ في عرض المنتجات: ${error.message}</p>`;
+        } finally {
+            hideSpinner(); // <-- إخفاء المؤشر
         }
     }
 
-    // استدعاء الوظيفة عند تحميل الصفحة
     fetchAndDisplayProducts();
 
     // --- الجزء الثاني: وظيفة زر "أضف إلى السلة" ---
-    // (هذا الجزء يبقى كما هو بدون تغيير)
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
     productsGrid.addEventListener('click', async (event) => {
         if (event.target.classList.contains('add-to-cart-btn')) {
             if (!csrfToken) {
-                console.error('CSRF Token not found!');
-                alert('حدث خطأ في الصفحة. يرجى إعادة تحميلها.');
+                showNotification('حدث خطأ في الصفحة. يرجى إعادة تحميلها.', 'error');
                 return;
             }
 
-            const userIsLoggedIn = !!localStorage.getItem('userEmail'); // تحقق بسيط
-            if (!userIsLoggedIn) {
-                alert('يرجى تسجيل الدخول أولاً لإضافة منتجات إلى السلة.');
-                window.location.href = '/login/'; // افترض أن لديك صفحة تسجيل دخول على هذا الرابط
+            if (!localStorage.getItem('userEmail')) {
+                showNotification('يرجى تسجيل الدخول أولاً لإضافة منتجات إلى السلة.', 'error');
+                setTimeout(() => { window.location.href = '/login/'; }, 2000);
                 return;
             }
 
             const productId = event.target.dataset.productId;
-
+            
+            showSpinner();
             try {
                 const response = await fetch('/api/add-to-cart/', {
                     method: 'POST',
@@ -93,14 +88,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const data = await response.json();
                 if (response.ok) {
-                    alert('تمت إضافة المنتج إلى السلة بنجاح!');
-                    // يمكنك هنا تحديث عدد المنتجات في أيقونة السلة إذا أردت
-                    // updateCartCount();
+                    showNotification('تمت إضافة المنتج إلى السلة بنجاح!', 'success');
+                    updateCartCount();
                 } else {
-                    alert(`حدث خطأ: ${data.error || 'فشل إضافة المنتج'}`);
+                    showNotification(`حدث خطأ: ${data.error || 'فشل إضافة المنتج'}`, 'error');
                 }
             } catch (error) {
-                alert('فشل الاتصال بالخادم.');
+                showNotification('فشل الاتصال بالخادم.', 'error');
+            } finally {
+                hideSpinner();
             }
         }
     });

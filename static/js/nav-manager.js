@@ -81,3 +81,28 @@ async function updateCartCount() {
         console.error("Failed to update cart count:", error);
     }
 }
+
+
+
+function showSpinner() {
+    document.getElementById('spinner-overlay').classList.add('show');
+}
+
+function hideSpinner() {
+    document.getElementById('spinner-overlay').classList.remove('show');
+}
+
+
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type}`; // 'success' or 'error'
+    
+    notification.classList.add('show');
+    
+    // إخفاء التنبيه تلقائيًا بعد 3 ثواني
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
