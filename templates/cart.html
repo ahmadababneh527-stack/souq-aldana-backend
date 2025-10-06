@@ -1,56 +1,32 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سلة المشتريات - سوق الدانة</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <header class="main-header">
-        <div class="container">
-            <h1 class="logo">سوق الدانة</h1>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="{% url 'index' %}">الرئيسية</a></li>
-                    <li><a href="#">المنتجات</a></li>
-                    <li><a href="#">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
-                    <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
-                    <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
-                    <li id="user-info" style="display: none;">
-                        <span id="user-email" style="color: white; margin-left: 15px;"></span>
-                        <a href="#" id="logout-link">تسجيل الخروج</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <main class="container">
-            {% csrf_token %}
-        <h2>سلة مشترياتك</h2>
-        <div class="cart-container">
-            <table class="cart-table">
-                <thead>
-                    <tr>
-                        <th>المنتج</th>
-                        <th>السعر</th>
-                        <th>الكمية</th>
-                        <th>الإجمالي</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="cart-items-body">
-                    </tbody>
-            </table>
-            <div class="cart-summary">
-                <h4>إجمالي السلة: <span id="cart-total">0.00</span> درهم</h4>
-                <button class="btn-primary">الانتقال للدفع</button>
-            </div>
+{% block title %}سلة المشتريات - سوق الدانة{% endblock %}
+
+{% block content %}
+    <h2>سلة مشترياتك</h2>
+    <div class="cart-container" style="min-height: 300px;">
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>المنتج</th>
+                    <th>السعر</th>
+                    <th>الكمية</th>
+                    <th>الإجمالي</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="cart-items-body">
+                </tbody>
+        </table>
+        <div class="cart-summary">
+            <h4>إجمالي السلة: <span id="cart-total">0.00</span> درهم</h4>
+            <button class="btn-primary">الانتقال للدفع</button>
         </div>
-    </main>
-    
-    <script src="{% static 'js/nav-manager.js' %}"></script>
-    <script src="{% static 'js/cart.js' %}"></script> </body>
-</html>
+    </div>
+    {% csrf_token %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}
