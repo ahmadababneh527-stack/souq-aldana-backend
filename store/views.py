@@ -4,6 +4,7 @@ from rest_framework import viewsets, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from django_countries import countries
 
 from .models import Product, User, Cart, CartItem, Review
 from .serializers import (
@@ -163,3 +164,15 @@ class TermsView(TemplateView):
 
 class PrivacyView(TemplateView):
     template_name = 'privacy.html'
+
+
+    
+    
+    
+
+class CountryListView(APIView):
+    def get(self, request):
+        # مكتبة django-countries توفر قائمة بالبلدان
+        # نحولها إلى صيغة مناسبة للـ API
+        country_list = [{'code': code, 'name': name} for code, name in list(countries)]
+        return Response(country_list)

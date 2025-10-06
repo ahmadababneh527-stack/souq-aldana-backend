@@ -8,6 +8,7 @@ from .views import (
     AddToCartAPIView, 
     CartItemViewSet, 
     ProfileAPIView,
+     CountryListView ,
     ReviewListCreateAPIView
 )
 
@@ -23,4 +24,5 @@ urlpatterns = [
     path('add-to-cart/', AddToCartAPIView.as_view(), name='add-to-cart'),
     path('profile/', ProfileAPIView.as_view(), name='api-profile'),
     path('products/<int:product_id>/reviews/', ReviewListCreateAPIView.as_view(), name='product-reviews'),
+     path('countries/', CountryListView.as_view(), name='country-list'),
 ]

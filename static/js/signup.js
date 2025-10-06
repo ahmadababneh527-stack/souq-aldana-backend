@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- كود جديد لجلب وتعبئة قائمة البلدان ---
+async function populateCountries() {
+    const countrySelect = document.getElementById('country');
+    try {
+        const response = await fetch('/api/countries/');
+        const countries = await response.json();
+
+        countrySelect.innerHTML = '<option value="">-- اختر بلدك --</option>'; // إعادة تعيين القائمة
+
+        countries.forEach(country => {
+            const option = document.createElement('option');
+            option.value = country.code;
+            option.textContent = country.name;
+            countrySelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Failed to load countries:', error);
+        countrySelect.innerHTML = '<option value="">فشل تحميل البلدان</option>';
+    }
+}
+// استدعاء الدالة عند تحميل الصفحة
+populateCountries();
+// --- نهاية الكود الجديد ---
     const signupForm = document.getElementById('signup-form');
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
