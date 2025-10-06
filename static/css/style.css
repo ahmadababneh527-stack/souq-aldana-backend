@@ -556,3 +556,54 @@ a {
     --swiper-navigation-color: #fff;
     --swiper-pagination-color: #fff;
 }
+
+
+/* === تحسينات تصميم نماذج تسجيل الدخول وإنشاء الحساب === */
+
+.admin-form-container {
+    max-width: 500px; /* تحديد عرض أقصى للنموذج */
+    margin: 50px auto;
+    padding: 30px;
+    background-color: var(--white-color);
+    border: 1px solid #eee;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block; /* يجعل العنوان يظهر في سطر منفصل */
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%; /* يجعل حقل الإدخال يأخذ العرض الكامل */
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box; /* يمنع الحقل من تجاوز حدود النموذج */
+}
+
+/* تعديل بسيط لزر الإرسال ليأخذ العرض الكامل */
+.admin-form-container .btn-primary {
+    width: 100%;
+    padding: 15px;
+}
+
+/* تنسيق خاص بمربع الشروط والأحكام */
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.form-group-checkbox input[type="checkbox"] {
+    width: auto; /* إلغاء العرض الكامل للمربع */
+}
