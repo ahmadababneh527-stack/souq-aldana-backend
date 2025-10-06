@@ -16,13 +16,16 @@ from .serializers import (
 # === API ViewSets (للنماذج الرئيسية) ===
 # =======================================
 
+# في ملف store/views.py
+
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     """
     يعرض قائمة المنتجات ومنتج واحد. للقراءة فقط.
     """
-    queryset = Product.objects.prefetch_related('images').order_by('-createdAt')
+    # ----- السطر الذي يجب تعديله -----
+    queryset = Product.objects.prefetch_related('images', 'reviews__user').order_by('-createdAt')
+    
     serializer_class = ProductSerializer
-
 class UserViewSet(viewsets.ModelViewSet):
     """
     ViewSet لإنشاء المستخدمين وعرضهم (يستخدم في صفحة التسجيل).
