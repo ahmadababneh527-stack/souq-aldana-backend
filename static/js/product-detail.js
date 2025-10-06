@@ -1,31 +1,24 @@
 // static/js/product-details.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    // ما زلنا بحاجة لمعرف المنتج (productId) لوظائف الإضافة للسلة والتقييمات
-    const productId = window.location.pathname.split('/')[2];
 
+    // ==========================================================
+    // === الجزء الأول: الإعدادات الأولية وجلب ID المنتج ===
+    // ==========================================================
+    const productId = window.location.pathname.split('/')[2];
     if (!productId) {
-        // يمكنك إظهار رسالة خطأ إذا لم يتم العثور على المعرف
         console.error('Product ID not found in URL.');
         return;
     }
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
     // ==========================================================
-    // تم حذف دالة loadProductDetails() لأن Django يعرض البيانات الآن
-    // ==========================================================
-
-    // يمكنك الإبقاء على تحميل التقييمات بشكل ديناميكي إذا أردت
-    loadProductReviews();
-
-    // ==========================================================
-    // === الجزء الثاني: تفعيل محدد الكمية وزر الإضافة للسلة ===
-    // (هذا الجزء يبقى كما هو لأنه تفاعلي)
+    // === الجزء الثاني: تفعيل أزرار الكمية والإضافة للسلة ===
     // ==========================================================
     const decreaseBtn = document.getElementById('decrease-quantity');
     const increaseBtn = document.getElementById('increase-quantity');
     const quantityInput = document.getElementById('quantity');
     const addToCartBtn = document.querySelector('.add-to-cart-btn');
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
     if (decreaseBtn && increaseBtn && quantityInput) {
         decreaseBtn.addEventListener('click', () => {
@@ -34,25 +27,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 quantityInput.value = currentValue - 1;
             }
         });
-
         increaseBtn.addEventListener('click', () => {
             let currentValue = parseInt(quantityInput.value);
             quantityInput.value = currentValue + 1;
         });
     }
-    
+
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', async () => {
-            // ملاحظة: قد تحتاج إلى طريقة أخرى للتحقق من تسجيل دخول المستخدم
-            // إذا لم تعد تعتمد على localStorage
             if (!csrfToken) {
-                // يمكنك استبدال showNotification بتنبيه بسيط أو إظهار رسالة
                 alert('خطأ في الصفحة، يرجى إعادة التحميل.');
                 return;
             }
             const quantity = parseInt(quantityInput.value);
             
-            // يمكنك استبدال showSpinner/hideSpinner بمؤشر تحميل بسيط
             addToCartBtn.textContent = 'جاري الإضافة...';
             addToCartBtn.disabled = true;
 
@@ -67,14 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await response.json();
                 if (response.ok) {
-                    alert(data.message); // استبدال showNotification
-                    // يمكنك استدعاء دالة لتحديث عدد المنتجات في أيقونة السلة
-                    // updateCartCount(); 
+                    alert(data.message);
+                    // يمكنك لاحقًا إضافة دالة لتحديث عدد السلة هنا
                 } else {
-                    alert(`حدث خطأ: ${data.error}`); // استبدال showNotification
+                    alert(`حدث خطأ: ${data.error}`);
                 }
             } catch (error) {
-                alert('فشل الاتصال بالخادم.'); // استبدال showNotification
+                alert('فشل الاتصال بالخادم.');
             } finally {
                 addToCartBtn.textContent = 'أضف إلى السلة';
                 addToCartBtn.disabled = false;
@@ -83,14 +70,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================
-    // === الجزء الثالث: تحميل وعرض وإضافة التقييمات ===
-    // (هذا الجزء يبقى كما هو لأنه تفاعلي)
+    // === الجزء الثالث: تفعيل النقر على الصور المصغرة ===
+    // ==========================================================
+    const mainImage = document.querySelector('.main-image-wrapper img');
+    const thumbnails = document.querySelectorAll('.thumbnail-image');
+
+    if (mainImage && thumbnails.length > 0) {
+        thumbnails.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                mainImage.src = this.src;
+                thumbnails.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        thumbnails[0].classList.add('active');
+    }
+
+    // ==========================================================
+    // === الجزء الرابع: تحميل وعرض وإضافة التقييمات ===
     // ==========================================================
     const reviewsList = document.getElementById('reviews-list');
     const reviewsCount = document.getElementById('reviews-count');
     const reviewForm = document.getElementById('review-form');
 
     async function loadProductReviews() {
+        // ... (كود تحميل التقييمات يبقى كما هو)
         try {
             const response = await fetch(`/api/products/${productId}/reviews/`);
             if (!response.ok) return;
@@ -116,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (reviewForm) {
         reviewForm.addEventListener('submit', async (event) => {
+            // ... (كود إرسال التقييم يبقى كما هو)
             event.preventDefault();
             const ratingInput = reviewForm.querySelector('input[name="rating"]:checked');
             const comment = document.getElementById('comment').value;
@@ -136,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     alert('شكرًا لك، تم إضافة تقييمك!');
                     reviewForm.reset();
-                    loadProductReviews(); // إعادة تحميل التقييمات لتشمل الجديد
+                    loadProductReviews();
                 } else {
                     const data = await response.json();
                     alert(`خطأ: ${Object.values(data)[0]}`);
@@ -146,4 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
+    
+    // استدعاء دالة تحميل التقييمات عند فتح الصفحة
+    loadProductReviews();
+
+}); // <-- القوس الأخير يغلق مستمع الحدث الرئيسي

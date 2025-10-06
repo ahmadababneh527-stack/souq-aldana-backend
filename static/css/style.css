@@ -760,3 +760,36 @@ a {
         font-size: 16px;
     }
 }
+
+
+/* ======================================= */
+/* === تجاوب صفحة المنتج مع الهاتف === */
+/* ======================================= */
+
+@media (max-width: 768px) {
+    .product-page-container {
+        /* غير اتجاه العرض من أفقي إلى عمودي */
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .product-gallery-container,
+    .product-details-container {
+        /* اجعل كل قسم يأخذ العرض الكامل */
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .product-details-container h1 {
+        font-size: 24px; /* تصغير حجم العنوان */
+    }
+
+    .product-price {
+        font-size: 20px; /* تصغير حجم السعر */
+    }
+    
+    .add-to-cart-btn {
+        padding: 12px;
+        font-size: 16px;
+    }
+}
