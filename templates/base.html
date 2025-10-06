@@ -9,12 +9,10 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block head_extra %}{% endblock %}
 </head>
-<body>
-    <div id="spinner-overlay" class="spinner-overlay">
+<body> <div id="spinner-overlay" class="spinner-overlay">
         <div class="spinner"></div>
     </div>
 
-<body>
     <div id="notification" class="notification"></div>
 
     <header class="main-header">
@@ -43,6 +41,28 @@
         </div>
     </header>
 
+    <div class="announcement-wrapper">
+        <div class="image-slider-container">
+            <div class="slider-wrapper">
+                <div class="slide">
+                    <img src="{% static 'images/special_offer.png' %}" alt="Special Offer">
+                </div>
+                <div class="slide">
+                    <img src="https://placehold.co/1200x300/3498db/ffffff?text=Summer+Sale" alt="Summer Sale">
+                </div>
+                <div class="slide">
+                    <img src="https://placehold.co/1200x300/2ecc71/ffffff?text=New+Arrivals" alt="New Arrivals">
+                </div>
+            </div>
+            <button class="slider-btn prev-btn">&#10094;</button>
+            <button class="slider-btn next-btn">&#10095;</button>
+            <div class="slider-dots"></div>
+        </div>
+        <div class="text-promo-bar">
+            <span>🚚 الشحن مجاني خلال 48 ساعة</span>
+            <span>💰 الدفع عند الاستلام</span>
+        </div>
+    </div>
     <div class="mobile-nav" id="mobile-nav">
         <nav>
             <ul>
@@ -78,7 +98,10 @@
 
     <script src="{% static 'js/nav-manager.js' %}"></script>
     
+    <script src="{% static 'js/announcement-slider.js' %}"></script>
+    
     {% block scripts %}
     {% endblock %}
+
 </body>
 </html>

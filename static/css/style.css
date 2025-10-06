@@ -640,3 +640,123 @@ a {
     object-fit: cover;
     border-radius: 4px;
 }
+
+/* ==================== تنسيقات الأشرطة الإعلانية ==================== */
+
+/* الحاوية الرئيسية للشريطين */
+.announcement-wrapper {
+    width: 100%;
+    margin-bottom: 20px; /* مسافة بين الأشرطة وباقي المحتوى */
+}
+
+/* --- الشريط الأول: سلايدر الصور --- */
+.image-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden; /* لإخفاء الشرائح الأخرى */
+}
+
+.slider-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out; /* لتأثير الحركة الناعمة */
+}
+
+.slide {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.slide img {
+    width: 100%;
+    display: block;
+    max-height: 250px; /* الارتفاع على شاشات الحاسوب */
+    object-fit: cover; /* لمنع تشوه الصورة */
+}
+
+/* أزرار التحكم (الأسهم) */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+}
+
+.slider-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.prev-btn {
+    left: 10px;
+    border-radius: 5px 0 0 5px;
+}
+
+.next-btn {
+    right: 10px;
+    border-radius: 0 5px 5px 0;
+}
+
+/* نقاط التنقل */
+.slider-dots {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    margin: 0 5px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dot.active {
+    background-color: white;
+}
+
+
+/* --- الشريط الثاني: الشريط النصي الترويجي --- */
+.text-promo-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* للسماح بالتفاف النص على الشاشات الصغيرة */
+    gap: 20px; /* مسافة بين العبارات */
+    background: linear-gradient(90deg, #004d40, #00796b); /* تدرج لوني جذاب */
+    color: white;
+    padding: 12px 10px;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+}
+
+
+/* --- التجاوب مع الشاشات المختلفة (الهاتف) --- */
+@media (max-width: 768px) {
+    .slide img {
+        max-height: 150px; /* تقليل ارتفاع السلايدر على الهاتف */
+    }
+    
+    .text-promo-bar {
+        flex-direction: column; /* جعل العبارات تحت بعضها */
+        gap: 8px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .slider-btn {
+        padding: 8px 12px;
+        font-size: 16px;
+    }
+}
