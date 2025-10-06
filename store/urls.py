@@ -8,7 +8,7 @@ from .views import (
     AddToCartAPIView, 
     CartItemViewSet, 
     ProfileAPIView,
-    ReviewListCreateAPIView # <-- هذا هو الاسم الصحيح
+    ReviewListCreateAPIView
 )
 
 router = DefaultRouter()
