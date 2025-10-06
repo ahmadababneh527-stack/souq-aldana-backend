@@ -1,78 +1,82 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- الجزء الأول: إدارة القائمة العلوية ---
-    const userFirstName = localStorage.getItem('userFirstName');
-    const userLastName = localStorage.getItem('userLastName');
+    function updateNavigations() {
+        const userFirstName = localStorage.getItem('userFirstName');
+        const userLastName = localStorage.getItem('userLastName');
 
-    const signupLink = document.getElementById('signup-link');
-    const loginLink = document.getElementById('login-link');
-    const userInfo = document.getElementById('user-info');
-    const userEmailSpan = document.getElementById('user-email');
-    const logoutLink = document.getElementById('logout-link');
+        const navs = [
+            { suffix: '',  prefix: '' },
+            { suffix: '-mobile', prefix: 'mobile-' }
+        ];
 
-    if (userFirstName) { // نتأكد من وجود الاسم
-        if(signupLink) signupLink.style.display = 'none';
-        if(loginLink) loginLink.style.display = 'none';
-        
-        if(userInfo) userInfo.style.display = 'list-item';
-        if(userEmailSpan) userEmailSpan.innerHTML = `مرحباً، <a href="/profile/" style="color: #fff; text-decoration: underline;">${userFirstName} ${userLastName}</a>`;
+        navs.forEach(nav => {
+            const signupLink = document.getElementById(`signup-link${nav.suffix}`);
+            const loginLink = document.getElementById(`login-link${nav.suffix}`);
+            const userInfo = document.getElementById(`user-info${nav.suffix}`);
+            const userDisplay = document.getElementById(`user-display${nav.suffix}`);
+            const logoutLink = document.getElementById(`logout-link${nav.suffix}`);
 
-        if(logoutLink) logoutLink.addEventListener('click', (event) => {
-            event.preventDefault();
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userFirstName');
-            localStorage.removeItem('userLastName');
-            window.location.href = '/';
+            if (userFirstName) {
+                if(signupLink) signupLink.style.display = 'none';
+                if(loginLink) loginLink.style.display = 'none';
+                if(userInfo) userInfo.style.display = 'list-item';
+                if(userDisplay) userDisplay.innerHTML = `<a href="/profile/" style="color: #fff;">مرحباً، ${userFirstName}</a>`;
+                if(logoutLink) logoutLink.addEventListener('click', logout);
+            } else {
+                if(signupLink) signupLink.style.display = 'list-item';
+                if(loginLink) loginLink.style.display = 'list-item';
+                if(userInfo) userInfo.style.display = 'none';
+            }
         });
-
-    } else {
-        // المستخدم ليس مسجل دخوله
-        if(signupLink) signupLink.style.display = 'list-item';
-        if(loginLink) loginLink.style.display = 'list-item';
-        if(userInfo) userInfo.style.display = 'none';
+    }
+    
+    function logout(event) {
+        event.preventDefault();
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userFirstName');
+        localStorage.removeItem('userLastName');
+        window.location.href = '/';
     }
 
-    // استدعاء دالة تحديث السلة عند تحميل أي صفحة
+    updateNavigations();
     updateCartCount();
 
-    // --- الجزء الثاني: تفعيل روابط الشريط السفلي ---
-    const termsLink = document.getElementById('terms-link');
-    const privacyLink = document.getElementById('privacy-link');
+    const hamburgerButton = document.getElementById('hamburger-button');
+    const mobileNav = document.getElementById('mobile-nav');
+    const navOverlay = document.getElementById('nav-overlay');
 
-    if (termsLink) {
-        termsLink.addEventListener('click', (event) => {
-            event.preventDefault();
-            window.location.href = '/terms/'; // توجيه المستخدم إلى صفحة الشروط
-        });
-    }
+    if (hamburgerButton) {
+        function closeMenu() {
+            hamburgerButton.classList.remove('is-active');
+            mobileNav.classList.remove('is-open');
+            navOverlay.classList.remove('is-open');
+        }
 
-    if (privacyLink) {
-        privacyLink.addEventListener('click', (event) => {
-            event.preventDefault();
-            window.location.href = '/privacy/'; // توجيه المستخدم إلى صفحة الخصوصية
+        hamburgerButton.addEventListener('click', () => {
+            hamburgerButton.classList.toggle('is-active');
+            mobileNav.classList.toggle('is-open');
+            navOverlay.classList.toggle('is-open');
         });
+
+        navOverlay.addEventListener('click', closeMenu);
     }
 });
 
-
-// --- دالة تحديث عدد السلة (تبقى منفصلة في الخارج) ---
 async function updateCartCount() {
-    const cartCountElement = document.getElementById('cart-count');
-    if (!localStorage.getItem('userEmail') || !cartCountElement) {
-        if(cartCountElement) cartCountElement.textContent = 0;
+    const cartCountElements = [document.getElementById('cart-count'), document.getElementById('cart-count-mobile')];
+    if (!localStorage.getItem('userEmail')) {
+        cartCountElements.forEach(el => { if(el) el.textContent = 0; });
         return;
     }
-    
     try {
         const response = await fetch('/api/cart/');
         if (!response.ok) return;
         const data = await response.json();
         const cart = data[0];
-        if (cart) {
-            const totalQuantity = cart.items.reduce((sum, item) => sum + item.quantity, 0);
-            cartCountElement.textContent = totalQuantity;
-        } else {
-            cartCountElement.textContent = 0;
+        let totalQuantity = 0;
+        if (cart && cart.items) {
+            totalQuantity = cart.items.reduce((sum, item) => sum + item.quantity, 0);
         }
+        cartCountElements.forEach(el => { if(el) el.textContent = totalQuantity; });
     } catch (error) {
         console.error("Failed to update cart count:", error);
     }

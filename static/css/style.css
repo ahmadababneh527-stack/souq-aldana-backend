@@ -31,6 +31,10 @@ main.container {
     flex-grow: 1;
 }
 
+a {
+    text-decoration: none;
+}
+
 /* ======================================= */
 /* === الهيدر والقائمة العلوية === */
 /* ======================================= */
@@ -49,9 +53,9 @@ main.container {
 
 .logo a {
     font-size: 28px;
+    font-weight: bold;
     margin: 0;
     color: var(--white-color);
-    text-decoration: none;
 }
 
 .desktop-nav ul {
@@ -60,12 +64,11 @@ main.container {
     margin: 0;
     padding: 0;
     list-style: none;
-    gap: 20px;
+    gap: 25px;
 }
 
 .desktop-nav a, #user-info a {
     color: var(--white-color);
-    text-decoration: none;
     font-size: 16px;
     transition: color 0.3s;
 }
@@ -74,19 +77,14 @@ main.container {
     color: var(--secondary-color);
 }
 
+#user-display a {
+    color: #fff;
+    font-weight: bold;
+}
+
 /* ======================================= */
 /* === أقسام الصفحة الرئيسية === */
 /* ======================================= */
-.hero-section {
-    text-align: center;
-    padding: 80px 20px;
-}
-
-.hero-section h2 {
-    font-size: 40px;
-    color: var(--primary-color);
-}
-
 .main-slider {
     width: 100%;
     height: 400px;
@@ -117,15 +115,15 @@ main.container {
 /* ======================================= */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 25px;
 }
 
 .product-card {
     background-color: var(--white-color);
-    border: 1px solid #ddd;
+    border: 1px solid #eee;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -145,20 +143,24 @@ main.container {
 }
 
 .product-card .product-info {
-    padding: 20px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    text-align: right;
 }
 
 .product-card h4 {
-    font-size: 20px;
+    font-size: 18px;
     margin: 0 0 10px 0;
     color: var(--primary-color);
 }
+.product-card h4 a {
+    color: inherit;
+}
 
 .product-price {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     margin-bottom: 15px;
 }
@@ -172,7 +174,6 @@ main.container {
 
 .product-price.offer {
     color: #d9534f;
-    font-weight: bold;
 }
 
 /* ======================================= */
@@ -180,95 +181,21 @@ main.container {
 /* ======================================= */
 .btn-primary, .add-to-cart-btn {
     color: var(--white-color);
-    padding: 12px 25px;
+    padding: 10px 20px;
     text-decoration: none;
     border-radius: 5px;
-    font-size: 18px;
+    font-size: 16px;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 100%;
 }
-
-.btn-primary {
-    background-color: var(--secondary-color);
-}
-.btn-primary:hover {
-    background-color: #c09e32;
-}
-
 .add-to-cart-btn {
     background-color: var(--primary-color);
-    margin-top: auto; /* يدفع الزر لأسفل البطاقة */
+    margin-top: auto;
 }
 .add-to-cart-btn:hover {
     background-color: var(--secondary-color);
-}
-
-/* ======================================= */
-/* === صفحات المحتوى (تفاصيل، ملف شخصي، سلة) === */
-/* ======================================= */
-.product-page-container {
-    display: flex;
-    gap: 40px;
-    margin-top: 50px;
-}
-.product-image-container, .product-details-container {
-    flex: 1;
-}
-.product-image-container img {
-    width: 100%;
-    border-radius: 8px;
-}
-.product-details-container h1 {
-    font-size: 42px;
-    color: var(--primary-color);
-    margin-top: 0;
-}
-
-.cart-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-.cart-table th, .cart-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: right;
-    vertical-align: middle;
-}
-.cart-table th {
-    background-color: var(--light-gray);
-}
-.cart-product-info {
-    display: flex;
-    align-items: center;
-}
-.cart-product-info img {
-    margin-left: 15px;
-    border-radius: 4px;
-}
-
-.profile-container {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    max-width: 700px;
-    margin: 20px auto;
-}
-.profile-container p {
-    display: grid;
-    grid-template-columns: 150px 1fr;
-    margin-bottom: 15px;
-    font-size: 1.1em;
-}
-
-.admin-form-container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: var(--light-gray);
-    border-radius: 8px;
 }
 
 /* ======================================= */
@@ -289,21 +216,15 @@ main.container {
 }
 .footer-links a {
     color: inherit;
-    text-decoration: none;
     margin: 0 10px;
 }
-.footer-links a:hover {
-    text-decoration: underline;
-}
-
 
 /* ======================================= */
 /* === تصميم قائمة الهاتف (الهامبرغر) === */
 /* ======================================= */
-.hamburger-menu { display: none; }
-.mobile-nav { display: none; }
-.nav-overlay { display: none; }
-
+.hamburger-menu, .mobile-nav, .nav-overlay {
+    display: none;
+}
 
 /* ======================================= */
 /* === كود التجاوب مع شاشات الموبايل === */
@@ -364,8 +285,8 @@ main.container {
     }
     .mobile-nav ul li a:hover { background-color: rgba(255, 255, 255, 0.1); }
     .mobile-nav i.fas { font-size: 1.1em; width: 30px; margin-left: 15px; }
-    #user-info-mobile { background-color: rgba(0, 0, 0, 0.2); }
-    #user-info-mobile span a { display: inline; padding: 0; border: none; font-weight: bold; }
+    #user-info-mobile, #user-display-mobile { background-color: rgba(0, 0, 0, 0.2); }
+    #user-display-mobile a { display: inline; padding: 0; border: none; font-weight: bold; }
 
     /* --- غطاء التعتيم --- */
     .nav-overlay {
