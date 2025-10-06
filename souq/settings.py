@@ -117,9 +117,6 @@ AUTH_USER_MODEL = 'store.User'
 # ... باقي الإعدادات ...
 
 # settings.py
-
 MEDIA_URL = '/media/'
-
-# ▼▼▼ قم بالتعديل ليصبح هكذا ▼▼▼
-# MEDIA_ROOT = '/var/data/media'  # <--- تعطيل مؤقت
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # <--- إعادة السطر القديم مؤقتًا
+# استخدم المسار من متغير البيئة في Render، أو المسار المحلي كخيار افتراضي
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))

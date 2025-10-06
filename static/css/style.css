@@ -607,3 +607,36 @@ a {
 .form-group-checkbox input[type="checkbox"] {
     width: auto; /* إلغاء العرض الكامل للمربع */
 }
+
+
+/* === إصلاح تنسيق جدول سلة المشتريات === */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse; /* يدمج حدود الخلايا */
+    margin-bottom: 20px;
+}
+
+.cart-table th, .cart-table td {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 10px;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.cart-table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+.cart-product-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-product-info img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}

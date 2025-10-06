@@ -5,7 +5,8 @@
 
 {% block content %}
     <h2>سلة مشترياتك</h2>
-    <div class="cart-container" style="min-height: 300px;">
+    <div class="cart-container">
+        {% csrf_token %}
         <table class="cart-table">
             <thead>
                 <tr>
@@ -19,12 +20,14 @@
             <tbody id="cart-items-body">
                 </tbody>
         </table>
+        <div id="cart-empty-message" style="display: none; text-align: center; padding: 40px 0;">
+            <h3>سلة المشتريات فارغة.</h3>
+        </div>
         <div class="cart-summary">
             <h4>إجمالي السلة: <span id="cart-total">0.00</span> درهم</h4>
             <button class="btn-primary">الانتقال للدفع</button>
         </div>
     </div>
-    {% csrf_token %}
 {% endblock %}
 
 {% block scripts %}
