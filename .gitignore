@@ -1,12 +1,21 @@
-# Virtualenv
-venv/
-
 # Database
 db.sqlite3
+
+# Python virtual environment
+venv/
+/venv/
+env/
+/env/
 
 # Python cache
 __pycache__/
 *.pyc
+
+# Django static files collection
+staticfiles/
+
+# Media files (if you don't want to track them)
+media/
 
 # Environment variables
 .env
