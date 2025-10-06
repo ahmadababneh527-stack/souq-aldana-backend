@@ -225,3 +225,12 @@ class ReviewViewSet(viewsets.ModelViewSet):
     # دالة لربط التقييم الجديد بالمستخدم المسجل دخوله تلقائيًا
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+        # ... (الكود الموجود مسبقًا)
+
+class TermsView(TemplateView):
+    template_name = 'terms.html'
+
+class PrivacyView(TemplateView):
+    template_name = 'privacy.html'

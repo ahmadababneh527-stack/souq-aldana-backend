@@ -6,12 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}سوق الدانة{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'icons/site.webmanifest' %}">
-    </head>
+</head>
 <body>
     <header class="main-header">
         <div class="container">
@@ -37,16 +36,16 @@
         {% endblock %}
     </main>
 
-  <footer class="main-footer">
-    <div class="container">
-        <p>&copy; 2025 سوق الدانة. كل الحقوق محفوظة.</p>
-        <div class="footer-links">
-            <a href="#" id="terms-link">شروط الاستخدام</a>
-            <span>|</span>
-            <a href="#" id="privacy-link">سياسة الخصوصية</a>
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 سوق الدانة. كل الحقوق محفوظة.</p>
+            <div class="footer-links">
+                <a href="{% url 'terms' %}" id="terms-link">شروط الاستخدام</a>
+                <span>|</span>
+                <a href="{% url 'privacy' %}" id="privacy-link">سياسة الخصوصية</a>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
     <script src="{% static 'js/nav-manager.js' %}"></script>
     
