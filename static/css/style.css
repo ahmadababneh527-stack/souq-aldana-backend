@@ -1,10 +1,24 @@
-/* --- إعدادات عامة --- */
+/* ======================================= */
+/* === إعدادات عامة ومتغيرات === */
+/* ======================================= */
+:root {
+    --primary-color: #00426A; /* الأزرق الداكن */
+    --secondary-color: #D4AF37; /* الذهبي الرملي */
+    --text-color: #333333;
+    --background-color: #FDFBF5;
+    --light-gray: #f9f9f9;
+    --white-color: #FFFFFF;
+}
+
 body {
-    font-family: 'Arial', sans-serif; /* يمكنك تغيير الخط لاحقاً */
+    font-family: 'Arial', sans-serif;
     margin: 0;
-    background-color: #FDFBF5; /* الأبيض اللؤلؤي للخلفية */
-    color: #333333; /* الرمادي الداكن للنصوص */
-    direction: rtl; /* اتجاه من اليمين لليسار */
+    background-color: var(--background-color);
+    color: var(--text-color);
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .container {
@@ -13,10 +27,16 @@ body {
     margin: 0 auto;
 }
 
-/* --- تصميم الشريط العلوي --- */
+main.container {
+    flex-grow: 1;
+}
+
+/* ======================================= */
+/* === الهيدر والقائمة العلوية === */
+/* ======================================= */
 .main-header {
-    background-color: #00426A; /* الأزرق الداكن */
-    color: #FFFFFF;
+    background-color: var(--primary-color);
+    color: var(--white-color);
     padding: 15px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
@@ -27,34 +47,36 @@ body {
     align-items: center;
 }
 
-.logo {
+.logo a {
     font-size: 28px;
     margin: 0;
+    color: var(--white-color);
+    text-decoration: none;
 }
 
-.main-nav ul {
+.desktop-nav ul {
+    display: flex;
+    align-items: center;
     margin: 0;
     padding: 0;
     list-style: none;
+    gap: 20px;
 }
 
-.main-nav ul li {
-    display: inline-block;
-    margin-right: 20px;
-}
-
-.main-nav a {
-    color: #FFFFFF;
+.desktop-nav a, #user-info a {
+    color: var(--white-color);
     text-decoration: none;
     font-size: 16px;
     transition: color 0.3s;
 }
 
-.main-nav a:hover {
-    color: #D4AF37; /* الذهبي الرملي عند مرور الماوس */
+.desktop-nav a:hover, #user-info a:hover {
+    color: var(--secondary-color);
 }
 
-/* --- تصميم القسم الرئيسي --- */
+/* ======================================= */
+/* === أقسام الصفحة الرئيسية === */
+/* ======================================= */
 .hero-section {
     text-align: center;
     padding: 80px 20px;
@@ -62,505 +84,12 @@ body {
 
 .hero-section h2 {
     font-size: 40px;
-    color: #00426A; /* الأزرق الداكن */
+    color: var(--primary-color);
 }
 
-.hero-section p {
-    font-size: 18px;
-    margin-bottom: 30px;
-}
-
-.btn-primary {
-    background-color: #D4AF37; /* الذهبي الرملي */
-    color: #FFFFFF;
-    padding: 12px 25px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 18px;
-    transition: background-color 0.3s;
-}
-
-.btn-primary:hover {
-    background-color: #c09e32; /* درجة أغمق من الذهبي */
-}
-
-/* --- تصميم قسم المنتجات --- */
-.featured-products {
-    text-align: center;
-    padding: 50px 0;
-}
-
-.featured-products h3 {
-    font-size: 32px;
-    color: #00426A;
-    margin-bottom: 40px;
-}
-
-/* --- تصميم تذييل الصفحة --- */
-.main-footer {
-    background-color: #333333; /* الرمادي الداكن */
-    color: #FFFFFF;
-    text-align: center;
-    padding: 20px 0;
-    margin-top: 50px;
-}
-
-
-/* --- تصميم شبكة المنتجات --- */
-.products-grid {
-    display: flex; /* نستخدم Flexbox لتنظيم العناصر */
-    justify-content: center; /* توسيط البطاقات */
-    flex-wrap: wrap; /* السماح للبطاقات بالنزول لسطر جديد عند ضيق الشاشة */
-    gap: 20px; /* مسافة بين البطاقات */
-}
-
-/* --- تصميم بطاقة المنتج الواحدة --- */
-.product-card {
-    background-color: #FFFFFF; /* خلفية بيضاء للبطاقة */
-    border: 1px solid #ddd;
-    border-radius: 8px; /* حواف دائرية */
-    width: 300px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* ظل خفيف لإعطاء عمق */
-    transition: transform 0.3s; /* حركة ناعمة عند مرور الماوس */
-}
-
-.product-card:hover {
-    transform: translateY(-5px); /* رفع البطاقة قليلاً للأعلى عند مرور الماوس */
-}
-
-.product-card img {
-    width: 100%;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-}
-
-.product-card .product-info {
-    padding: 20px;
-}
-
-.product-card h4 {
-    font-size: 20px;
-    margin-top: 0;
-    margin-bottom: 10px;
-    color: #00426A; /* اللون الأزرق الداكن لاسم المنتج */
-}
-
-.product-price {
-    font-size: 18px;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.add-to-cart-btn {
-    background-color: #00426A; /* اللون الأزرق الداكن */
-    color: #FFFFFF;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer; /* تغيير شكل المؤشر للإشارة إلى أنه زر */
-    transition: background-color 0.3s;
-}
-
-.add-to-cart-btn:hover {
-    background-color: #D4AF37; /* اللون الذهبي عند مرور الماوس */
-}
-
-/* --- تصميم صفحة تفاصيل المنتج --- */
-.product-page-container {
-    display: flex;
-    gap: 40px; /* مسافة بين الصورة والتفاصيل */
-    margin-top: 50px;
-}
-
-.product-image-container {
-    flex: 1; /* يأخذ نصف المساحة */
-}
-
-.product-image-container img {
-    width: 100%;
-    border-radius: 8px;
-}
-
-.product-details-container {
-    flex: 1; /* يأخذ النصف الآخر من المساحة */
-}
-
-.product-details-container h1 {
-    font-size: 42px;
-    color: #00426A;
-    margin-top: 0;
-}
-
-.product-page-price {
-    font-size: 28px;
-    font-weight: bold;
-    color: #D4AF37; /* اللون الذهبي للسعر */
-    margin-bottom: 20px;
-}
-
-.product-description {
-    font-size: 16px;
-    line-height: 1.6; /* لسهولة القراءة */
-    margin-bottom: 30px;
-}
-
-
-
-
-/* --- تصميم صفحة سلة المشتريات --- */
-.cart-page {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    margin-top: 50px;
-}
-
-.cart-items-container {
-    flex: 2; /* تأخذ ثلثي المساحة */
-    min-width: 300px;
-}
-
-.cart-summary {
-    flex: 1; /* تأخذ ثلث المساحة */
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    height: fit-content;
-}
-
-.cart-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 20px;
-}
-
-.cart-item-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-
-.cart-item-details {
-    flex-grow: 1;
-}
-
-.cart-item-name {
-    margin: 0 0 10px 0;
-}
-
-.cart-item-price {
-    margin: 0;
-    font-weight: bold;
-}
-
-.remove-item-btn {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.cart-summary h2 {
-    margin-top: 0;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-}
-
-.summary-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    font-size: 16px;
-}
-
-.total-row {
-    font-weight: bold;
-    font-size: 20px;
-    border-top: 1px solid #ddd;
-    padding-top: 15px;
-}
-
-.checkout-btn {
-    width: 100%;
-    padding: 15px;
-    background-color: #D4AF37;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 18px;
-    cursor: pointer;
-    text-align: center;
-}
-
-
-/* --- تصميم صفحة لوحة التحكم --- */
-.admin-form-container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.admin-form-container h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #00426A;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-#status-message {
-    text-align: center;
-    font-weight: bold;
-    margin-top: 20px;
-}
-
-/* === إصلاح الشريط السفلي (Footer) ليكون ثابتًا === */
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* يجعل الجسم يأخذ طول الشاشة بالكامل */
-}
-
-main.container {
-    flex-grow: 1; /* يجعل المحتوى الرئيسي يمتد ويملأ المساحة المتاحة */
-}
-
-/* === إصلاح تنسيق الشريط العلوي (Header) === */
-.main-nav ul {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    gap: 20px; /* يضيف مسافة بين العناصر */
-}
-
-/* === إصلاح تنسيق جدول سلة المشتريات === */
-.cart-table {
-    width: 100%;
-    border-collapse: collapse; /* يدمج حدود الخلايا */
-    margin-bottom: 20px;
-}
-
-.cart-table th, .cart-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: right;
-    vertical-align: middle;
-}
-
-.cart-table th {
-    background-color: #f2f2f2;
-}
-
-.cart-product-info {
-    display: flex;
-    align-items: center;
-}
-
-.cart-product-info img {
-    margin-left: 15px;
-    border-radius: 4px;
-}
-
-
-/* === كود التصميم المتجاوب (Responsive) === */
-
-
-
-/* === تصميم صفحة الملف الشخصي === */
-.profile-container {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    max-width: 700px;
-    margin: 20px auto;
-}
-
-.profile-container h2 {
-    margin-top: 0;
-    margin-bottom: 25px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
-}
-
-.profile-container p {
-    display: grid;
-    grid-template-columns: 150px 1fr; /* عمود للتسمية وعمود للقيمة */
-    margin-bottom: 15px;
-    font-size: 1.1em;
-    border-bottom: 1px solid #f9f9f9;
-    padding-bottom: 15px;
-}
-
-.profile-container p:last-child {
-    border-bottom: none;
-}
-
-.profile-container p strong {
-    color: #333;
-}
-
-/* --- تنسيقات الأسعار الجديدة --- */
-.price-container {
-    margin: 10px 0;
-}
-
-.original-price {
-    font-size: 0.9em;
-    color: #888;
-    text-decoration: line-through; /* هذا يضيف الخط على السعر القديم */
-    margin-left: 10px;
-}
-
-.sale-price {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #c0392b; /* لون أحمر للعرض */
-}
-
-/* --- تنسيق المؤقت --- */
-.countdown-timer {
-    font-size: 0.85em;
-    color: #3498db; /* لون أزرق للمؤقت */
-    font-weight: bold;
-    margin-top: 10px;
-    padding: 5px;
-    background-color: #f0f9ff;
-    border-radius: 4px;
-    text-align: center;
-}
-
-
-.original-price {
-    text-decoration: line-through;
-    color: #999;
-    font-size: 0.9em;
-    margin: 0;
-}
-.product-price.offer {
-    color: #d9534f; /* لون أحمر للعرض */
-    font-weight: bold;
-}
-
-/* --- كود لتغيير لون الشعار في الهيدر --- */
-.main-header .logo a {
-    color: #FFFFFF;           /* هذا يغير اللون إلى الأبيض */
-    text-decoration: none;    /* هذا يزيل الخط تحت الشعار */
-}
-
-
-/* ======================================= */
-/* === كود التجاوب مع شاشات الموبايل === */
-/* ======================================= */
-
-/* ======================================= */
-/* === كود التجاوب مع شاشات الموبايل === */
-/* ======================================= */
-
-@media (max-width: 768px) {
-  /* الكود هنا يعمل فقط على الشاشات التي عرضها 768 بكسل أو أقل */
-
-  /* --- 1. تنسيقات الشريط العلوي (من الكود الجديد والأفضل) --- */
-  .main-header .container {
-    flex-direction: column; /* نجعل العناصر الرئيسية (الشعار والقائمة) عمودية */
-    gap: 20px;              /* نضيف مسافة بين الشعار والقائمة */
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  .main-nav ul {
-    flex-direction: column; /* نجعل عناصر القائمة نفسها عمودية */
-    align-items: center;    /* نجعلها تتوسط الشاشة */
-    gap: 15px;              /* نضيف مسافة بين كل عنصر في القائمة */
-  }
-  
-  .main-nav li {
-    width: 100%;            /* نجعل كل عنصر يأخذ كامل العرض المتاح */
-    text-align: center;     /* توسيط النص داخل كل عنصر */
-  }
-
-  /* --- 2. تنسيقات صفحات المنتجات (من الكود القديم والمهم) --- */
-  
-  /* اجعل شبكة المنتجات في الصفحة الرئيسية عمودًا واحدًا */
-  .products-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* اجعل عناصر صفحة تفاصيل المنتج تتكدس عموديًا */
-  .product-page-container {
-    flex-direction: column;
-  }
-  
-  .product-image-container,
-  .product-details-container {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  /* --- 3. تنسيقات عامة للخطوط (من الكود القديم) --- */
-  h1 { font-size: 2em; }
-  h2 { font-size: 1.8em; }
-  h3 { font-size: 1.5em; }
-}
-
-
-
-/* --- تنسيقات الفوتر --- */
-.main-footer .container {
-    display: flex;
-    justify-content: space-between; /* لوضع كل عنصر في جهة */
-    align-items: center;
-    flex-wrap: wrap; /* للسماح بالالتفاف على الشاشات الصغيرة */
-    gap: 15px; /* مسافة في حال التفاف العناصر */
-}
-
-.footer-links a {
-    color: inherit; /* ليرث اللون من العنصر الأب */
-    text-decoration: none;
-    margin: 0 10px;
-}
-
-.footer-links a:hover {
-    text-decoration: underline;
-}
-
-
-/* === تنسيق شريط الصور المتحرك (Slider) === */
 .main-slider {
     width: 100%;
-    height: 400px; /* يمكنك تعديل الارتفاع حسب رغبتك */
+    height: 400px;
     margin-bottom: 40px;
     border-radius: 8px;
     overflow: hidden;
@@ -569,124 +98,218 @@ main.container {
 .swiper-slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* يضمن أن الصورة تملأ المساحة بشكل جميل */
+    object-fit: cover;
 }
 
-/* تعديل ألوان أزرار التنقل في الـ Slider */
-:root {
-    --swiper-navigation-color: #fff;
-    --swiper-pagination-color: #fff;
+.featured-products {
+    text-align: center;
+    padding: 50px 0;
 }
 
+.featured-products h3 {
+    font-size: 32px;
+    color: var(--primary-color);
+    margin-bottom: 40px;
+}
 
-/* === تحسين تصميم بطاقة المنتج (تأثير عند المرور) === */
+/* ======================================= */
+/* === بطاقات المنتجات === */
+/* ======================================= */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
 .product-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* حركة ناعمة */
+    background-color: var(--white-color);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-card:hover {
-    transform: translateY(-5px); /* يرتفع قليلاً للأعلى */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* يضيف ظلًا أكبر */
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-
-/* === تصميم القائمة الجانبية للهاتف === */
-.mobile-nav {
-    position: fixed;
-    top: 0;
-    right: -100%; /* ابدأ من خارج الشاشة */
-    width: 280px;
-    height: 100%;
-    background-color: var(--primary-color, #00426A);
-    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
-    z-index: 100;
-    transition: right 0.3s ease-in-out;
-    padding-top: 80px;
-}
-
-.mobile-nav.is-open {
-    right: 0; /* عند الفتح، حركه إلى داخل الشاشة */
-}
-
-.mobile-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.mobile-nav ul li a, .mobile-nav ul li span {
-    display: block;
-    padding: 15px 20px;
-    color: white;
-    text-decoration: none;
-    font-size: 1.2em;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-.mobile-nav ul li span a {
-    display: inline;
-    padding: 0;
-    border: none;
-}
-
-.nav-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
+.product-card img {
     width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 99;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
-.nav-overlay.is-open {
-    opacity: 1;
-    visibility: visible;
-}
-
-
-/* === تصميم أيقونة الهامبرغر وتحويلها إلى X === */
-.hamburger-menu {
-    display: none;
-    z-index: 101;
-}
-
-.hamburger-menu span {
-    width: 2rem;
-    height: 0.25rem;
-    background: white;
-    border-radius: 10px;
-    transition: all 0.3s ease-in-out;
-}
-
-.hamburger-menu.is-active span:nth-child(1) {
-    transform: rotate(45deg) translate(8px, 6px);
-}
-
-.hamburger-menu.is-active span:nth-child(2) {
-    opacity: 0;
-}
-
-.hamburger-menu.is-active span:nth-child(3) {
-    transform: rotate(-45deg) translate(8px, -6px);
-}
-
-
-/* === تعديل بطاقات المنتجات === */
-.product-info {
+.product-card .product-info {
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* للسماح بالتمدد */
+    flex-grow: 1;
 }
 
-.product-info .add-to-cart-btn {
-    margin-top: auto; /* يدفع الزر دائمًا إلى الأسفل */
+.product-card h4 {
+    font-size: 20px;
+    margin: 0 0 10px 0;
+    color: var(--primary-color);
 }
 
-/* === إخفاء وإظهار القوائم حسب حجم الشاشة === */
+.product-price {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9em;
+    margin: -10px 0 10px 0;
+}
+
+.product-price.offer {
+    color: #d9534f;
+    font-weight: bold;
+}
+
+/* ======================================= */
+/* === الأزرار === */
+/* ======================================= */
+.btn-primary, .add-to-cart-btn {
+    color: var(--white-color);
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+}
+.btn-primary:hover {
+    background-color: #c09e32;
+}
+
+.add-to-cart-btn {
+    background-color: var(--primary-color);
+    margin-top: auto; /* يدفع الزر لأسفل البطاقة */
+}
+.add-to-cart-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+/* ======================================= */
+/* === صفحات المحتوى (تفاصيل، ملف شخصي، سلة) === */
+/* ======================================= */
+.product-page-container {
+    display: flex;
+    gap: 40px;
+    margin-top: 50px;
+}
+.product-image-container, .product-details-container {
+    flex: 1;
+}
+.product-image-container img {
+    width: 100%;
+    border-radius: 8px;
+}
+.product-details-container h1 {
+    font-size: 42px;
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.cart-table th, .cart-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: right;
+    vertical-align: middle;
+}
+.cart-table th {
+    background-color: var(--light-gray);
+}
+.cart-product-info {
+    display: flex;
+    align-items: center;
+}
+.cart-product-info img {
+    margin-left: 15px;
+    border-radius: 4px;
+}
+
+.profile-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    max-width: 700px;
+    margin: 20px auto;
+}
+.profile-container p {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.admin-form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: var(--light-gray);
+    border-radius: 8px;
+}
+
+/* ======================================= */
+/* === الفوتر (الشريط السفلي) === */
+/* ======================================= */
+.main-footer {
+    background-color: var(--text-color);
+    color: var(--white-color);
+    padding: 20px 0;
+    margin-top: 50px;
+}
+.main-footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.footer-links a {
+    color: inherit;
+    text-decoration: none;
+    margin: 0 10px;
+}
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+
+/* ======================================= */
+/* === تصميم قائمة الهاتف (الهامبرغر) === */
+/* ======================================= */
+.hamburger-menu { display: none; }
+.mobile-nav { display: none; }
+.nav-overlay { display: none; }
+
+
+/* ======================================= */
+/* === كود التجاوب مع شاشات الموبايل === */
+/* ======================================= */
 @media (max-width: 768px) {
+    /* --- إخفاء قائمة سطح المكتب وإظهار الهامبرغر --- */
     .desktop-nav {
         display: none;
     }
@@ -700,5 +323,70 @@ main.container {
         border: none;
         cursor: pointer;
         padding: 0;
+        z-index: 101;
     }
+    .hamburger-menu span {
+        width: 2rem;
+        height: 0.25rem;
+        background: white;
+        border-radius: 10px;
+        transition: all 0.3s ease-in-out;
+    }
+    .hamburger-menu.is-active span:nth-child(1) { transform: rotate(45deg) translate(8px, 6px); }
+    .hamburger-menu.is-active span:nth-child(2) { opacity: 0; }
+    .hamburger-menu.is-active span:nth-child(3) { transform: rotate(-45deg) translate(8px, -6px); }
+
+    /* --- القائمة الجانبية --- */
+    .mobile-nav {
+        display: block;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100%;
+        background-color: var(--primary-color);
+        box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+        z-index: 100;
+        transition: right 0.3s ease-in-out;
+        padding-top: 80px;
+    }
+    .mobile-nav.is-open { right: 0; }
+    .mobile-nav ul { list-style: none; padding: 0; margin: 0; }
+    .mobile-nav ul li a, .mobile-nav ul li span {
+        display: flex;
+        align-items: center;
+        padding: 18px 25px;
+        color: white;
+        text-decoration: none;
+        font-size: 1.2em;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        transition: background-color 0.2s ease-in-out;
+    }
+    .mobile-nav ul li a:hover { background-color: rgba(255, 255, 255, 0.1); }
+    .mobile-nav i.fas { font-size: 1.1em; width: 30px; margin-left: 15px; }
+    #user-info-mobile { background-color: rgba(0, 0, 0, 0.2); }
+    #user-info-mobile span a { display: inline; padding: 0; border: none; font-weight: bold; }
+
+    /* --- غطاء التعتيم --- */
+    .nav-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
+    .nav-overlay.is-open { opacity: 1; visibility: visible; }
+
+    /* --- تنسيقات عامة للهاتف --- */
+    .products-grid { grid-template-columns: 1fr; }
+    .product-page-container { flex-direction: column; }
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.8em; }
+    h3 { font-size: 1.5em; }
 }
