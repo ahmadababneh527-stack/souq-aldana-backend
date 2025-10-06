@@ -555,3 +555,36 @@ main.container {
 .footer-links a:hover {
     text-decoration: underline;
 }
+
+
+/* === تنسيق شريط الصور المتحرك (Slider) === */
+.main-slider {
+    width: 100%;
+    height: 400px; /* يمكنك تعديل الارتفاع حسب رغبتك */
+    margin-bottom: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* يضمن أن الصورة تملأ المساحة بشكل جميل */
+}
+
+/* تعديل ألوان أزرار التنقل في الـ Slider */
+:root {
+    --swiper-navigation-color: #fff;
+    --swiper-pagination-color: #fff;
+}
+
+
+/* === تحسين تصميم بطاقة المنتج (تأثير عند المرور) === */
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* حركة ناعمة */
+}
+
+.product-card:hover {
+    transform: translateY(-5px); /* يرتفع قليلاً للأعلى */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* يضيف ظلًا أكبر */
+}

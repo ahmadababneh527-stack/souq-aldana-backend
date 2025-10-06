@@ -5,11 +5,23 @@
 
 {% block content %}
     {% csrf_token %}
-    <section class="hero-section">
-        <h2>أهلاً بك في متجرك المفضل</h2>
-        <p>أفضل المنتجات المحلية والعالمية، تصلك أينما كنت في الإمارات.</p>
-        <a href="#" class="btn-primary">اكتشف المنتجات</a>
-    </section>
+
+    <div class="swiper main-slider">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="https://placehold.co/1200x400/00426A/FFFFFF?text=New+Collection" alt="عرض جديد">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://placehold.co/1200x400/E8A87C/FFFFFF?text=Special+Offer" alt="عرض خاص">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://placehold.co/1200x400/C38D9E/FFFFFF?text=Sale+Up+To+50%25" alt="تخفيضات">
+            </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+    </div>
 
     <section class="featured-products">
         <h3>أبرز المنتجات</h3>
@@ -19,5 +31,31 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const swiper = new Swiper('.main-slider', {
+                loop: true, // يجعل الصور تدور في حلقة
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                autoplay: {
+                    delay: 5000, // تغيير الصورة كل 5 ثواني
+                    disableOnInteraction: false,
+                },
+            });
+        });
+    </script>
+    
     <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 {% endblock %}
