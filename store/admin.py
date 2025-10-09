@@ -60,7 +60,6 @@ class ReviewAdmin(admin.ModelAdmin):
 
 # تسجيل كل الموديلات لتظهر في لوحة التحكم
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Product, ProductAdmin)
 admin.site.register(Cart)
 admin.site.register(CartItem)
 admin.site.register(Review, ReviewAdmin) # <-- أضف هذا السطر
