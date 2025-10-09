@@ -172,20 +172,21 @@ class PrivacyView(TemplateView):
     template_name = 'privacy.html'
 
 
-    
-    def category_products(request, slug):
-     category = get_object_or_404(Category, slug=slug)
-     products = Product.objects.filter(category=category)
-     context = {
-        'category': category,
-         'products': products
-     }
-     return render(request, 'category_products.html', context)
-    
 
+# الشكل الصحيح
 class CountryListView(APIView):
     def get(self, request):
-        # مكتبة django-countries توفر قائمة بالبلدان
-        # نحولها إلى صيغة مناسبة للـ API
+        # ... (كود البلدان) ...
         country_list = [{'code': code, 'name': name} for code, name in list(countries)]
         return Response(country_list)
+
+# --- صحيح: الدالة تم نقلها إلى هنا في نهاية الملف ---
+# (لاحظ أنها على نفس مستوى الـ indentation مع الكلاسات الأخرى، أي بدون مسافة بادئة)
+def category_products(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+    context = {
+        'category': category,
+        'products': products
+    }
+    return render(request, 'category_products.html', context)
