@@ -1,65 +1,42 @@
-# في ملف store/admin.py
+# في store/admin.py
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Product, ProductImage, Cart, CartItem, Review # <-- أضف Review هنا
-from .models import Product, Category, User  # <-- تأكد من إضافة Category هنا
+from .models import User, Category, Product, ProductImage, Cart, CartItem, Review
 
-# هذا الكود يجعل عرض المستخدمين في لوحة التحكم أفضل
-# ويضيف الحقول المخصصة التي أنشأناها
+# --- User Admin ---
+@admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    # يمكنك إضافة الحقول المخصصة هنا لتظهر في لوحة التحكم
-    # مثال:
-    # fieldsets = UserAdmin.fieldsets + (
-    #     ('بيانات إضافية', {'fields': ('country', 'phone_number')}),
-    # )
+    # يمكنك إضافة حقولك المخصصة هنا في المستقبل
     pass
 
-# إنشاء كلاس لعرض صور المنتج بشكل مضمن مع المنتج
-class ProductImageInline(admin.TabularInline):
-    model = ProductImage
-    extra = 1 # عدد حقول الصور الجديدة التي تظهر
-
-class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductImageInline]
-    list_display = ('name', 'price', 'createdAt')
-    search_fields = ('name',)
-
-
-
-# في ملف store/admin.py
-
-
+# --- Category Admin ---
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
-    prepopulated_fields = {'slug': ('name',)} # <-- هذه الميزة الرائعة تملأ حقل الـ slug تلقائيًا عند كتابة الاسم
+    prepopulated_fields = {'slug': ('name',)}
 
-# تأكد من أن ProductAdmin موجود أيضًا
+# --- Product Admin (النسخة المدمجة والصحيحة) ---
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'category', 'createdAt'] # <-- أضفنا category هنا
+    inlines = [ProductImageInline]
+    list_display = ['name', 'price', 'category', 'createdAt'] # <-- دمجنا كل الحقول المطلوبة
     list_filter = ['category', 'createdAt']
+    search_fields = ['name',]
 
-
-
-
-
-# ... (الكود السابق يبقى كما هو)
-
-# كلاس لعرض التقييمات بشكل أفضل
+# --- Review Admin ---
+@admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('name', 'product', 'rating', 'created_at')
     list_filter = ('product', 'rating')
     search_fields = ('name', 'comment')
 
-# تسجيل الموديلات
-# ... (admin.site.register السابقة تبقى كما هي)
-
-
-
-# تسجيل كل الموديلات لتظهر في لوحة التحكم
-admin.site.register(User, CustomUserAdmin)
+# --- تسجيل باقي النماذج ---
+# لم نعد بحاجة لـ admin.site.register لأننا نستخدم @admin.register
+# لكن يمكنك تسجيل النماذج البسيطة هكذا إذا أردت
 admin.site.register(Cart)
 admin.site.register(CartItem)
-admin.site.register(Review, ReviewAdmin) # <-- أضف هذا السطر
