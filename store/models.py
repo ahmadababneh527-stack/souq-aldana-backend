@@ -1,3 +1,5 @@
+# في store/models.py
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
@@ -5,7 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django_countries.fields import CountryField
 from django.urls import reverse
 
-# نموذج المستخدم
+# --- 1. نموذج المستخدم ---
 class User(AbstractUser):
     GENDER_CHOICES = (('M', 'ذكر'), ('F', 'أنثى'))
     date_of_birth = models.DateField(null=True, blank=True)
@@ -17,22 +19,7 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-# نموذج المنتج
-class Product(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    offer_end_date = models.DateTimeField(null=True, blank=True)
-    createdAt = models.DateTimeField(default=timezone.now)
-    def get_absolute_url(self):
-        return reverse('product-detail', args=[str(self.id)])
-    
-    def __str__(self):
-        return self.name
-
-# في store/models.py
-
+# --- 2. نموذج القسم (تم نقله إلى هنا) ---
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, unique=True)
@@ -44,16 +31,32 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
-# نموذج صور المنتج
-class ProductImage(models.Model):
+
+# --- 3. نموذج المنتج ---
+class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    offer_end_date = models.DateTimeField(null=True, blank=True)
+    createdAt = models.DateTimeField(default=timezone.now)
+    
+    def get_absolute_url(self):
+        return reverse('product-detail', args=[str(self.id)])
+    
+    def __str__(self):
+        return self.name
+
+# --- 4. نموذج صور المنتج (تم حذف حقل category) ---
+class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='products/')
+    
     def __str__(self):
         return f"صورة للمنتج: {self.product.name}"
 
-# نموذج التقييمات
+# --- 5. نموذج التقييمات ---
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviews')
@@ -62,13 +65,15 @@ class Review(models.Model):
     rating = models.IntegerField(default=5, validators=[MaxValueValidator(5), MinValueValidator(1)])
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return f"تقييم للمنتج {self.product.name} بواسطة {self.name}"
 
-# نماذج السلة
+# --- 6. نماذج السلة ---
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     createdAt = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return f"سلة المستخدم: {self.user.username}"
 
@@ -76,5 +81,6 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
