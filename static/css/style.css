@@ -560,10 +560,10 @@ a {
 /* === تحسينات إضافية للتصميم المتجاوب === */
 
 @media (max-width: 768px) {
-    /* تصغير ارتفاع الـ Slider على الهاتف */
-    .main-slider {
-        height: 250px;
-    }
+ .product-page-container {
+ /* غير اتجاه العرض من أفقي إلى عمودي */
+ flex-direction: column;
+ gap: 20px;
 }
 
 /* توحيد لون نقاط وأسهم الـ Slider */
@@ -788,13 +788,14 @@ a {
         gap: 20px;
     }
 
-    .product-gallery-container,
-    .product-details-container {
-        /* اجعل كل قسم يأخذ العرض الكامل */
-        width: 100%;
-        max-width: 100%;
-    }
-
+ .product-gallery-container,
+.product-details-container {
+ /* اجعل كل قسم يأخذ العرض الكامل */
+ width: 100%;
+ max-width: 100%;
+}
+    /* ... قد يكون هناك المزيد من القواعد هنا ... */
+}
     .product-details-container h1 {
         font-size: 24px; /* تصغير حجم العنوان */
     }
