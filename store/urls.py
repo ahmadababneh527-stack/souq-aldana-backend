@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
 from .views import (
     ProductViewSet, 
     UserViewSet, 
@@ -9,6 +10,7 @@ from .views import (
     CartItemViewSet, 
     ProfileAPIView,
      CountryListView ,
+     category_products,
     ReviewListCreateAPIView
 )
 
@@ -24,5 +26,7 @@ urlpatterns = [
     path('add-to-cart/', AddToCartAPIView.as_view(), name='add-to-cart'),
     path('profile/', ProfileAPIView.as_view(), name='api-profile'),
     path('products/<int:product_id>/reviews/', ReviewListCreateAPIView.as_view(), name='product-reviews'),
-     path('countries/', CountryListView.as_view(), name='country-list'),
+    path('countries/', CountryListView.as_view(), name='country-list'),
+    path('category/<slug:slug>/', category_products, name='category_products'),
+
 ]

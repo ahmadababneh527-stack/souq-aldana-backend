@@ -3,6 +3,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Product, ProductImage, Cart, CartItem, Review # <-- أضف Review هنا
+from .models import Product, Category, User  # <-- تأكد من إضافة Category هنا
 
 # هذا الكود يجعل عرض المستخدمين في لوحة التحكم أفضل
 # ويضيف الحقول المخصصة التي أنشأناها
@@ -27,6 +28,21 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 # في ملف store/admin.py
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug']
+    prepopulated_fields = {'slug': ('name',)} # <-- هذه الميزة الرائعة تملأ حقل الـ slug تلقائيًا عند كتابة الاسم
+
+# تأكد من أن ProductAdmin موجود أيضًا
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'price', 'category', 'createdAt'] # <-- أضفنا category هنا
+    list_filter = ['category', 'createdAt']
+
+
+
 
 
 # ... (الكود السابق يبقى كما هو)

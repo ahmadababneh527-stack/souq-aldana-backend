@@ -5,7 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django_countries import countries
-from .models import Product, User, Cart, CartItem, Review
+from django.shortcuts import render, get_object_or_404
+
+from .models import Product, User, Cart, CartItem, Review, Category
 from .serializers import (
     ProductSerializer, UserSerializer, CartSerializer, 
     CartItemSerializer, ReviewSerializer
@@ -171,7 +173,14 @@ class PrivacyView(TemplateView):
 
 
     
-    
+    def category_products(request, slug):
+     category = get_object_or_404(Category, slug=slug)
+     products = Product.objects.filter(category=category)
+     context = {
+        'category': category,
+         'products': products
+     }
+     return render(request, 'category_products.html', context)
     
 
 class CountryListView(APIView):

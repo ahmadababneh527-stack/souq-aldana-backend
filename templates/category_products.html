@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} - سوق الدانة{% endblock %}
+
+{% block content %}
+    <div class="category-header">
+        <h1>قسم: {{ category.name }}</h1>
+    </div>
+
+    <section class="featured-products">
+        <div class="products-grid">
+            {% for product in products %}
+                <div class="product-card">
+                    <a href="{{ product.get_absolute_url }}"> {% if product.images.all %}
+                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="https://placehold.co/300x300?text=No+Image" alt="No Image">
+                        {% endif %}
+                    </a>
+                    <div class="product-info">
+                        <h4><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h4>
+                        <p class="product-price">{{ product.price }} درهم</p>
+                        <button class="add-to-cart-btn" data-product-id="{{ product.id }}">أضف إلى السلة</button>
+                    </div>
+                </div>
+            {% empty %}
+                <p>لا توجد منتجات في هذا القسم حاليًا.</p>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/main.js' %}"></script> {% endblock %}

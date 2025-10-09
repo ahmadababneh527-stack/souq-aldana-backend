@@ -22,7 +22,14 @@
             <nav class="desktop-nav">
                 <ul>
                     <li><a href="{% url 'index' %}">الرئيسية</a></li>
-                    <li><a href="#">المنتجات</a></li>
+                    <li class="dropdown">
+    <a href="#" class="dropbtn">الأقسام <i class="fa fa-caret-down"></i></a>
+    <div class="dropdown-content">
+        {% for category in categories %}
+            <a href="{% url 'category_products' category.slug %}">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+</li>
                     <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
                     <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
                     <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
