@@ -900,3 +900,14 @@ h1, h2, h3, h4, h5, h6 {
         gap: 15px;
     }
 }
+
+/* =============================================== */
+/* === !! إصلاح نهائي لارتفاع السلايدر على الهاتف !! === */
+/* =============================================== */
+@media (max-width: 768px) {
+    .announcement-wrapper .image-slider-container .slide img {
+        height: 150px !important;
+        max-height: 150px !important;
+        object-fit: cover; /* لمنع تمدد الصورة */
+    }
+}
