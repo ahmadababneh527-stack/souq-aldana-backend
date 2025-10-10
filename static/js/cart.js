@@ -1,6 +1,5 @@
-// في ملف static/js/cart.js (النسخة النهائية المكتفية ذاتياً)
+// في ملف static/js/cart.js (النسخة النهائية مع إصلاح النصوص)
 
-// ▼▼▼ أضفنا الدوال المساعدة هنا لضمان عمل الملف دائماً ▼▼▼
 function showSpinner() {
     const spinner = document.getElementById('spinner-overlay');
     if (spinner) spinner.classList.add('show');
@@ -23,8 +22,6 @@ function showNotification(message, type = 'success') {
         notification.classList.remove('show');
     }, 3000);
 }
-// ▲▲▲ نهاية الدوال المساعدة ▲▲▲
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const cartItemsBody = document.getElementById('cart-items-body'); 
@@ -35,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function displayCart() {
         if (!mainContainer) return;
 
-        showSpinner(); // <-- الآن ستعمل لأنها معرّفة في نفس الملف
+        showSpinner();
 
         try {
             const response = await fetch('/api/cart/');
@@ -74,6 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 grandTotal += itemTotal;
 
                 const row = document.createElement('tr');
+                
+                // ▼▼▼ هذا هو الجزء الذي تم تعديله ▼▼▼
                 row.innerHTML = `
                     <td>
                         <div class="cart-product-info">
@@ -81,11 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span>${item.product.name}</span>
                         </div>
                     </td>
-                    <td>${parseFloat(item.product.price).toFixed(2)} درهم</td>
-                    <td>${item.quantity}</td>
-                    <td>${itemTotal.toFixed(2)} درهم</td>
+                    <td><span>${parseFloat(item.product.price).toFixed(2)} درهم</span></td>
+                    <td><span>${item.quantity}</span></td>
+                    <td><span>${itemTotal.toFixed(2)} درهم</span></td>
                     <td><button class="remove-from-cart-btn" data-item-id="${item.id}">حذف</button></td>
                 `;
+                // ▲▲▲ نهاية الجزء المعدل ▲▲▲
+
                 cartItemsBody.appendChild(row);
             });
             
