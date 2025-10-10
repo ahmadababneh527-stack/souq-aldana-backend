@@ -518,60 +518,69 @@ a {
 
 
 /* ======================================= */
-/* === جعل سلة المشتريات متجاوبة مع الهاتف === */
+/* في ملف static/css/style.css */
+
+/* ======================================= */
+/* === جعل سلة المشتريات متجاوبة مع الهاتف (النسخة النهائية والمعدلة) === */
 /* ======================================= */
 @media (max-width: 768px) {
-    /* --- ١. تحويل الجدول إلى بطاقات --- */
+    /* --- ١. إخفاء رأس الجدول الأصلي --- */
     .cart-table thead {
-        display: none; /* إخفاء الترويسة الأصلية */
+        display: none;
     }
-    .cart-table, .cart-table tbody, .cart-table tr, .cart-table td {
-        display: block; /* جعل كل العناصر تتصرف كـ div */
+
+    /* --- ٢. تحويل عناصر الجدول إلى كتل (Blocks) --- */
+    .cart-table, 
+    .cart-table tbody, 
+    .cart-table tr, 
+    .cart-table td {
+        display: block;
         width: 100%;
     }
+
+    /* --- ٣. تصميم كل صف كبطاقة منفصلة --- */
     .cart-table tr {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         border: 1px solid #ddd;
         border-radius: 8px;
-        padding: 10px;
+        padding: 15px;
         box-shadow: none;
     }
+
+    /* --- ٤. (هذا هو الجزء الأهم) تنسيق كل خلية داخل البطاقة --- */
     .cart-table td {
-        display: flex; /* لترتيب العنوان والمحتوى */
+        display: flex;
+        justify-content: space-between; /* يضع العنوان يميناً والمحتوى يساراً */
         align-items: center;
-        padding: 10px;
-        text-align: left; /* محاذاة المحتوى لليسار */
+        padding: 12px 0;
+        text-align: right; /* محاذاة النص لليمين لتناسب اللغة العربية */
         border-bottom: 1px solid #eee;
     }
-    .cart-table td:last-child {
-        border-bottom: none;
+    .cart-table tr td:last-child {
+        border-bottom: none; /* إزالة الخط السفلي لآخر عنصر */
     }
 
-    /* --- ٢. إضافة العناوين قبل كل حقل باستخدام CSS --- */
+    /* --- ٥. إظهار العناوين باستخدام المحتوى من data-label --- */
     .cart-table td::before {
-        content: attr(data-label); /* <-- هذه الخاصية تحتاج لدعم من JavaScript */
-        /* الحل البديل بدون JS: */
+        content: attr(data-label); /* يجلب النص من data-label الذي أضفناه في JavaScript */
         font-weight: bold;
-        text-align: right; /* محاذاة العنوان لليمين */
-        margin-left: auto;
         color: var(--primary-color);
     }
-    .cart-table td:nth-of-type(1)::before { content: "المنتج:"; }
-    .cart-table td:nth-of-type(2)::before { content: "السعر:"; }
-    .cart-table td:nth-of-type(3)::before { content: "الكمية:"; }
-    .cart-table td:nth-of-type(4)::before { content: "الإجمالي:"; }
-    .cart-table td:nth-of-type(5)::before { content: "إزالة:"; }
     
-    .cart-product-info {
-        justify-content: flex-end; /* لترتيب الصورة والنص بشكل صحيح */
+    /* --- ٦. إصلاحات إضافية لخلية المنتج وزر الحذف --- */
+    .cart-table td .cart-product-info {
+       justify-content: flex-end; /* يبقي الصورة والنص على اليسار */
+    }
+    .cart-table td .remove-from-cart-btn {
+       margin-right: 0;
     }
 
-    /* --- ٣. تعديل قسم ملخص السلة للهاتف --- */
+    /* --- ٧. تعديل قسم ملخص السلة للهاتف --- */
     .cart-summary {
-        text-align: center; /* توسيط كل شيء */
+        text-align: center;
     }
     .cart-summary .btn-primary {
-        width: 100%; /* جعل الزر يملأ العرض */
+        width: 100%;
     }
 }
 
@@ -680,3 +689,5 @@ a {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+

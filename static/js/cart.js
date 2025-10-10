@@ -73,18 +73,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const row = document.createElement('tr');
                 
                 // ▼▼▼ هذا هو الجزء الذي تم تعديله ▼▼▼
-                row.innerHTML = `
-                    <td>
-                        <div class="cart-product-info">
-                            <img src="${imageUrl}" alt="${item.product.name}">
-                            <span>${item.product.name}</span>
-                        </div>
-                    </td>
-                    <td><span>${parseFloat(item.product.price).toFixed(2)} درهم</span></td>
-                    <td><span>${item.quantity}</span></td>
-                    <td><span>${itemTotal.toFixed(2)} درهم</span></td>
-                    <td><button class="remove-from-cart-btn" data-item-id="${item.id}">حذف</button></td>
-                `;
+         // في ملف static/js/cart.js
+
+row.innerHTML = `
+    <td data-label="المنتج:">
+        <div class="cart-product-info">
+            <img src="${imageUrl}" alt="${item.product.name}">
+            <span>${item.product.name}</span>
+        </div>
+    </td>
+    <td data-label="السعر:"><span>${parseFloat(item.product.price).toFixed(2)} درهم</span></td>
+    <td data-label="الكمية:"><span>${item.quantity}</span></td>
+    <td data-label="الإجمالي:"><span>${itemTotal.toFixed(2)} درهم</span></td>
+    <td data-label="إزالة:"><button class="remove-from-cart-btn" data-item-id="${item.id}">حذف</button></td>
+`;
                 // ▲▲▲ نهاية الجزء المعدل ▲▲▲
 
                 cartItemsBody.appendChild(row);
