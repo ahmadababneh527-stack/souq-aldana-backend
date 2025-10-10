@@ -1,10 +1,38 @@
+// في ملف static/js/main.js (النسخة النهائية المكتفية ذاتياً)
+
+// ▼▼▼ أضفنا الدوال المساعدة هنا لضمان عمل الملف دائماً ▼▼▼
+function showSpinner() {
+    const spinner = document.getElementById('spinner-overlay');
+    if (spinner) spinner.classList.add('show');
+}
+
+function hideSpinner() {
+    const spinner = document.getElementById('spinner-overlay');
+    if (spinner) spinner.classList.remove('show');
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    if (!notification) return;
+    
+    notification.textContent = message;
+    notification.className = 'notification show';
+    notification.classList.add(type);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+// ▲▲▲ نهاية الدوال المساعدة ▲▲▲
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const productsGrid = document.querySelector('.products-grid');
 
     async function fetchAndDisplayProducts() {
         if (!productsGrid) return;
         
-        showSpinner();
+        showSpinner(); // <-- الآن ستعمل لأنها معرّفة في نفس الملف
         try {
             const response = await fetch('/api/products/');
             if (!response.ok) { throw new Error('فشل تحميل المنتجات'); }
@@ -46,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             productsGrid.innerHTML = `<p>حدث خطأ في عرض المنتجات: ${error.message}</p>`;
         } finally {
-            hideSpinner();
+            hideSpinner(); // <-- ستعمل أيضاً
         }
     }
 
