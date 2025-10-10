@@ -421,3 +421,155 @@ a {
         padding: 20px;
     }
 }
+
+/* ======================================= */
+/* === تصميم صفحة سلة المشتريات === */
+/* ======================================= */
+
+/* --- ١. الحاوية الرئيسية والعنوان --- */
+.cart-container {
+    width: 100%;
+    margin-top: 30px;
+}
+.cart-container h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}
+
+/* --- ٢. تصميم الجدول لنسخة الحاسوب --- */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse; /* دمج حدود الخلايا */
+    margin-bottom: 30px;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    border-radius: 8px;
+    overflow: hidden; /* ضروري لعمل border-radius */
+}
+
+/* --- ترويسة الجدول --- */
+.cart-table thead tr {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    text-align: right;
+    font-weight: bold;
+}
+
+.cart-table th, .cart-table td {
+    padding: 15px 20px;
+    vertical-align: middle;
+}
+
+/* --- صفوف محتوى الجدول --- */
+.cart-table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+.cart-table tbody tr:nth-of-type(even) {
+    background-color: #f8f8f8; /* تلوين الصفوف الزوجية */
+}
+.cart-table tbody tr:last-of-type {
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* تنسيق خاص بعمود المنتج */
+.cart-product-info {
+    display: flex;
+    align-items: center;
+}
+.cart-product-info img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-left: 15px;
+}
+
+/* تنسيق زر الحذف */
+.remove-from-cart-btn {
+    background-color: var(--accent-color);
+    color: var(--white-color);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.remove-from-cart-btn:hover {
+    background-color: #c9302c; /* درجة أغمق من الأحمر */
+}
+
+
+/* --- ٣. قسم ملخص السلة --- */
+.cart-summary {
+    text-align: left; /* محاذاة لليسار في نسخة الحاسوب */
+    margin-top: 20px;
+}
+.cart-summary h4 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+.cart-summary .btn-primary {
+    width: auto; /* جعل الزر بعرض المحتوى */
+    padding: 12px 30px;
+    font-size: 18px;
+}
+
+
+/* ======================================= */
+/* === جعل سلة المشتريات متجاوبة مع الهاتف === */
+/* ======================================= */
+@media (max-width: 768px) {
+    /* --- ١. تحويل الجدول إلى بطاقات --- */
+    .cart-table thead {
+        display: none; /* إخفاء الترويسة الأصلية */
+    }
+    .cart-table, .cart-table tbody, .cart-table tr, .cart-table td {
+        display: block; /* جعل كل العناصر تتصرف كـ div */
+        width: 100%;
+    }
+    .cart-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: none;
+    }
+    .cart-table td {
+        display: flex; /* لترتيب العنوان والمحتوى */
+        justify-content: space-between;
+        padding: 10px;
+        text-align: left; /* محاذاة المحتوى لليسار */
+        border-bottom: 1px solid #eee;
+    }
+    .cart-table td:last-child {
+        border-bottom: none;
+    }
+
+    /* --- ٢. إضافة العناوين قبل كل حقل باستخدام CSS --- */
+    .cart-table td::before {
+        content: attr(data-label); /* <-- هذه الخاصية تحتاج لدعم من JavaScript */
+        /* الحل البديل بدون JS: */
+        font-weight: bold;
+        text-align: right; /* محاذاة العنوان لليمين */
+        margin-left: 10px;
+        color: var(--primary-color);
+    }
+    .cart-table td:nth-of-type(1)::before { content: "المنتج:"; }
+    .cart-table td:nth-of-type(2)::before { content: "السعر:"; }
+    .cart-table td:nth-of-type(3)::before { content: "الكمية:"; }
+    .cart-table td:nth-of-type(4)::before { content: "الإجمالي:"; }
+    .cart-table td:nth-of-type(5)::before { content: "إزالة:"; }
+    
+    .cart-product-info {
+        justify-content: flex-end; /* لترتيب الصورة والنص بشكل صحيح */
+    }
+
+    /* --- ٣. تعديل قسم ملخص السلة للهاتف --- */
+    .cart-summary {
+        text-align: center; /* توسيط كل شيء */
+    }
+    .cart-summary .btn-primary {
+        width: 100%; /* جعل الزر يملأ العرض */
+    }
+}
