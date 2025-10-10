@@ -103,37 +103,81 @@
     </footer>
 
     {% block scripts %}
-   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // --- كود تفعيل شريط البحث (يبقى كما هو) ---
-        const searchToggleBtn = document.getElementById('search-toggle-btn');
-        const searchContainer = document.querySelector('.search-container');
-        // ... إلى آخره
+  <script>
+    // ===================================
+    // === دوال مساعدة عامة لكل الموقع ===
+    // ===================================
+    function showSpinner() {
+        const spinner = document.getElementById('spinner-overlay');
+        if (spinner) spinner.classList.add('show');
+    }
 
+    function hideSpinner() {
+        const spinner = document.getElementById('spinner-overlay');
+        if (spinner) spinner.classList.remove('show');
+    }
+
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        if (!notification) return;
         
-        // ▼▼▼ أضف هذا الكود الجديد هنا ▼▼▼
-        // ===================================
-        // === كود تفعيل قائمة الأقسام بالضغط ===
-        // ===================================
-        const dropdown = document.querySelector('.desktop-nav .dropdown');
+        notification.textContent = message;
+        notification.className = 'notification show';
+        notification.classList.add(type);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
 
-        if (dropdown) {
-            const dropdownBtn = dropdown.querySelector('.dropbtn');
-            
+    // ===================================
+    // === كود تفعيل الهيدر الموحد (النهائي) ===
+    // ===================================
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchContainer = document.querySelector('.search-container');
+        const searchToggleBtn = document.getElementById('search-toggle-btn');
+        const dropdown = document.querySelector('.desktop-nav .dropdown');
+        const dropdownBtn = document.querySelector('.desktop-nav .dropdown .dropbtn');
+
+        // --- تفعيل زر البحث ---
+        if (searchToggleBtn && searchContainer) {
+            searchToggleBtn.addEventListener('click', function(event) {
+                event.stopPropagation(); // امنع الضغطة من الوصول للصفحة كلها
+                // أغلق القائمة الأخرى قبل فتح هذه
+                if (dropdown) dropdown.classList.remove('active');
+                // افتح/أغلق قائمة البحث
+                searchContainer.classList.toggle('active');
+                if (searchContainer.classList.contains('active')) {
+                    document.querySelector('.search-input').focus();
+                }
+            });
+        }
+
+        // --- تفعيل قائمة الأقسام ---
+        if (dropdownBtn && dropdown) {
             dropdownBtn.addEventListener('click', function(event) {
                 event.preventDefault();
-                event.stopPropagation(); // يمنع إغلاق القائمة فوراً
+                event.stopPropagation(); // امنع الضغطة من الوصول للصفحة كلها
+                // أغلق القائمة الأخرى قبل فتح هذه
+                if (searchContainer) searchContainer.classList.remove('active');
+                // افتح/أغلق قائمة الأقسام
                 dropdown.classList.toggle('active');
             });
         }
     });
 
-    // --- كود إغلاق القائمة عند الضغط في أي مكان آخر ---
-    window.addEventListener('click', function() {
+    // --- إغلاق القوائم المفتوحة عند الضغط في أي مكان آخر ---
+    window.addEventListener('click', function(event) {
+        const searchContainer = document.querySelector('.search-container');
         const dropdown = document.querySelector('.desktop-nav .dropdown');
-        if (dropdown && dropdown.classList.contains('active')) {
-            // هذا الشرط يتأكد من أن الضغطة لم تكن على القائمة نفسها
-            // بما أننا أوقفنا انتشار الضغطة من الزر، فإن أي ضغطة تصل هنا هي من خارج القائمة
+
+        // أغلق قائمة البحث إذا كانت الضغطة خارجها
+        if (searchContainer && !searchContainer.contains(event.target)) {
+            searchContainer.classList.remove('active');
+        }
+
+        // أغلق قائمة الأقسام إذا كانت الضغطة خارجها
+        if (dropdown && !dropdown.contains(event.target)) {
             dropdown.classList.remove('active');
         }
     });
