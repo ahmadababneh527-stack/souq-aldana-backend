@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}نتائج البحث عن: {{ query }}{% endblock %}
+
+{% block content %}
+    <div class="featured-products" style="padding: 30px 0;">
+        {% if query %}
+            <h2>نتائج البحث عن: "{{ query }}"</h2>
+        {% else %}
+            <h2>الرجاء إدخال كلمة للبحث</h2>
+        {% endif %}
+    </div>
+
+    {% if results %}
+        <div class="products-grid">
+            {% for product in results %}
+                <div class="product-card">
+                    <a href="/products/{{product.id}}/">
+                        {% if product.images.first %}
+                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="https://placehold.co/300x300?text=No+Image" alt="{{ product.name }}">
+                        {% endif %}
+                    </a>
+                    <div class="product-info">
+                        <h4><a href="/products/{{product.id}}/">{{ product.name }}</a></h4>
+                        <p class="product-price">{{ product.price }} درهم</p>
+                        <button class="add-to-cart-btn" data-product-id="{{ product.id }}">أضف إلى السلة</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif query %}
+        <p style="text-align: center; font-size: 1.2rem;">لا توجد نتائج بحث تطابق "{{ query }}".</p>
+    {% endif %}
+{% endblock %}

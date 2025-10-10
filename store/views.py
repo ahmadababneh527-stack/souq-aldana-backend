@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django_countries import countries
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Q # تأكد من إضافة هذا السطر في الأعلى مع بقية الـ imports
 
 from .models import Product, User, Cart, CartItem, Review, Category
 from .serializers import (
@@ -190,3 +191,20 @@ def category_products(request, slug):
         'products': products
     }
     return render(request, 'category_products.html', context)
+
+
+
+def search_results(request):
+    query = request.GET.get('q', '') # الحصول على كلمة البحث من الرابط
+    results = []
+    if query:
+        # ابحث في اسم المنتج ووصفه عن الكلمة
+        results = Product.objects.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        )
+
+    context = {
+        'query': query,
+        'results': results
+    }
+    return render(request, 'templates/search_results.html', context)
