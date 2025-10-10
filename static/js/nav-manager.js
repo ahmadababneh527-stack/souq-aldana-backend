@@ -1,3 +1,5 @@
+// في ملف static/js/nav-manager.js (النسخة النهائية - تستمع للأحداث)
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- 1. كود القائمة الجانبية للهاتف (Hamburger Menu) ---
@@ -11,13 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
             mobileNav.classList.remove('is-open');
             navOverlay.classList.remove('is-open');
         }
-
         hamburgerButton.addEventListener('click', () => {
             hamburgerButton.classList.toggle('is-active');
             mobileNav.classList.toggle('is-open');
             navOverlay.classList.toggle('is-open');
         });
-
         navOverlay.addEventListener('click', closeMenu);
     }
 
@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateNavigations() {
         const userFirstName = localStorage.getItem('userFirstName');
         const navs = [ { suffix: '' }, { suffix: '-mobile' } ];
-
         navs.forEach(nav => {
             const signupLink = document.getElementById(`signup-link${nav.suffix}`);
             const loginLink = document.getElementById(`login-link${nav.suffix}`);
@@ -60,22 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 3. كود تحديث عدد المنتجات في السلة ---
-    // جعلناها دالة عامة ليتمكن main.js من استدعائها
-    window.updateCartCount = async function() {
+    async function updateCartCount() {
         const cartCountElements = [document.getElementById('cart-count'), document.getElementById('cart-count-mobile')];
         const resetCount = () => cartCountElements.forEach(el => { if (el) el.textContent = '0'; });
-
         if (!localStorage.getItem('userEmail')) {
             resetCount();
             return;
         }
-
         try {
             const response = await fetch('/api/cart/');
-            if (!response.ok) {
-                resetCount();
-                return;
-            }
+            if (!response.ok) { resetCount(); return; }
             const data = await response.json();
             const cart = data[0];
             let totalQuantity = 0;
@@ -90,14 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- التشغيل عند تحميل الصفحة ---
-// --- التشغيل عند تحميل الصفحة ---
     updateNavigations();
     updateCartCount();
 
-    // ▼▼▼ هذا هو الكود الجديد الذي أضفته ▼▼▼
     // --- الاستماع لتحديثات السلة ---
     document.addEventListener('cartUpdated', () => {
         updateCartCount();
     });
-    // ▲▲▲ نهاية الإضافة ▲▲▲
 });

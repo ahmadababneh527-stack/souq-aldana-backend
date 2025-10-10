@@ -1,30 +1,4 @@
-// في ملف static/js/main.js (النسخة النهائية المكتفية ذاتياً)
-
-// ▼▼▼ أضفنا الدوال المساعدة هنا لضمان عمل الملف دائماً ▼▼▼
-function showSpinner() {
-    const spinner = document.getElementById('spinner-overlay');
-    if (spinner) spinner.classList.add('show');
-}
-
-function hideSpinner() {
-    const spinner = document.getElementById('spinner-overlay');
-    if (spinner) spinner.classList.remove('show');
-}
-
-function showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
-    if (!notification) return;
-    
-    notification.textContent = message;
-    notification.className = 'notification show';
-    notification.classList.add(type);
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 3000);
-}
-// ▲▲▲ نهاية الدوال المساعدة ▲▲▲
-
+// في ملف static/js/main.js (النسخة النهائية - تستخدم الدوال العامة)
 
 document.addEventListener('DOMContentLoaded', () => {
     const productsGrid = document.querySelector('.products-grid');
@@ -32,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchAndDisplayProducts() {
         if (!productsGrid) return;
         
-        showSpinner(); // <-- الآن ستعمل لأنها معرّفة في نفس الملف
+        showSpinner();
         try {
             const response = await fetch('/api/products/');
             if (!response.ok) { throw new Error('فشل تحميل المنتجات'); }
@@ -52,17 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let priceHTML = `<p class="product-price">${product.price} درهم</p>`;
                 if (product.original_price && parseFloat(product.original_price) > parseFloat(product.price)) {
-                    priceHTML = `
-                        <p class="product-price offer">${product.price} درهم</p>
-                        <p class="original-price">${product.original_price} درهم</p>
-                    `;
+                    priceHTML = `<p class="product-price offer">${product.price} درهم</p><p class="original-price">${product.original_price} درهم</p>`;
                 }
 
                 const productCardHTML = `
                 <div class="product-card">
-                    <a href="/products/${product.id}/">
-                        <img src="${imageUrl}" alt="${product.name}">
-                    </a>
+                    <a href="/products/${product.id}/"><img src="${imageUrl}" alt="${product.name}"></a>
                     <div class="product-info">
                         <h4><a href="/products/${product.id}/">${product.name}</a></h4>
                         ${priceHTML} 
@@ -74,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             productsGrid.innerHTML = `<p>حدث خطأ في عرض المنتجات: ${error.message}</p>`;
         } finally {
-            hideSpinner(); // <-- ستعمل أيضاً
+            hideSpinner();
         }
     }
 
@@ -90,22 +59,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const productId = event.target.dataset.productId;
-                
                 showSpinner();
                 try {
                     const response = await fetch('/api/add-to-cart/', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken
-                        },
+                        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
                         body: JSON.stringify({ product_id: productId, quantity: 1 }),
                     });
 
                     const data = await response.json();
                     if (response.ok) {
                         showNotification('تمت إضافة المنتج إلى السلة!', 'success');
-                         document.dispatchEvent(new CustomEvent('cartUpdated'));
+                        // إرسال إشارة عامة بأن السلة قد تم تحديثها
+                        document.dispatchEvent(new CustomEvent('cartUpdated'));
                     } else {
                         showNotification(`حدث خطأ: ${data.error || 'فشل'}`, 'error');
                     }
