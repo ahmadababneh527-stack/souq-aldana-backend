@@ -1,16 +1,15 @@
-// في ملف static/js/cart.js (النسخة النهائية مع تحسين مؤشر التحميل)
+// في ملف static/js/cart.js (النسخة النهائية الموحدة)
 
 document.addEventListener('DOMContentLoaded', () => {
     const cartItemsBody = document.getElementById('cart-items-body'); 
     const cartTotalSpan = document.getElementById('cart-total');
     const mainContainer = document.querySelector('.cart-container'); 
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-    const spinnerOverlay = document.getElementById('spinner-overlay');
 
     async function displayCart() {
         if (!mainContainer) return;
 
-        spinnerOverlay.classList.add('show');
+        showSpinner(); // <-- استخدام الدالة العامة
 
         try {
             const response = await fetch('/api/cart/');
@@ -31,6 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cartTotalSpan) cartTotalSpan.textContent = '0.00';
                 return;
             }
+
+            // إظهار الجدول وإخفاء رسالة "السلة فارغة" إذا كانت ظاهرة
+            document.querySelector('.cart-table').style.display = '';
+            document.querySelector('.cart-summary').style.display = '';
+            document.getElementById('cart-empty-message').style.display = 'none';
 
             cartItemsBody.innerHTML = '';
             let grandTotal = 0;
@@ -64,11 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             mainContainer.innerHTML = `<h3>عذرًا، حدث خطأ أثناء عرض السلة.</h3><p>${error.message}</p>`;
         } finally {
-            // ▼▼▼ هذا هو التعديل المهم ▼▼▼
-            // سنضيف تأخيراً بسيطاً قبل إخفاء المؤشر لضمان ظهوره
+            // إضافة تأخير بسيط قبل إخفاء المؤشر لتحسين التجربة
             setTimeout(() => {
-                spinnerOverlay.classList.remove('show');
-            }, 300); // 300 ميلي ثانية (حوالي ثلث ثانية)
+                hideSpinner(); // <-- استخدام الدالة العامة
+            }, 300);
         }
     }
     
@@ -76,19 +79,18 @@ document.addEventListener('DOMContentLoaded', () => {
         cartItemsBody.addEventListener('click', async (event) => {
             if (event.target.classList.contains('remove-from-cart-btn')) {
                 const itemId = event.target.dataset.itemId;
-                // لا داعي لإظهار المؤشر عند الحذف لأنه سريع جداً
                 try {
                     const response = await fetch(`/api/cart-items/${itemId}/`, {
                         method: 'DELETE',
                         headers: { 'X-CSRFToken': csrfToken }
                     });
                     if (response.ok) {
-                        displayCart();
+                        displayCart(); // إعادة تحميل محتويات السلة
                     } else {
-                        alert(`فشل حذف المنتج.`);
+                        showNotification(`فشل حذف المنتج.`, 'error');
                     }
                 } catch (error) {
-                    alert('فشل الاتصال بالخادم.');
+                    showNotification('فشل الاتصال بالخادم.', 'error');
                 }
             }
         });
