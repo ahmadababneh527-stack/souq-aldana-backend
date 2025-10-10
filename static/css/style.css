@@ -523,19 +523,23 @@ a {
 /* ======================================= */
 /* === جعل سلة المشتريات متجاوبة مع الهاتف (النسخة النهائية والمعدلة) === */
 /* ======================================= */
+/* ======================================= */
+/* === جعل سلة المشتريات متجاوبة مع الهاتف (الحل البديل والنهائي) === */
+/* ======================================= */
 @media (max-width: 768px) {
     /* --- ١. إخفاء رأس الجدول الأصلي --- */
     .cart-table thead {
         display: none;
     }
 
-    /* --- ٢. تحويل عناصر الجدول إلى كتل (Blocks) --- */
+    /* --- ٢. تحويل عناصر الجدول إلى كتل --- */
     .cart-table, 
     .cart-table tbody, 
     .cart-table tr, 
     .cart-table td {
         display: block;
         width: 100%;
+        box-sizing: border-box; /* لضمان عدم تجاوز الحدود */
     }
 
     /* --- ٣. تصميم كل صف كبطاقة منفصلة --- */
@@ -543,39 +547,50 @@ a {
         margin-bottom: 20px;
         border: 1px solid #ddd;
         border-radius: 8px;
-        padding: 15px;
-        box-shadow: none;
+        padding: 10px 15px;
     }
 
-    /* --- ٤. (هذا هو الجزء الأهم) تنسيق كل خلية داخل البطاقة --- */
+    /* --- ٤. (الكود الأهم) تنسيق كل خلية داخل البطاقة --- */
     .cart-table td {
         display: flex;
-        justify-content: space-between; /* يضع العنوان يميناً والمحتوى يساراً */
+        justify-content: space-between;
         align-items: center;
         padding: 12px 0;
-        text-align: right; /* محاذاة النص لليمين لتناسب اللغة العربية */
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid #f0f0f0;
+        gap: 15px; /* إضافة مسافة بين العنوان والمحتوى */
     }
     .cart-table tr td:last-child {
-        border-bottom: none; /* إزالة الخط السفلي لآخر عنصر */
+        border-bottom: none;
     }
 
-    /* --- ٥. إظهار العناوين باستخدام المحتوى من data-label --- */
+    /* --- ٥. تنسيق العناوين (مثل "المنتج:") --- */
     .cart-table td::before {
-        content: attr(data-label); /* يجلب النص من data-label الذي أضفناه في JavaScript */
+        content: attr(data-label);
         font-weight: bold;
         color: var(--primary-color);
+        white-space: nowrap; /* لمنع العنوان من النزول لسطر جديد */
     }
     
-    /* --- ٦. إصلاحات إضافية لخلية المنتج وزر الحذف --- */
-    .cart-table td .cart-product-info {
-       justify-content: flex-end; /* يبقي الصورة والنص على اليسار */
-    }
-    .cart-table td .remove-from-cart-btn {
-       margin-right: 0;
+    /* --- ٦. (مفتاح الحل) تنسيق المحتوى الفعلي (اسم المنتج، السعر...) --- */
+    .cart-table td > span,
+    .cart-table td > .cart-product-info {
+        flex: 1; /* يسمح للمحتوى بالتمدد ليأخذ المساحة المتاحة */
+        min-width: 0; /* ضروري ليسمح للمحتوى بالتقلص عند الحاجة */
+        text-align: left; /* محاذاة المحتوى لليسار (مقابل العنوان) */
     }
 
-    /* --- ٧. تعديل قسم ملخص السلة للهاتف --- */
+    .cart-table td .cart-product-info {
+        justify-content: flex-end; /* لترتيب الصورة والنص داخل الحاوية */
+        gap: 10px;
+    }
+    
+    /* --- ٧. ضمان أن اسم المنتج الطويل ينزل لسطر جديد --- */
+    .cart-table td .cart-product-info span {
+        word-wrap: break-word;
+        white-space: normal;
+    }
+    
+    /* --- ٨. تعديل قسم ملخص السلة للهاتف --- */
     .cart-summary {
         text-align: center;
     }
