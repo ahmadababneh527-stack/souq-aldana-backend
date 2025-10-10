@@ -101,7 +101,7 @@
             </div>
         </div>
     </footer>
-
+    
     {% block scripts %}
         <script>
             // ===================================
@@ -156,11 +156,6 @@
                     dropdownBtn.addEventListener('click', function(event) {
                         event.preventDefault(); // لمنع الصفحة من القفز للأعلى
                         dropdown.classList.toggle('active');
-
-                        // إغلاق القوائم الأخرى إذا كانت مفتوحة
-                        if (searchContainer.classList.contains('active')) {
-                            searchContainer.classList.remove('active');
-                        }
                     });
 
                     // إغلاق القائمة عند الضغط في أي مكان آخر في الصفحة
