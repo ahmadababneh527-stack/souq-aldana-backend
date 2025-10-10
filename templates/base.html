@@ -17,7 +17,10 @@
 
     <header class="main-header">
         <div class="container">
-            <h1 class="logo"><a href="{% url 'index' %}">سوق الدانة</a></h1>
+            <a href="{% url 'index' %}" class="logo-container">
+    <img src="{% static 'images/logo.png' %}" alt="شعار سوق الدانة" class="logo-img">
+    <h1 class="logo-text">سوق الدانة</h1>
+</a>
             
             <nav class="desktop-nav">
                 <ul>
@@ -51,16 +54,10 @@
     <div class="announcement-wrapper">
         <div class="image-slider-container">
             <div class="slider-wrapper">
-                <div class="slide">
-                    <img src="{% static 'images/special_offer.png' %}" alt="Special Offer">
-                </div>
-                <div class="slide">
-                    <img src="https://placehold.co/1200x300/3498db/ffffff?text=Summer+Sale" alt="Summer Sale">
-                </div>
-                <div class="slide">
-                    <img src="https://placehold.co/1200x300/2ecc71/ffffff?text=New+Arrivals" alt="New Arrivals">
-                </div>
-            </div>
+    <div class="slide">
+        <img src="{% static 'images/special_offer.png' %}" alt="Special Offer">
+    </div>
+    </div>
             <button class="slider-btn prev-btn">&#10094;</button>
             <button class="slider-btn next-btn">&#10095;</button>
             <div class="slider-dots"></div>
