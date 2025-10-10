@@ -4,7 +4,7 @@
 {% block title %}إنشاء حساب جديد - سوق الدانة{% endblock %}
 
 {% block content %}
-<div class="admin-form-container">
+<div class="auth-form-container">
     <h2>إنشاء حساب جديد</h2>
     <form id="signup-form">
         {% csrf_token %}
@@ -37,11 +37,11 @@
             </select>
         </div>
         <div class="form-group">
-    <label for="country">البلد:</label>
-    <select id="country" name="country">
-        <option value="">-- جار التحميل --</option>
-    </select>
-</div>
+            <label for="country">البلد:</label>
+            <select id="country" name="country">
+                <option value="">-- جار التحميل --</option>
+            </select>
+        </div>
         <div class="form-group">
             <label for="address">العنوان:</label>
             <input type="text" id="address" name="address">
@@ -62,7 +62,7 @@
         <button type="submit" class="btn-primary">إنشاء الحساب</button>
     </form>
     <p id="status-message"></p>
-    <p style="text-align: center; margin-top: 20px;">
+    <p class="form-footer-link">
         لديك حساب بالفعل؟ <a href="{% url 'login' %}">سجل دخولك الآن</a>
     </p>
 </div>

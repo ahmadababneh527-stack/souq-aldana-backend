@@ -315,3 +315,109 @@ a {
         flex-direction: column;
     }
 }
+
+
+/* ======================================= */
+/* === تصميم صفحات تسجيل الدخول وإنشاء حساب === */
+/* ======================================= */
+
+/* --- ١. الحاوية الرئيسية للنموذج (الكارت) --- */
+.auth-form-container {
+    max-width: 500px; /* تحديد أقصى عرض للنموذج */
+    margin: 50px auto; /* توسيط النموذج في الصفحة مع هامش علوي */
+    padding: 30px;
+    background-color: var(--white-color);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+}
+
+/* --- ٢. عنوان النموذج (تسجيل الدخول / إنشاء حساب) --- */
+.auth-form-container h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+/* --- ٣. مجموعة الحقل (العنوان + حقل الإدخال) --- */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* لمنع الحقل من تجاوز حدود الحاوية */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* --- ٤. تأثير جميل عند التركيز على حقل الإدخال --- */
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(0, 115, 47, 0.3);
+}
+
+/* --- ٥. تنسيق خاص بمربع الشروط والأحكام --- */
+.form-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+.form-group-checkbox input[type="checkbox"] {
+    width: auto; /* إلغاء العرض الكامل للمربع */
+    height: 1.2em;
+    width: 1.2em;
+}
+.form-group-checkbox label {
+    margin: 0;
+    font-weight: normal;
+}
+
+/* --- ٦. زر الإرسال الرئيسي --- */
+.auth-form-container .btn-primary {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: var(--primary-color);
+}
+.auth-form-container .btn-primary:hover {
+    background-color: #005a25; /* درجة أغمق من الأخضر عند مرور الماوس */
+}
+
+
+/* --- ٧. الرابط السفلي (ليس لديك حساب؟) --- */
+.form-footer-link {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 15px;
+}
+.form-footer-link a {
+    color: var(--primary-color);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* --- ٨. التجاوب مع شاشات الهاتف --- */
+@media (max-width: 600px) {
+    .auth-form-container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+}
