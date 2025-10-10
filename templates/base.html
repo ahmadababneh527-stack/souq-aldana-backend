@@ -70,6 +70,18 @@
     <div class="mobile-nav" id="mobile-nav">
         <nav>
             <ul>
+                  <li class="mobile-categories-item">
+     <details>
+         <summary>
+             <i class="fas fa-tags"></i> الأقسام
+         </summary>
+         <ul class="mobile-categories-list">
+             {% for category in categories %}
+                 <li><a href="{% url 'category_products' category.slug %}">{{ category.name }}</a></li>
+             {% endfor %}
+         </ul>
+     </details>
+ </li>
                 <li><a href="{% url 'index' %}"><i class="fas fa-home"></i> الرئيسية</a></li>
                 <li><a href="#"><i class="fas fa-box-open"></i> المنتجات</a></li>
                 <li><a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i> سلة المشتريات (<span id="cart-count-mobile">0</span>)</a></li>

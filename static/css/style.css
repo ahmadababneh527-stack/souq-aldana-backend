@@ -968,3 +968,84 @@ h1, h2, h3, h4, h5, h6 {
       font-size: 20px; /* تصغير النص قليلاً على الجوال */
     }
 }
+
+
+/* ========================================= */
+/* ====   إصلاح قائمة الأقسام المنسدلة   ==== */
+/* ========================================= */
+
+/* --- ١. تجهيز العنصر الأب --- */
+.desktop-nav .dropdown {
+    position: relative; /* ضروري لتثبيت القائمة المنسدلة أسفله */
+}
+
+/* --- ٢. إخفاء وتنسيق القائمة المنسدلة --- */
+.desktop-nav .dropdown-content {
+    display: none; /* إخفاء القائمة بشكل افتراضي */
+    position: absolute; /* يجعل القائمة تطفو فوق المحتوى */
+    background-color: #f9f9f9; /* لون خلفية القائمة */
+    min-width: 200px; /* تحديد عرض القائمة */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 10; /* للتأكد من أنها تظهر فوق العناصر الأخرى */
+    border-radius: 5px;
+    padding: 10px 0;
+    list-style: none; /* لإزالة أي نقاط من القائمة */
+}
+
+/* --- ٣. إظهار القائمة عند مرور الماوس --- */
+.desktop-nav .dropdown:hover .dropdown-content {
+    display: block; /* هذا هو السطر الأهم، يقوم بإظهار القائمة */
+}
+
+/* --- ٤. تنسيق الروابط داخل القائمة --- */
+.desktop-nav .dropdown-content a {
+    color: black; /* لون النص للروابط */
+    padding: 12px 16px; /* هوامش داخلية */
+    text-decoration: none;
+    display: block; /* لجعل الرابط يملأ المساحة المتاحة */
+    text-align: right; /* محاذاة النص لليمين */
+}
+
+/* --- ٥. تغيير لون الرابط عند مرور الماوس --- */
+.desktop-nav .dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+
+/* ========================================= */
+/* ====   تنسيق قائمة الأقسام في الهاتف   ==== */
+/* ========================================= */
+.mobile-nav .mobile-categories-item summary {
+    display: flex;
+    align-items: center;
+    padding: 18px 25px;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    list-style: none; /* لإخفاء السهم الافتراضي */
+}
+
+.mobile-nav .mobile-categories-item summary::after {
+    content: '◀'; /* إضافة سهم مخصص */
+    margin-right: auto; /* لدفع السهم إلى أقصى اليسار */
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+}
+
+.mobile-nav .mobile-categories-item details[open] > summary::after {
+    transform: rotate(-90deg); /* تدوير السهم عند فتح القائمة */
+}
+
+.mobile-nav .mobile-categories-list {
+    list-style: none;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.2); /* خلفية أغمق قليلاً لتمييزها */
+}
+
+.mobile-nav .mobile-categories-list a {
+    display: block;
+    padding: 15px 40px 15px 25px; /* مسافة بادئة لليمين */
+    color: white;
+    text-decoration: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
