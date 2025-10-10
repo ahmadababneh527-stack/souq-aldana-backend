@@ -1,20 +1,17 @@
-// في ملف static/js/main.js (النسخة النهائية)
-
 document.addEventListener('DOMContentLoaded', () => {
     const productsGrid = document.querySelector('.products-grid');
 
     // --- الجزء الأول: جلب وعرض المنتجات ---
     async function fetchAndDisplayProducts() {
-        // لا تفعل شيئاً إذا لم نكن في صفحة تحتوي على شبكة المنتجات
         if (!productsGrid) return;
         
         showSpinner(); // <-- إظهار المؤشر
         try {
             const response = await fetch('/api/products/');
-            if (!response.ok) { throw new Error('فشل تحميل المنتجات'); }
+            if (!response.ok) { throw new Error('فشل تحميل المنتج'); }
             
             const products = await response.json();
-            productsGrid.innerHTML = ''; // تفريغ الشبكة قبل إضافة المنتجات الجديدة
+            productsGrid.innerHTML = '';
 
             if (products.length === 0) {
                 productsGrid.innerHTML = '<p>لم يتم إضافة أي منتجات بعد.</p>';
@@ -34,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                 }
 
+                // **تم تصحيح الرابط هنا**
                 const productCardHTML = `
                 <div class="product-card">
                     <a href="/products/${product.id}/">
@@ -54,49 +52,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- الجزء الثاني: وظيفة زر "أضف إلى السلة" ---
-    if (productsGrid) {
-        productsGrid.addEventListener('click', async (event) => {
-            if (event.target.classList.contains('add-to-cart-btn')) {
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-                
-                if (!localStorage.getItem('userEmail')) {
-                    showNotification('يرجى تسجيل الدخول أولاً لإضافة منتجات إلى السلة.', 'error');
-                    setTimeout(() => { window.location.href = '/login/'; }, 2000);
-                    return;
-                }
-
-                const productId = event.target.dataset.productId;
-                
-                showSpinner();
-                try {
-                    const response = await fetch('/api/add-to-cart/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrfToken
-                        },
-                        body: JSON.stringify({ product_id: productId, quantity: 1 }),
-                    });
-
-                    const data = await response.json();
-                    if (response.ok) {
-                        showNotification('تمت إضافة المنتج إلى السلة بنجاح!', 'success');
-                        if (typeof updateCartCount === 'function') {
-                            updateCartCount();
-                        }
-                    } else {
-                        showNotification(`حدث خطأ: ${data.error || 'فشل إضافة المنتج'}`, 'error');
-                    }
-                } catch (error) {
-                    showNotification('فشل الاتصال بالخادم.', 'error');
-                } finally {
-                    hideSpinner();
-                }
-            }
-        });
-    }
-
-    // --- تشغيل الدالة الرئيسية ---
     fetchAndDisplayProducts();
+
+    // --- الجزء الثاني: وظيفة زر "أضف إلى السلة" ---
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+    productsGrid.addEventListener('click', async (event) => {
+        if (event.target.classList.contains('add-to-cart-btn')) {
+            if (!csrfToken) {
+                showNotification('حدث خطأ في الصفحة. يرجى إعادة تحميلها.', 'error');
+                return;
+            }
+
+            if (!localStorage.getItem('userEmail')) {
+                showNotification('يرجى تسجيل الدخول أولاً لإضافة منتجات إلى السلة.', 'error');
+                setTimeout(() => { window.location.href = '/login/'; }, 2000);
+                return;
+            }
+
+            const productId = event.target.dataset.productId;
+            
+            showSpinner();
+            try {
+                const response = await fetch('/api/add-to-cart/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        quantity: 1
+                    }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    showNotification('تمت إضافة المنتج إلى السلة بنجاح!', 'success');
+                    updateCartCount();
+                } else {
+                    showNotification(`حدث خطأ: ${data.error || 'فشل إضافة المنتج'}`, 'error');
+                }
+            } catch (error) {
+                showNotification('فشل الاتصال بالخادم.', 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+    });
 });
