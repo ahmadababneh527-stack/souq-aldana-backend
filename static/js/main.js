@@ -105,9 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const data = await response.json();
                     if (response.ok) {
                         showNotification('تمت إضافة المنتج إلى السلة!', 'success');
-                        if (typeof updateCartCount === 'function') {
-                            updateCartCount();
-                        }
+                         document.dispatchEvent(new CustomEvent('cartUpdated'));
                     } else {
                         showNotification(`حدث خطأ: ${data.error || 'فشل'}`, 'error');
                     }

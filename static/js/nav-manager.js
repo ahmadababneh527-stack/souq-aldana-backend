@@ -90,6 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- التشغيل عند تحميل الصفحة ---
+// --- التشغيل عند تحميل الصفحة ---
     updateNavigations();
     updateCartCount();
+
+    // ▼▼▼ هذا هو الكود الجديد الذي أضفته ▼▼▼
+    // --- الاستماع لتحديثات السلة ---
+    document.addEventListener('cartUpdated', () => {
+        updateCartCount();
+    });
+    // ▲▲▲ نهاية الإضافة ▲▲▲
 });
