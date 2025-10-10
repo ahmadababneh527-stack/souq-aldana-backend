@@ -4,7 +4,7 @@
 {% block title %}{{ category.name }} - سوق الدانة{% endblock %}
 
 {% block content %}
-    <div class="category-header">
+    <div class="category-header" style="text-align: center; padding: 30px 0;">
         <h1>قسم: {{ category.name }}</h1>
     </div>
 
@@ -12,14 +12,15 @@
         <div class="products-grid">
             {% for product in products %}
                 <div class="product-card">
-                    <a href="{{ product.get_absolute_url }}"> {% if product.images.all %}
+                    <a href="/products/{{product.id}}/">
+                        {% if product.images.first %}
                             <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
                         {% else %}
                             <img src="https://placehold.co/300x300?text=No+Image" alt="No Image">
                         {% endif %}
                     </a>
                     <div class="product-info">
-                        <h4><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h4>
+                        <h4><a href="/products/{{product.id}}/">{{ product.name }}</a></h4>
                         <p class="product-price">{{ product.price }} درهم</p>
                         <button class="add-to-cart-btn" data-product-id="{{ product.id }}">أضف إلى السلة</button>
                     </div>
@@ -32,4 +33,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'js/main.js' %}"></script> {% endblock %}
+    {{ block.super }}
+    {% endblock %}
