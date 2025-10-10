@@ -100,59 +100,11 @@
                 <a href="{% url 'privacy' %}">سياسة الخصوصية</a>
             </div>
         </div>
-    </footer>
+     </footer>
 
-    <script src="{% static 'js/nav-manager.js' %}"></script>
-    
-    {% block scripts %}
-        <script>
-            // ===================================
-            // === دوال مساعدة عامة لكل الموقع ===
-            // ===================================
-            function showSpinner() {
-                const spinner = document.getElementById('spinner-overlay');
-                if (spinner) spinner.classList.add('show');
-            }
-    
-            function hideSpinner() {
-                const spinner = document.getElementById('spinner-overlay');
-                if (spinner) spinner.classList.remove('show');
-            }
-    
-            function showNotification(message, type = 'success') {
-                const notification = document.getElementById('notification');
-                if (!notification) return;
-                
-                notification.textContent = message;
-                notification.className = 'notification show';
-                notification.classList.add(type);
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            }
-    
-            // ===================================
-            // === كود تفعيل شريط البحث ===
-            // ===================================
-            document.addEventListener('DOMContentLoaded', function() {
-                const searchToggleBtn = document.getElementById('search-toggle-btn');
-                const searchContainer = document.querySelector('.search-container');
-                const searchInput = document.querySelector('.search-input');
-    
-                if (searchToggleBtn && searchContainer && searchInput) {
-                    searchToggleBtn.addEventListener('click', function() {
-                        searchContainer.classList.toggle('active');
-                        if (searchContainer.classList.contains('active')) {
-                            searchInput.focus();
-                        }
-                    });
-                }
-            });
-        </script>
-    {% endblock %}
-
-    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        alert('Test Alert Is Working');
+    </script>
 
 </body>
 </html>
