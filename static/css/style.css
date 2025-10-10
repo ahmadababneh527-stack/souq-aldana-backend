@@ -709,3 +709,165 @@ a {
 }
 
 
+/* ======================================= */
+/* === تصميم صفحة تفاصيل المنتج === */
+/* ======================================= */
+
+/* --- ١. التخطيط الرئيسي للصفحة (عمودان) --- */
+.product-page-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* عمودان متساويان */
+    gap: 40px; /* مسافة بين العمودين */
+    margin-top: 40px;
+}
+
+/* --- ٢. معرض صور المنتج --- */
+.product-gallery-container .main-image-wrapper {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+.product-gallery-container .main-image-wrapper img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+.thumbnail-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 10px;
+}
+.thumbnail-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+.thumbnail-image:hover, .thumbnail-image.active {
+    border-color: var(--primary-color);
+}
+
+/* --- ٣. تفاصيل المنتج --- */
+.product-details-container h1 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 32px;
+}
+.product-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+}
+.price-section {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+    margin: 20px 0;
+    font-weight: bold;
+}
+.price-section .product-price {
+    font-size: 2.2em;
+    color: var(--primary-color);
+}
+.price-section .original-price {
+    font-size: 1.2em;
+    color: #999;
+    text-decoration: line-through;
+}
+.quantity-selector {
+    margin: 30px 0;
+}
+.quantity-selector label {
+    font-weight: bold;
+    margin-left: 10px;
+}
+.quantity-controls {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.quantity-controls button {
+    background: #f5f5f5;
+    border: none;
+    font-size: 1.5em;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+.quantity-controls input {
+    width: 60px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    font-size: 1.2em;
+    height: 40px;
+}
+/* إخفاء أسهم المتصفح الافتراضية لحقل الرقم */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+.product-details-container .add-to-cart-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+}
+
+/* --- ٤. قسم التقييمات --- */
+.reviews-section {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #eee;
+}
+.review-form-container {
+    background: #fdfdfd;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    border: 1px solid #eee;
+}
+.review-card {
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+}
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.review-author { font-weight: bold; }
+.review-rating .fa-star { color: #ccc; }
+.review-rating .fa-star.filled { color: #ffc107; }
+
+/* تصميم حقل إدخال النجوم */
+.star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
+.star-rating input[type="radio"] { display: none; }
+.star-rating label { font-size: 2em; color: #ccc; cursor: pointer; transition: color 0.2s; }
+.star-rating input[type="radio"]:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #ffc107;
+}
+
+/* ======================================= */
+/* === تجاوب صفحة المنتج مع الهاتف === */
+/* ======================================= */
+@media (max-width: 768px) {
+    .product-page-container {
+        grid-template-columns: 1fr; /* عمود واحد فقط */
+        gap: 20px;
+    }
+    .product-details-container h1 {
+        font-size: 26px;
+    }
+}
