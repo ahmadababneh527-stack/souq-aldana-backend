@@ -49,6 +49,14 @@
                 <span></span>
                 <span></span>
             </button>
+            <div class="search-container">
+            <form action="/search/" method="get" class="search-form" id="search-form">
+                <input type="search" name="q" placeholder="ابحث عن منتجات..." class="search-input" required>
+            </form>
+            <button class="search-toggle-btn" id="search-toggle-btn" aria-label="Toggle Search">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
         </div>
     </header>
 
@@ -103,6 +111,28 @@
     <script src="{% static 'js/announcement-slider.js' %}"></script>
     
     {% block scripts %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- كود تفعيل شريط البحث ---
+        const searchToggleBtn = document.getElementById('search-toggle-btn');
+        const searchContainer = document.querySelector('.search-container');
+        const searchInput = document.querySelector('.search-input');
+
+        // نتأكد من وجود كل العناصر قبل إضافة الأوامر
+        if (searchToggleBtn && searchContainer && searchInput) {
+
+            searchToggleBtn.addEventListener('click', function() {
+                // عند الضغط على الأيقونة، أضف أو أزل كلاس 'active'
+                searchContainer.classList.toggle('active');
+
+                // إذا كان شريط البحث ظاهراً الآن، قم بالتركيز عليه تلقائياً
+                if (searchContainer.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            });
+        }
+    });
+</script>
     {% endblock %}
 
 </body>

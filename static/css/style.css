@@ -573,3 +573,74 @@ a {
         width: 100%; /* جعل الزر يملأ العرض */
     }
 }
+
+
+/* ======================================= */
+/* === تصميم شريط البحث الجديد === */
+/* ======================================= */
+
+/* --- ١. الحاوية الرئيسية للبحث --- */
+.search-container {
+    display: flex;
+    align-items: center;
+    /* هذا السطر يدفع أيقونة البحث إلى أقصى اليسار في نسخة الحاسوب */
+    margin-right: auto;
+}
+
+/* --- ٢. زر أيقونة البحث --- */
+.search-toggle-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem; /* حجم الأيقونة */
+    color: var(--white-color);
+    padding: 8px;
+    line-height: 1; /* يمنع أي ارتفاع إضافي غير مرغوب فيه */
+}
+
+/* --- ٣. حقل إدخال النص (مخفي بشكل افتراضي) --- */
+.search-input {
+    width: 0; /* يبدأ بعرض صفر (مخفي) */
+    padding: 8px 0;
+    border: none;
+    border-bottom: 2px solid var(--white-color);
+    background: transparent;
+    outline: none;
+    color: var(--white-color);
+    font-size: 1rem;
+    opacity: 0; /* يبدأ شفافاً */
+    transition: all 0.4s ease-out; /* حركة ظهور ناعمة */
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* --- ٤. عند تفعيل البحث (عندما نضيف كلاس .active) --- */
+.search-container.active .search-input {
+    width: 200px; /* يظهر بعرض 200 بكسل */
+    opacity: 1; /* يظهر بالكامل */
+    padding: 8px 10px;
+    margin-left: 10px; /* مسافة بين حقل الإدخال والأيقونة */
+}
+
+/* --- ٥. التجاوب مع الهاتف --- */
+@media (max-width: 768px) {
+    .search-container {
+        margin-right: 0; /* في الهاتف، يكون بجانب أيقونة القائمة مباشرة */
+    }
+    
+    /* تغيير ترتيب العناصر في نسخة الهاتف */
+    .main-header .container {
+        /* نتأكد من أن العناصر تتوزع بشكل صحيح */
+        justify-content: space-between;
+    }
+
+    .desktop-nav {
+       display: none !important; /* نتأكد من إخفاء قائمة الحاسوب */
+    }
+    
+    .search-container.active .search-input {
+        width: 150px; /* يمكنك تعديل العرض ليناسب شاشة الهاتف */
+    }
+}
