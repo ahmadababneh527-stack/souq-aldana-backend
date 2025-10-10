@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const data = await response.json();
                     if (response.ok) {
                         showNotification('تمت إضافة المنتج إلى السلة بنجاح!', 'success');
-                        // استدعاء الدالة من ملف nav-manager.js لتحديث عدد السلة
                         if (typeof updateCartCount === 'function') {
                             updateCartCount();
                         }

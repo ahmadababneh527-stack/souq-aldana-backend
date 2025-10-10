@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block head_extra %}{% endblock %}
 </head>
-<body> <div id="spinner-overlay" class="spinner-overlay">
+<body> 
+    <div id="spinner-overlay" class="spinner-overlay">
         <div class="spinner"></div>
     </div>
 
@@ -18,22 +19,21 @@
     <header class="main-header">
         <div class="container">
             <a href="{% url 'index' %}" class="logo-container">
-    <img src="{% static 'images/special_offer.png' %}" alt="شعار سوق الدانة" class="logo-img">
-
-    <h1 class="logo-text">سوق الدانة</h1>
-</a>
+                <img src="{% static 'images/special_offer.png' %}" alt="شعار سوق الدانة" class="logo-img">
+                <h1 class="logo-text">سوق الدانة</h1>
+            </a>
             
             <nav class="desktop-nav">
                 <ul>
                     <li><a href="{% url 'index' %}">الرئيسية</a></li>
                     <li class="dropdown">
-    <a href="#" class="dropbtn">الأقسام <i class="fa fa-caret-down"></i></a>
-    <div class="dropdown-content">
-        {% for category in categories %}
-            <a href="{% url 'category_products' category.slug %}">{{ category.name }}</a>
-        {% endfor %}
-    </div>
-</li>
+                        <a href="#" class="dropbtn">الأقسام <i class="fa fa-caret-down"></i></a>
+                        <div class="dropdown-content">
+                            {% for category in categories %}
+                                <a href="{% url 'category_products' category.slug %}">{{ category.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
                     <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
                     <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
                     <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
@@ -50,32 +50,31 @@
                 <span></span>
             </button>
             <div class="search-container">
-            <form action="/search/" method="get" class="search-form" id="search-form">
-                <input type="search" name="q" placeholder="ابحث عن منتجات..." class="search-input" required>
-            </form>
-            <button class="search-toggle-btn" id="search-toggle-btn" aria-label="Toggle Search">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
+                <form action="/search/" method="get" class="search-form" id="search-form">
+                    <input type="search" name="q" placeholder="ابحث عن منتجات..." class="search-input" required>
+                </form>
+                <button class="search-toggle-btn" id="search-toggle-btn" aria-label="Toggle Search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
         </div>
     </header>
 
- 
     <div class="mobile-nav" id="mobile-nav">
         <nav>
             <ul>
-                  <li class="mobile-categories-item">
-     <details>
-         <summary>
-             <i class="fas fa-tags"></i> الأقسام
-         </summary>
-         <ul class="mobile-categories-list">
-             {% for category in categories %}
-                 <li><a href="{% url 'category_products' category.slug %}">{{ category.name }}</a></li>
-             {% endfor %}
-         </ul>
-     </details>
- </li>
+                <li class="mobile-categories-item">
+                    <details>
+                        <summary>
+                            <i class="fas fa-tags"></i> الأقسام
+                        </summary>
+                        <ul class="mobile-categories-list">
+                            {% for category in categories %}
+                                <li><a href="{% url 'category_products' category.slug %}">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                </li>
                 <li><a href="{% url 'index' %}"><i class="fas fa-home"></i> الرئيسية</a></li>
                 <li><a href="#"><i class="fas fa-box-open"></i> المنتجات</a></li>
                 <li><a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i> سلة المشتريات (<span id="cart-count-mobile">0</span>)</a></li>
@@ -91,8 +90,7 @@
     <div class="nav-overlay" id="nav-overlay"></div>
 
     <main class="container">
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
     <footer class="main-footer">
@@ -107,54 +105,55 @@
     </footer>
 
     <script src="{% static 'js/nav-manager.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
     
- {% block scripts %}
-    <script>
-        // ===================================
-        // === دوال مساعدة عامة لكل الموقع ===
-        // ===================================
-        function showSpinner() {
-            const spinner = document.getElementById('spinner-overlay');
-            if (spinner) spinner.classList.add('show');
-        }
-
-        function hideSpinner() {
-            const spinner = document.getElementById('spinner-overlay');
-            if (spinner) spinner.classList.remove('show');
-        }
-
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            if (!notification) return;
-
-            notification.textContent = message;
-            notification.className = 'notification show'; // إعادة تعيين الكلاسات
-            notification.classList.add(type); // إضافة نوع التنبيه
-
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // ===================================
-        // === كود تفعيل شريط البحث ===
-        // ===================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchToggleBtn = document.getElementById('search-toggle-btn');
-            const searchContainer = document.querySelector('.search-container');
-            const searchInput = document.querySelector('.search-input');
-
-            if (searchToggleBtn && searchContainer && searchInput) {
-                searchToggleBtn.addEventListener('click', function() {
-                    searchContainer.classList.toggle('active');
-                    if (searchContainer.classList.contains('active')) {
-                        searchInput.focus();
-                    }
-                });
+    {% block scripts %}
+        <script>
+            // ===================================
+            // === دوال مساعدة عامة لكل الموقع ===
+            // ===================================
+            function showSpinner() {
+                const spinner = document.getElementById('spinner-overlay');
+                if (spinner) spinner.classList.add('show');
             }
-        });
-    </script>
-{% endblock %}
+    
+            function hideSpinner() {
+                const spinner = document.getElementById('spinner-overlay');
+                if (spinner) spinner.classList.remove('show');
+            }
+    
+            function showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                if (!notification) return;
+                
+                notification.textContent = message;
+                notification.className = 'notification show';
+                notification.classList.add(type);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+    
+            // ===================================
+            // === كود تفعيل شريط البحث ===
+            // ===================================
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchToggleBtn = document.getElementById('search-toggle-btn');
+                const searchContainer = document.querySelector('.search-container');
+                const searchInput = document.querySelector('.search-input');
+    
+                if (searchToggleBtn && searchContainer && searchInput) {
+                    searchToggleBtn.addEventListener('click', function() {
+                        searchContainer.classList.toggle('active');
+                        if (searchContainer.classList.contains('active')) {
+                            searchInput.focus();
+                        }
+                    });
+                }
+            });
+        </script>
+    {% endblock %}
 
 </body>
 </html>
