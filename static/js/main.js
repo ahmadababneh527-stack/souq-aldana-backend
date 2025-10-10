@@ -1,18 +1,14 @@
-// في ملف static/js/main.js (النسخة النهائية والمحسّنة)
-
 document.addEventListener('DOMContentLoaded', () => {
     const productsGrid = document.querySelector('.products-grid');
 
-    // --- الجزء الأول: جلب وعرض المنتجات ---
     async function fetchAndDisplayProducts() {
-        // لا تفعل شيئاً إذا لم نكن في صفحة تحتوي على شبكة المنتجات
         if (!productsGrid) return;
-
+        
         showSpinner();
         try {
             const response = await fetch('/api/products/');
             if (!response.ok) { throw new Error('فشل تحميل المنتجات'); }
-
+            
             const products = await response.json();
             productsGrid.innerHTML = '';
 
@@ -54,21 +50,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- الجزء الثاني: وظيفة زر "أضف إلى السلة" ---
-    // هذا الشرط مهم جداً، يمنع الكود من العمل إلا في الصفحة التي تحتوي على شبكة المنتجات
     if (productsGrid) {
         productsGrid.addEventListener('click', async (event) => {
             if (event.target.classList.contains('add-to-cart-btn')) {
                 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-
+                
                 if (!localStorage.getItem('userEmail')) {
-                    showNotification('يرجى تسجيل الدخول أولاً لإضافة منتجات إلى السلة.', 'error');
+                    showNotification('يرجى تسجيل الدخول أولاً.', 'error');
                     setTimeout(() => { window.location.href = '/login/'; }, 2000);
                     return;
                 }
 
                 const productId = event.target.dataset.productId;
-
+                
                 showSpinner();
                 try {
                     const response = await fetch('/api/add-to-cart/', {
@@ -82,12 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const data = await response.json();
                     if (response.ok) {
-                        showNotification('تمت إضافة المنتج إلى السلة بنجاح!', 'success');
+                        showNotification('تمت إضافة المنتج إلى السلة!', 'success');
                         if (typeof updateCartCount === 'function') {
                             updateCartCount();
                         }
                     } else {
-                        showNotification(`حدث خطأ: ${data.error || 'فشل إضافة المنتج'}`, 'error');
+                        showNotification(`حدث خطأ: ${data.error || 'فشل'}`, 'error');
                     }
                 } catch (error) {
                     showNotification('فشل الاتصال بالخادم.', 'error');
@@ -98,6 +92,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- تشغيل الدالة الرئيسية ---
     fetchAndDisplayProducts();
 });

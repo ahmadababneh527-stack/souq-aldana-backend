@@ -1,5 +1,3 @@
-// في ملف static/js/nav-manager.js (النسخة النهائية والمصححة)
-
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- 1. كود القائمة الجانبية للهاتف (Hamburger Menu) ---
@@ -7,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileNav = document.getElementById('mobile-nav');
     const navOverlay = document.getElementById('nav-overlay');
 
-    // نتأكد من وجود كل العناصر قبل إضافة أي أوامر لتجنب الأخطاء
     if (hamburgerButton && mobileNav && navOverlay) {
         function closeMenu() {
             hamburgerButton.classList.remove('is-active');
@@ -27,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 2. كود تحديث روابط تسجيل الدخول والخروج ---
     function updateNavigations() {
         const userFirstName = localStorage.getItem('userFirstName');
-        
         const navs = [ { suffix: '' }, { suffix: '-mobile' } ];
 
         navs.forEach(nav => {
@@ -42,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (loginLink) loginLink.style.display = 'none';
                 if (userInfo) userInfo.style.display = 'list-item';
                 if (userDisplay) userDisplay.innerHTML = `<a href="/profile/" style="color: #fff; font-weight: bold;">مرحباً، ${userFirstName}</a>`;
-                // نتأكد من عدم إضافة المستمع أكثر من مرة
                 if (logoutLink && !logoutLink.hasAttribute('data-listener-added')) {
                     logoutLink.addEventListener('click', logout);
                     logoutLink.setAttribute('data-listener-added', 'true');
@@ -60,12 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('userEmail');
         localStorage.removeItem('userFirstName');
         localStorage.removeItem('userLastName');
-        updateNavigations(); // تحديث الأزرار لإظهار "تسجيل الدخول"
+        updateNavigations();
         window.location.href = '/';
     }
 
     // --- 3. كود تحديث عدد المنتجات في السلة ---
-    async function updateCartCount() {
+    // جعلناها دالة عامة ليتمكن main.js من استدعائها
+    window.updateCartCount = async function() {
         const cartCountElements = [document.getElementById('cart-count'), document.getElementById('cart-count-mobile')];
         const resetCount = () => cartCountElements.forEach(el => { if (el) el.textContent = '0'; });
 
