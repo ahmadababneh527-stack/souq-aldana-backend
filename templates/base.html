@@ -103,85 +103,41 @@
     </footer>
 
     {% block scripts %}
-        <script>
-            // ===================================
-            // === دوال مساعدة عامة لكل الموقع ===
-            // ===================================
-            function showSpinner() {
-                const spinner = document.getElementById('spinner-overlay');
-                if (spinner) spinner.classList.add('show');
-            }
-    
-            function hideSpinner() {
-                const spinner = document.getElementById('spinner-overlay');
-                if (spinner) spinner.classList.remove('show');
-            }
-    
-            function showNotification(message, type = 'success') {
-                const notification = document.getElementById('notification');
-                if (!notification) return;
-                
-                notification.textContent = message;
-                notification.className = 'notification show';
-                notification.classList.add(type);
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            }
-    
-            // ===================================
-            // === كود تفعيل كل خصائص الهيدر ===
-            // ===================================
-            document.addEventListener('DOMContentLoaded', function() {
-                // --- كود تفعيل شريط البحث ---
-                const searchToggleBtn = document.getElementById('search-toggle-btn');
-                const searchContainer = document.querySelector('.search-container');
-                const searchInput = document.querySelector('.search-input');
-    
-                if (searchToggleBtn && searchContainer && searchInput) {
-                    searchToggleBtn.addEventListener('click', function() {
-                        searchContainer.classList.toggle('active');
-                        if (searchContainer.classList.contains('active')) {
-                            searchInput.focus();
-                        }
-                    });
-                }
-
-                // --- كود تفعيل قائمة الأقسام ---
-              // --- كود تفعيل قائمة الأقسام (النسخة النهائية والمعدلة) ---
-const dropdown = document.querySelector('.desktop-nav .dropdown');
-
-if (dropdown) {
-    const dropdownBtn = dropdown.querySelector('.dropbtn');
-    
-    // عند الضغط على زر "الأقسام" نفسه
-    dropdownBtn.addEventListener('click', function(event) {
-        // الخطوة 1: منع هذا الضغط من الوصول إلى الصفحة كلها (هذا هو مفتاح الحل)
-        event.stopPropagation(); 
-        event.preventDefault();
-        
-        // فتح وإغلاق القائمة الحالية
-        dropdown.classList.toggle('active');
-
-        // (اختياري) إغلاق شريط البحث إذا كان مفتوحًا
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- كود تفعيل شريط البحث (يبقى كما هو) ---
+        const searchToggleBtn = document.getElementById('search-toggle-btn');
         const searchContainer = document.querySelector('.search-container');
-        if (searchContainer && searchContainer.classList.contains('active')) {
-            searchContainer.classList.remove('active');
+        // ... إلى آخره
+
+        
+        // ▼▼▼ أضف هذا الكود الجديد هنا ▼▼▼
+        // ===================================
+        // === كود تفعيل قائمة الأقسام بالضغط ===
+        // ===================================
+        const dropdown = document.querySelector('.desktop-nav .dropdown');
+
+        if (dropdown) {
+            const dropdownBtn = dropdown.querySelector('.dropbtn');
+            
+            dropdownBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation(); // يمنع إغلاق القائمة فوراً
+                dropdown.classList.toggle('active');
+            });
         }
     });
-}
 
-// --- كود إغلاق القائمة عند الضغط في أي مكان آخر ---
-// هذا الكود يراقب الصفحة كلها
-window.addEventListener('click', function() {
-    // إذا كانت القائمة مفتوحة، قم بإغلاقها
-    if (dropdown && dropdown.classList.contains('active')) {
-        dropdown.classList.remove('active');
-    }
-});
-            });
-        </script>
+    // --- كود إغلاق القائمة عند الضغط في أي مكان آخر ---
+    window.addEventListener('click', function() {
+        const dropdown = document.querySelector('.desktop-nav .dropdown');
+        if (dropdown && dropdown.classList.contains('active')) {
+            // هذا الشرط يتأكد من أن الضغطة لم تكن على القائمة نفسها
+            // بما أننا أوقفنا انتشار الضغطة من الزر، فإن أي ضغطة تصل هنا هي من خارج القائمة
+            dropdown.classList.remove('active');
+        }
+    });
+</script>
     {% endblock %}
 
     <script src="{% static 'js/nav-manager.js' %}"></script>

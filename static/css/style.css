@@ -111,8 +111,9 @@ a {
 .desktop-nav .dropdown {
     position: relative;
 }
+
 .desktop-nav .dropdown-content {
-   display: flex;
+    display: none; /* <-- تأكد أن القائمة مخفية بشكل افتراضي */
     position: absolute;
     background-color: #f9f9f9;
     min-width: 200px;
@@ -121,20 +122,22 @@ a {
     border-radius: 5px;
     padding: 10px 0;
 }
-.desktop-nav .dropdown.active .dropdown-content {
 
+/* إظهار القائمة عند إضافة كلاس .active بواسطة JavaScript */
+.desktop-nav .dropdown.active .dropdown-content {
     display: block;
 }
+
 .desktop-nav .dropdown-content a {
     color: black !important;
     padding: 12px 16px;
     display: block;
     text-align: right;
 }
+
 .desktop-nav .dropdown-content a:hover {
     background-color: #f1f1f1;
 }
-
 /* ======================================= */
 /* === بقية تنسيقات الصفحة === */
 /* ======================================= */
