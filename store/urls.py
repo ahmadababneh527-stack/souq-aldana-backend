@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from . import views
 
 from .views import (
     ProductViewSet, 
@@ -28,5 +29,6 @@ urlpatterns = [
     path('products/<int:product_id>/reviews/', ReviewListCreateAPIView.as_view(), name='product-reviews'),
     path('countries/', CountryListView.as_view(), name='country-list'),
     path('category/<slug:slug>/', category_products, name='category_products'),
+    path('search/', views.search_results, name='search_results'),
 
 ]
