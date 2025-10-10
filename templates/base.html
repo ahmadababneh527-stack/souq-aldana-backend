@@ -149,27 +149,37 @@
                 }
 
                 // --- كود تفعيل قائمة الأقسام ---
-                const dropdownBtn = document.querySelector('.desktop-nav .dropdown .dropbtn');
-                const dropdown = document.querySelector('.desktop-nav .dropdown');
+              // --- كود تفعيل قائمة الأقسام (النسخة النهائية والمعدلة) ---
+const dropdown = document.querySelector('.desktop-nav .dropdown');
 
-                if (dropdownBtn && dropdown) {
-                    dropdownBtn.addEventListener('click', function(event) {
-                        event.preventDefault(); // لمنع الصفحة من القفز للأعلى
-                        dropdown.classList.toggle('active');
+if (dropdown) {
+    const dropdownBtn = dropdown.querySelector('.dropbtn');
+    
+    // عند الضغط على زر "الأقسام" نفسه
+    dropdownBtn.addEventListener('click', function(event) {
+        // الخطوة 1: منع هذا الضغط من الوصول إلى الصفحة كلها (هذا هو مفتاح الحل)
+        event.stopPropagation(); 
+        event.preventDefault();
+        
+        // فتح وإغلاق القائمة الحالية
+        dropdown.classList.toggle('active');
 
-                        // إغلاق القوائم الأخرى إذا كانت مفتوحة
-                        if (searchContainer.classList.contains('active')) {
-                            searchContainer.classList.remove('active');
-                        }
-                    });
+        // (اختياري) إغلاق شريط البحث إذا كان مفتوحًا
+        const searchContainer = document.querySelector('.search-container');
+        if (searchContainer && searchContainer.classList.contains('active')) {
+            searchContainer.classList.remove('active');
+        }
+    });
+}
 
-                    // إغلاق القائمة عند الضغط في أي مكان آخر في الصفحة
-                    window.addEventListener('click', function(event) {
-                        if (!dropdown.contains(event.target)) {
-                            dropdown.classList.remove('active');
-                        }
-                    });
-                }
+// --- كود إغلاق القائمة عند الضغط في أي مكان آخر ---
+// هذا الكود يراقب الصفحة كلها
+window.addEventListener('click', function() {
+    // إذا كانت القائمة مفتوحة، قم بإغلاقها
+    if (dropdown && dropdown.classList.contains('active')) {
+        dropdown.classList.remove('active');
+    }
+});
             });
         </script>
     {% endblock %}
