@@ -207,4 +207,4 @@ def search_results(request):
         'query': query,
         'results': results
     }
-    return render(request, 'templates/search_results.html', context)
+    return render(request, 'search_results.html', context)

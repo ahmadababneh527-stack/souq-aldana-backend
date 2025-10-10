@@ -30,5 +30,6 @@ urlpatterns = [
     path('countries/', CountryListView.as_view(), name='country-list'),
     path('category/<slug:slug>/', category_products, name='category_products'),
     path('search/', views.search_results, name='search_results'),
+    
 
 ]
