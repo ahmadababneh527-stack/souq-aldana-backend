@@ -121,7 +121,8 @@ a {
     border-radius: 5px;
     padding: 10px 0;
 }
-.desktop-nav .dropdown:hover .dropdown-content {
+.desktop-nav .dropdown.active .dropdown-content {
+
     display: block;
 }
 .desktop-nav .dropdown-content a {
@@ -537,7 +538,7 @@ a {
     }
     .cart-table td {
         display: flex; /* لترتيب العنوان والمحتوى */
-        justify-content: space-between;
+        align-items: center;
         padding: 10px;
         text-align: left; /* محاذاة المحتوى لليسار */
         border-bottom: 1px solid #eee;
@@ -552,7 +553,7 @@ a {
         /* الحل البديل بدون JS: */
         font-weight: bold;
         text-align: right; /* محاذاة العنوان لليمين */
-        margin-left: 10px;
+        margin-left: auto;
         color: var(--primary-color);
     }
     .cart-table td:nth-of-type(1)::before { content: "المنتج:"; }
