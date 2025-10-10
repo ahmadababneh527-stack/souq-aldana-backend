@@ -1,18 +1,15 @@
-// في ملف static/js/cart.js (النسخة النهائية مع مؤشر التحميل)
+// في ملف static/js/cart.js (النسخة النهائية مع تحسين مؤشر التحميل)
 
 document.addEventListener('DOMContentLoaded', () => {
     const cartItemsBody = document.getElementById('cart-items-body'); 
     const cartTotalSpan = document.getElementById('cart-total');
     const mainContainer = document.querySelector('.cart-container'); 
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-    
-    // ▼▼▼ الخطوة 1: الحصول على عنصر مؤشر التحميل ▼▼▼
     const spinnerOverlay = document.getElementById('spinner-overlay');
 
     async function displayCart() {
         if (!mainContainer) return;
 
-        // ▼▼▼ الخطوة 2: إظهار مؤشر التحميل في بداية العملية ▼▼▼
         spinnerOverlay.classList.add('show');
 
         try {
@@ -47,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 grandTotal += itemTotal;
 
                 const row = document.createElement('tr');
-                // أضفنا class لزر الحذف ليتناسب مع تصميم CSS
                 row.innerHTML = `
                     <td>
                         <div class="cart-product-info">
@@ -68,8 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             mainContainer.innerHTML = `<h3>عذرًا، حدث خطأ أثناء عرض السلة.</h3><p>${error.message}</p>`;
         } finally {
-            // ▼▼▼ الخطوة 3: إخفاء مؤشر التحميل دائماً عند انتهاء العملية ▼▼▼
-            spinnerOverlay.classList.remove('show');
+            // ▼▼▼ هذا هو التعديل المهم ▼▼▼
+            // سنضيف تأخيراً بسيطاً قبل إخفاء المؤشر لضمان ظهوره
+            setTimeout(() => {
+                spinnerOverlay.classList.remove('show');
+            }, 300); // 300 ميلي ثانية (حوالي ثلث ثانية)
         }
     }
     
@@ -77,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cartItemsBody.addEventListener('click', async (event) => {
             if (event.target.classList.contains('remove-from-cart-btn')) {
                 const itemId = event.target.dataset.itemId;
+                // لا داعي لإظهار المؤشر عند الحذف لأنه سريع جداً
                 try {
                     const response = await fetch(`/api/cart-items/${itemId}/`, {
                         method: 'DELETE',
