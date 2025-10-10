@@ -1,4 +1,30 @@
-// في ملف static/js/cart.js (النسخة النهائية الموحدة)
+// في ملف static/js/cart.js (النسخة النهائية المكتفية ذاتياً)
+
+// ▼▼▼ أضفنا الدوال المساعدة هنا لضمان عمل الملف دائماً ▼▼▼
+function showSpinner() {
+    const spinner = document.getElementById('spinner-overlay');
+    if (spinner) spinner.classList.add('show');
+}
+
+function hideSpinner() {
+    const spinner = document.getElementById('spinner-overlay');
+    if (spinner) spinner.classList.remove('show');
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    if (!notification) return;
+    
+    notification.textContent = message;
+    notification.className = 'notification show';
+    notification.classList.add(type);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+// ▲▲▲ نهاية الدوال المساعدة ▲▲▲
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const cartItemsBody = document.getElementById('cart-items-body'); 
@@ -9,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function displayCart() {
         if (!mainContainer) return;
 
-        showSpinner(); // <-- استخدام الدالة العامة
+        showSpinner(); // <-- الآن ستعمل لأنها معرّفة في نفس الملف
 
         try {
             const response = await fetch('/api/cart/');
@@ -26,12 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const cart = data.length > 0 ? data[0] : null;
 
             if (!cart || cart.items.length === 0) {
-                mainContainer.innerHTML = '<h3>سلة المشتريات فارغة.</h3>';
-                if (cartTotalSpan) cartTotalSpan.textContent = '0.00';
+                document.querySelector('.cart-table').style.display = 'none';
+                document.querySelector('.cart-summary').style.display = 'none';
+                document.getElementById('cart-empty-message').style.display = 'block';
                 return;
             }
 
-            // إظهار الجدول وإخفاء رسالة "السلة فارغة" إذا كانت ظاهرة
             document.querySelector('.cart-table').style.display = '';
             document.querySelector('.cart-summary').style.display = '';
             document.getElementById('cart-empty-message').style.display = 'none';
@@ -68,9 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             mainContainer.innerHTML = `<h3>عذرًا، حدث خطأ أثناء عرض السلة.</h3><p>${error.message}</p>`;
         } finally {
-            // إضافة تأخير بسيط قبل إخفاء المؤشر لتحسين التجربة
             setTimeout(() => {
-                hideSpinner(); // <-- استخدام الدالة العامة
+                hideSpinner();
             }, 300);
         }
     }
@@ -85,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         headers: { 'X-CSRFToken': csrfToken }
                     });
                     if (response.ok) {
-                        displayCart(); // إعادة تحميل محتويات السلة
+                        displayCart();
                     } else {
                         showNotification(`فشل حذف المنتج.`, 'error');
                     }
