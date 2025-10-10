@@ -765,9 +765,10 @@ a {
 /* --- 1. تنسيق الحاوية الرئيسية للهيدر --- */
 .main-header .container {
     display: flex; /* نستخدم Flexbox لتوزيع العناصر بشكل مرن */
-    justify-content: space-between; /* يضع مسافة بين الشعار على اليسار والقائمة على اليمين */
+    justify-content: flex-start; /* <--- هذا هو التغيير الرئيسي، يجمع العناصر في البداية (اليمين) */
     align-items: center; /* لمحاذاة العناصر عمودياً في المنتصف */
     padding: 10px 20px; /* هوامش داخلية لراحة العين */
+    gap: 40px; /* <--- هذه إضافة جديدة، تضع مسافة 40 بكسل بين الشعار والقائمة */
 }
 
 /* --- 2. تنسيق حاوية الشعار (الصورة والنص) --- */
@@ -913,4 +914,21 @@ a {
 .desktop-nav .dropdown-content a:hover {
     background-color: #e9e9e9;
     color: black !important; /* التأكد من أن النص يعود للون الأسود هنا */
+}
+
+
+
+/* ========================================= */
+/* ====   إصلاح نهائي لأيقونة الهاتف   ==== */
+/* ========================================= */
+
+@media (max-width: 768px) {
+    .hamburger-menu {
+        background-color: transparent !important; /* تأكيد أن الخلفية شفافة */
+        border: none !important; /* تأكيد عدم وجود أي حدود للزر */
+    }
+
+    .hamburger-menu span {
+        background-color: var(--white-color) !important; /* تأكيد أن الخطوط بيضاء */
+    }
 }
