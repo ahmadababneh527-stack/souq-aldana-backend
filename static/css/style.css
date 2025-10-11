@@ -948,3 +948,34 @@ input[type=number]::-webkit-outer-spin-button {
 .static-page-content strong {
     color: var(--secondary-color);
 }
+
+/* === تصميم نموذج الدفع في صفحة إتمام الشراء === */
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+.form-row .form-group {
+    flex: 1;
+}
+.card-field {
+    position: relative;
+}
+.card-field i {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+.form-control { /* كلاس عام لتحسين حقول الإدخال */
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+/* لجعل الأيقونة تظهر داخل الحقل */
+.card-field .form-control {
+    padding-right: 40px; 
+}

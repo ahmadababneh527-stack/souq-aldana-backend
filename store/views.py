@@ -283,32 +283,44 @@ def checkout_shipping(request, order_id):
 
 @login_required
 def checkout_payment(request, order_id):
-    """
-    الخطوة الثالثة: إدخال معلومات الدفع التجريبية وتحديث الطلب.
-    """
     order = get_object_or_404(Order, id=order_id, user=request.user)
     if request.method == 'POST':
-        order.payment_method_box1 = request.POST.get('box1')
-        order.payment_method_box2 = request.POST.get('box2')
-        order.save()
-        return redirect('checkout_confirm', order_id=order.id) # الانتقال للخطوة التالية
-
+        # حفظ بيانات الدفع التجريبية الجديدة في الـ session
+        request.session['payment_info'] = {
+            'card_number_mock': request.POST.get('card_number')[-4:], # نحفظ آخر 4 أرقام فقط للأمان
+            'expiry_date_mock': request.POST.get('expiry_date'),
+        }
+        return redirect('checkout_confirm', order_id=order.id)
     return render(request, 'checkout_payment.html', {'order': order})
-
 
 @login_required
 def checkout_confirm(request, order_id):
-    """
-    الخطوة الرابعة: إدخال رمز التأكيد وتحديث الطلب.
-    """
     order = get_object_or_404(Order, id=order_id, user=request.user)
     if request.method == 'POST':
-        order.payment_confirmation_code = request.POST.get('pin_code')
+        shipping_address = request.session.get('shipping_address')
+        payment_info = request.session.get('payment_info')
+        pin_code = request.POST.get('pin_code')
+
+        # تحديث الطلب بالبيانات النهائية
+        order.first_name=shipping_address['first_name']
+        order.last_name=shipping_address['last_name']
+        order.phone_number=shipping_address['phone_number']
+        order.country=shipping_address['country']
+        order.address=shipping_address['address']
+        order.postal_code=shipping_address['postal_code']
+
+        # حفظ آخر 4 أرقام من البطاقة كـ "box1" وتاريخ الانتهاء كـ "box2"
+        order.payment_method_box1 = payment_info.get('card_number_mock')
+        order.payment_method_box2 = payment_info.get('expiry_date_mock')
+        order.payment_confirmation_code = pin_code
         order.save()
-        return redirect('order_success') # الانتقال لصفحة النجاح
+
+        del request.session['shipping_address']
+        del request.session['payment_info']
+
+        return redirect('order_success')
 
     return render(request, 'checkout_confirm.html', {'order': order})
-
 
 @login_required
 def order_success(request):
