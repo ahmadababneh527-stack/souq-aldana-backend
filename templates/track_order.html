@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}متابعة طلباتي - سوق الدانة{% endblock %}
+
+{% block content %}
+    <style>
+        .order-card { background: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); margin-bottom: 25px; overflow: hidden; }
+        .order-header { background: #f8f9fa; padding: 15px 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #eee; }
+        .order-header span { font-weight: bold; }
+        .order-body { padding: 20px; }
+        .order-status { font-size: 1.2rem; font-weight: bold; color: var(--primary-color); }
+        .order-items-list { list-style: none; padding: 0; margin-top: 15px; }
+        .order-items-list li { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .order-items-list li:last-child { border-bottom: none; }
+    </style>
+
+    <div style="text-align: center; padding: 30px 0;">
+        <h2>متابعة طلباتي</h2>
+    </div>
+
+    {% if orders %}
+        {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <span>رقم الطلب: #{{ order.id }}</span>
+                    <span>تاريخ الطلب: {{ order.created_at|date:"Y-m-d" }}</span>
+                    <span>الإجمالي: {{ order.total_price }} درهم</span>
+                </div>
+                <div class="order-body">
+                    <p><strong>حالة الطلب الحالية:</strong> <span class="order-status">{{ order.get_status_display }}</span></p>
+                    <h5>المنتجات في هذا الطلب:</h5>
+                    <ul class="order-items-list">
+                        {% for item in order.items.all %}
+                            <li>
+                                <span>{{ item.product.name }} (الكمية: {{ item.quantity }})</span>
+                                <span>{{ item.price }} درهم</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center;">لا يوجد لديك أي طلبات سابقة.</p>
+    {% endif %}
+{% endblock %}

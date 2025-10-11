@@ -6,9 +6,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django_countries import countries
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q # تأكد من إضافة هذا السطر في الأعلى مع بقية الـ imports
-
-from .models import Product, User, Cart, CartItem, Review, Category
+from .models import Product, User, Cart, CartItem, Review, Category,Order
 from .serializers import (
     ProductSerializer, UserSerializer, CartSerializer, 
     CartItemSerializer, ReviewSerializer
@@ -208,3 +208,15 @@ def search_results(request):
         'results': results
     }
     return render(request, 'search_results.html', context)
+
+
+# في نهاية ملف store/views.py
+
+@login_required
+def track_order_view(request):
+    # جلب كل الطلبات الخاصة بالمستخدم الحالي فقط، وترتيبها من الأحدث للأقدم
+    orders = request.user.orders.all().order_by('-created_at')
+    context = {
+        'orders': orders
+    }
+    return render(request, 'templates/track_order.html', context)

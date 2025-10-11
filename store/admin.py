@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Category, Product, ProductImage, Cart, CartItem, Review
+from .models import User, Category, Product, ProductImage, Cart, CartItem, Review, OrderItem, Order
 
 # --- User Admin ---
 @admin.register(User)
@@ -34,6 +34,17 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = ('name', 'product', 'rating', 'created_at')
     list_filter = ('product', 'rating')
     search_fields = ('name', 'comment')
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    readonly_fields = ('product', 'quantity', 'price')
+    extra = 0
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'created_at', 'total_price', 'status')
+    list_filter = ('status', 'created_at')
+    list_editable = ('status',) # هذا السطر يسمح لك بتغيير الحالة مباشرة
+    inlines = [OrderItemInline]
 
 # --- تسجيل باقي النماذج ---
 # لم نعد بحاجة لـ admin.site.register لأننا نستخدم @admin.register

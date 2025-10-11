@@ -12,6 +12,7 @@ from store.views import (
     CartView, 
     ProfileView, 
     TermsView, 
+    track_order_view, 
     PrivacyView
 )
 
@@ -31,6 +32,7 @@ urlpatterns = [
     path('profile/', ProfileView.as_view(), name='profile'),
     path('terms/', TermsView.as_view(), name='terms'),
     path('privacy/', PrivacyView.as_view(), name='privacy'),
+     path('track-order/', track_order_view, name='track_order'),
 ]
 
 # الكود يضاف هنا، بعد انتهاء القائمة
