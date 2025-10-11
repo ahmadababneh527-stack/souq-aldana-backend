@@ -88,6 +88,8 @@ class CartItem(models.Model):
 
     # في نهاية ملف store/models.py
 
+# في ملف store/models.py
+
 class Order(models.Model):
     STATUS_CHOICES = (
         ('preparing', 'جار تجهيز المنتجات'),
@@ -101,6 +103,17 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='preparing')
+
+    # --- الحقول الجديدة ---
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=100, blank=True)
+    address = models.CharField(max_length=255, blank=True)
+    postal_code = models.CharField(max_length=20, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True)
+    payment_method_box1 = models.CharField(max_length=50, blank=True, null=True)
+    payment_method_box2 = models.CharField(max_length=50, blank=True, null=True)
+    payment_confirmation_code = models.CharField(max_length=6, blank=True, null=True)
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"

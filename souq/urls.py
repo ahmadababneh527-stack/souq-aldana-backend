@@ -2,6 +2,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+# from store.views import ..., checkout_view
+from django.shortcuts import render # <-- قمنا بإضافة هذا السطر لتعريف render
+
 # لم نعد بحاجة إلى serve أو re_path
 # from django.views.static import serve
 from store.views import (
@@ -13,6 +16,7 @@ from store.views import (
     ProfileView, 
     TermsView, 
     track_order_view, 
+    checkout_view, 
     PrivacyView
 )
 
@@ -32,7 +36,9 @@ urlpatterns = [
     path('profile/', ProfileView.as_view(), name='profile'),
     path('terms/', TermsView.as_view(), name='terms'),
     path('privacy/', PrivacyView.as_view(), name='privacy'),
-     path('track-order/', track_order_view, name='track_order'),
+    path('track-order/', track_order_view, name='track_order'),
+    path('checkout/', checkout_view, name='checkout'),
+    path('order-success/', lambda request: render(request, 'templates/order_success.html'), name='order_success'),
 ]
 
 # الكود يضاف هنا، بعد انتهاء القائمة

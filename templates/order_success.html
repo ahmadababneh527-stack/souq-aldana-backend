@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}تم استلام طلبك{% endblock %}
+{% block content %}
+<div class="auth-form-container" style="text-align: center;">
+    <h2>شكراً لك!</h2>
+    <p style="font-size: 1.2rem;">سوف يتم توصيل طلبك بنجاح وسيتم الدفع عند الاستلام.</p>
+    <a href="{% url 'track_order' %}" class="btn-primary" style="display: inline-block; width: auto; margin-top: 20px;">متابعة حالة طلبي</a>
+    <a href="{% url 'index' %}" style="display: block; margin-top: 20px;">العودة للصفحة الرئيسية</a>
+</div>
+{% endblock %}

@@ -5,10 +5,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django_countries import countries
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+
+
 from django.db.models import Q # تأكد من إضافة هذا السطر في الأعلى مع بقية الـ imports
-from .models import Product, User, Cart, CartItem, Review, Category,Order
+from .models import Product, User, Cart, CartItem, Review, Category, Order, OrderItem
 from .serializers import (
     ProductSerializer, UserSerializer, CartSerializer, 
     CartItemSerializer, ReviewSerializer
@@ -220,3 +222,54 @@ def track_order_view(request):
         'orders': orders
     }
     return render(request, 'track_order.html', context)
+
+
+# في نهاية ملف store/views.py
+
+@login_required
+def checkout_view(request):
+    # هذه الدالة ستقوم بإنشاء الطلب بعد أن يملأ المستخدم بياناته
+    if request.method == 'POST':
+        cart = Cart.objects.get(user=request.user)
+        cart_items = cart.items.all()
+
+        if not cart_items:
+            return redirect('cart') # إذا كانت السلة فارغة، أعده للسلة
+
+        # إنشاء طلب جديد
+        new_order = Order.objects.create(
+            user=request.user,
+            first_name=request.POST.get('first_name'),
+            last_name=request.POST.get('last_name'),
+            country=request.POST.get('country'),
+            address=request.POST.get('address'),
+            postal_code=request.POST.get('postal_code'),
+            phone_number=request.POST.get('phone_number'),
+            # (تجريبي) حفظ بيانات الدفع
+            payment_method_box1=request.POST.get('box1'),
+            payment_method_box2=request.POST.get('box2'),
+            payment_confirmation_code=request.POST.get('pin_code'),
+        )
+
+        total_price = 0
+        # نقل المنتجات من السلة إلى الطلب الجديد
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=new_order,
+                product=item.product,
+                quantity=item.quantity,
+                price=item.product.price
+            )
+            total_price += item.product.price * item.quantity
+
+        # تحديث السعر الإجمالي للطلب
+        new_order.total_price = total_price
+        new_order.save()
+
+        # تفريغ السلة
+        cart_items.delete()
+
+        return redirect('order_success') # توجيه لصفحة النجاح
+
+    # في حالة GET، فقط اعرض صفحة إتمام الشراء
+    return render(request, 'templates/checkout.html')

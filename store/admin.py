@@ -39,12 +39,28 @@ class OrderItemInline(admin.TabularInline):
     readonly_fields = ('product', 'quantity', 'price')
     extra = 0
 
+# في ملف store/admin.py
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'created_at', 'total_price', 'status')
     list_filter = ('status', 'created_at')
-    list_editable = ('status',) # هذا السطر يسمح لك بتغيير الحالة مباشرة
+    list_editable = ('status',)
     inlines = [OrderItemInline]
+
+    # لعرض التفاصيل بشكل منظم داخل صفحة كل طلب
+    readonly_fields = ('user', 'created_at', 'total_price')
+    fieldsets = (
+        ('معلومات الطلب الأساسية', {
+            'fields': ('user', 'created_at', 'total_price', 'status')
+        }),
+        ('عنوان التوصيل', {
+            'fields': ('first_name', 'last_name', 'phone_number', 'country', 'address', 'postal_code')
+        }),
+        ('معلومات الدفع (تجريبية)', {
+            'fields': ('payment_method_box1', 'payment_method_box2', 'payment_confirmation_code')
+        }),
+    )
 
 # --- تسجيل باقي النماذج ---
 # لم نعد بحاجة لـ admin.site.register لأننا نستخدم @admin.register
