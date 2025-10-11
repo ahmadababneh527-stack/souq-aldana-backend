@@ -981,13 +981,19 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 
-/* === تحسينات تصميم صفحة إتمام الشراء === */
 .card-icons {
-    font-size: 2.2rem;
-    color: #aab7c4;
-    margin-bottom: 15px;
     display: flex;
     gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+.card-icons img {
+    height: 28px; /* تحديد ارتفاع موحد للصور */
+    width: auto;
+    background-color: #fff; /* خلفية بيضاء للصور التي لها شفافية */
+    padding: 3px 6px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
 }
 .expiry-fields {
     display: flex;
