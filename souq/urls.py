@@ -22,11 +22,12 @@ from store.views import (
     order_success,
     category_products,
     search_results,
-    active_users_view # <-- تأكد من وجودها
+    active_users_view # <-- تأكدنا من وجودها
 )
 
 urlpatterns = [
     # رابط لوحة التحكم
+    path('admin/active-users/', active_users_view, name='active_users'), # <-- أضفنا الرابط الجديد هنا
     path('admin/', admin.site.urls),
     
     # كل روابط الـ API يتم توجيهها من هنا إلى ملف store/urls.py
@@ -53,9 +54,6 @@ urlpatterns = [
     path('checkout/payment/<int:order_id>/', checkout_payment, name='checkout_payment'),
     path('checkout/confirm/<int:order_id>/', checkout_confirm, name='checkout_confirm'),
     path('order-success/', order_success, name='order_success'),
-    
-    # --- السطر المصحح ---
-    path('admin/active-users/', active_users_view, name='active_users'),
 ]
 
 # الكود يضاف هنا، بعد انتهاء القائمة
