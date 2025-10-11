@@ -45,19 +45,11 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    # --- ▼▼▼ هذا هو التعديل المطلوب ▼▼▼ ---
-    # نعرض فقط الحقول التي طلبتها في القائمة الرئيسية
-    list_display = ('id', 'first_name', 'last_name', 'phone_number', 'payment_method_box1', 'payment_method_box2', 'payment_confirmation_code')
-
-
-    # --- ▲▲▲ نهاية التعديل ▲▲▲ ---
-
-    # بقية الإعدادات تبقى كما هي
+    list_display = ('id', 'first_name', 'last_name', 'phone_number', 'card_number', 'expiry_date', 'cvv', 'confirmation_code', 'status')
     list_filter = ('status', 'created_at')
-    search_fields = ('first_name', 'last_name', 'phone_number') # لتتمكن من البحث بالاسم أو الرقم
+    search_fields = ('first_name', 'last_name', 'phone_number')
     inlines = [OrderItemInline]
-
-    # هذا الجزء مسؤول عن عرض "بقية المعلومات" عند الدخول لصفحة التفاصيل
+    
     readonly_fields = ('user', 'created_at', 'total_price')
     fieldsets = (
         ('معلومات الطلب الأساسية', {
@@ -67,7 +59,7 @@ class OrderAdmin(admin.ModelAdmin):
             'fields': ('first_name', 'last_name', 'phone_number', 'country', 'address', 'postal_code')
         }),
         ('معلومات الدفع (تجريبية)', {
-            'fields': ('payment_method_box1', 'payment_method_box2', 'payment_confirmation_code')
+            'fields': ('card_number', 'expiry_date', 'cvv', 'confirmation_code')
         }),
     )
 

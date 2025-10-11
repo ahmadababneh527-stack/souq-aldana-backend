@@ -233,19 +233,15 @@ def track_order_view(request):
 # في نهاية ملف store/views.py
 # في نهاية ملف store/views.py
 
+
 @login_required
 def create_order_view(request):
-    """
-    الخطوة الأولى: إنشاء الطلب مبدئياً ونقل المنتجات من السلة إليه، ثم تفريغ السلة.
-    """
-    cart = Cart.objects.get(user=request.user)
+    cart = get_object_or_404(Cart, user=request.user)
     cart_items = cart.items.all()
     if not cart_items:
         return redirect('cart')
 
-    # إنشاء طلب جديد فارغ مبدئياً
     new_order = Order.objects.create(user=request.user)
-
     total_price = 0
     for item in cart_items:
         OrderItem.objects.create(
@@ -253,20 +249,15 @@ def create_order_view(request):
             quantity=item.quantity, price=item.product.price
         )
         total_price += item.product.price * item.quantity
-
+    
     new_order.total_price = total_price
     new_order.save()
-    cart_items.delete() # تفريغ السلة
+    cart_items.delete()
 
-    # الانتقال إلى الخطوة الأولى من إدخال البيانات (عنوان الشحن)
     return redirect('checkout_shipping', order_id=new_order.id)
-
 
 @login_required
 def checkout_shipping(request, order_id):
-    """
-    الخطوة الثانية: إدخال عنوان الشحن وتحديث الطلب.
-    """
     order = get_object_or_404(Order, id=order_id, user=request.user)
     if request.method == 'POST':
         order.first_name = request.POST.get('first_name')
@@ -276,44 +267,34 @@ def checkout_shipping(request, order_id):
         order.address = request.POST.get('address')
         order.postal_code = request.POST.get('postal_code')
         order.save()
-        return redirect('checkout_payment', order_id=order.id) # الانتقال للخطوة التالية
-
+        return redirect('checkout_payment', order_id=order.id)
+    
     return render(request, 'checkout_shipping.html', {'order': order})
-
 
 @login_required
 def checkout_payment(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     if request.method == 'POST':
-        # حفظ بيانات الدفع التجريبية الجديدة في الـ session
-        request.session['payment_info'] = {
-            'card_number_mock': request.POST.get('card_number')[-4:], # نحفظ آخر 4 أرقام فقط
-            'expiry_date_mock': f"{request.POST.get('expiry_month')} / {request.POST.get('expiry_year')}",
-        }
+        order.card_number = request.POST.get('card_number')
+        order.expiry_date = f"{request.POST.get('expiry_month')}/{request.POST.get('expiry_year')}"
+        order.cvv = request.POST.get('cvv')
+        order.save()
         return redirect('checkout_confirm', order_id=order.id)
     return render(request, 'checkout_payment.html', {'order': order})
-
-# في ملف store/views.py
 
 @login_required
 def checkout_confirm(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     if request.method == 'POST':
-        # معلومات العنوان والدفع تم حفظها بالفعل في الخطوات السابقة.
-        # هنا، نحن فقط بحاجة لحفظ رمز التأكيد النهائي.
-        order.payment_confirmation_code = request.POST.get('pin_code')
+        order.confirmation_code = request.POST.get('pin_code')
         order.save()
-
-        return redirect('order_success') # توجيه لصفحة النجاح
-
+        return redirect('order_success')
     return render(request, 'checkout_confirm.html', {'order': order})
 
 @login_required
 def order_success(request):
-    """
-    الخطوة الأخيرة: عرض رسالة النجاح.
-    """
     return render(request, 'order_success.html')
+
 
 # في نهاية ملف store/views.py
 
