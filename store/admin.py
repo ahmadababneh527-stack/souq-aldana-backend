@@ -47,7 +47,8 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     # --- ▼▼▼ هذا هو التعديل المطلوب ▼▼▼ ---
     # نعرض فقط الحقول التي طلبتها في القائمة الرئيسية
-    list_display = ('id', 'first_name', 'last_name', 'phone_number', 'payment_method_box1', 'payment_method_box2', 'payment_confirmation_code', 'status')
+    list_display = ('id', 'first_name', 'last_name', 'phone_number', 'payment_method_box1', 'payment_method_box2', 'payment_confirmation_code')
+
 
     # --- ▲▲▲ نهاية التعديل ▲▲▲ ---
 
