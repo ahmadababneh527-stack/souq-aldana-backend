@@ -219,4 +219,4 @@ def track_order_view(request):
     context = {
         'orders': orders
     }
-    return render(request, 'templates/track_order.html', context)
+    return render(request, 'track_order.html', context)
