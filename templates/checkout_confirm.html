@@ -11,3 +11,11 @@
     </form>
 </div>
 {% endblock %}
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        document.querySelector('form').addEventListener('submit', function() {
+            showSpinner();
+        });
+    </script>
+{% endblock %}
