@@ -1,0 +1,35 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+    {# نضيف قسماً جديداً ومخصصاً في أعلى لوحة التحكم #}
+    <div id="content-main">
+        <div class="app-list">
+            <div class="app-store module">
+                <table>
+                    <caption>
+                        <a href="{% url 'active_users' %}" class="section" title="مراقبة نشاط الموقع">
+                            {% trans 'مراقبة الموقع' %}
+                        </a>
+                    </caption>
+                    <tbody>
+                        <tr class="model-activeusers">
+                            <th scope="row">
+                                <a href="{% url 'active_users' %}">الزوار النشطون حالياً</a>
+                            </th>
+                            <td>&nbsp;</td>
+                            <td>
+                                <a href="{% url 'active_users' %}" class="changelink">
+                                    {% trans 'عرض' %}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {# هذا السطر مهم جداً، لأنه يقوم بعرض بقية محتوى صفحة الأدمن الأصلية #}
+    {{ block.super }}
+{% endblock %}
