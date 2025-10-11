@@ -293,32 +293,18 @@ def checkout_payment(request, order_id):
         return redirect('checkout_confirm', order_id=order.id)
     return render(request, 'checkout_payment.html', {'order': order})
 
+# في ملف store/views.py
+
 @login_required
 def checkout_confirm(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     if request.method == 'POST':
-        shipping_address = request.session.get('shipping_address')
-        payment_info = request.session.get('payment_info')
-        pin_code = request.POST.get('pin_code')
-
-        # تحديث الطلب بالبيانات النهائية
-        order.first_name=shipping_address['first_name']
-        order.last_name=shipping_address['last_name']
-        order.phone_number=shipping_address['phone_number']
-        order.country=shipping_address['country']
-        order.address=shipping_address['address']
-        order.postal_code=shipping_address['postal_code']
-
-        # حفظ آخر 4 أرقام من البطاقة كـ "box1" وتاريخ الانتهاء كـ "box2"
-        order.payment_method_box1 = payment_info.get('card_number_mock')
-        order.payment_method_box2 = payment_info.get('expiry_date_mock')
-        order.payment_confirmation_code = pin_code
+        # معلومات العنوان والدفع تم حفظها بالفعل في الخطوات السابقة.
+        # هنا، نحن فقط بحاجة لحفظ رمز التأكيد النهائي.
+        order.payment_confirmation_code = request.POST.get('pin_code')
         order.save()
 
-        del request.session['shipping_address']
-        del request.session['payment_info']
-
-        return redirect('order_success')
+        return redirect('order_success') # توجيه لصفحة النجاح
 
     return render(request, 'checkout_confirm.html', {'order': order})
 
