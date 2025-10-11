@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}عنوان التوصيل{% endblock %}
+{% block content %}
+<div class="auth-form-container">
+    <h2>الخطوة 1: عنوان التوصيل</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group"><label>الاسم الأول:</label><input type="text" name="first_name" required></div>
+        <div class="form-group"><label>الاسم الأخير:</label><input type="text" name="last_name" required></div>
+        <div class="form-group"><label>رقم الهاتف:</label><input type="tel" name="phone_number" required></div>
+        <div class="form-group"><label>الدولة:</label><input type="text" name="country" required></div>
+        <div class="form-group"><label>العنوان (الشارع، المبنى):</label><input type="text" name="address" required></div>
+        <div class="form-group"><label>الرمز البريدي:</label><input type="text" name="postal_code"></div>
+        <button type="submit" class="btn-primary">التالي &larr;</button>
+    </form>
+</div>
+{% endblock %}

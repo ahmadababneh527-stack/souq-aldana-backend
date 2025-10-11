@@ -2,11 +2,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-# from store.views import ..., checkout_view
-from django.shortcuts import render # <-- قمنا بإضافة هذا السطر لتعريف render
+from django.shortcuts import render
 
-# لم نعد بحاجة إلى serve أو re_path
-# from django.views.static import serve
+# قمنا بتحديث قائمة الاستيراد لتشمل كل الدوال التي نحتاجها بأسمائها مباشرة
 from store.views import (
     IndexView, 
     ProductDetailView, 
@@ -15,9 +13,14 @@ from store.views import (
     CartView, 
     ProfileView, 
     TermsView, 
-    track_order_view, 
-    checkout_view, 
-    PrivacyView
+    PrivacyView,
+    track_order_view,
+    checkout_shipping, 
+    checkout_payment, 
+    checkout_confirm,
+    order_success,
+    category_products, # للتأكد من وجودها
+    search_results     # للتأكد من وجودها
 )
 
 urlpatterns = [
@@ -37,8 +40,16 @@ urlpatterns = [
     path('terms/', TermsView.as_view(), name='terms'),
     path('privacy/', PrivacyView.as_view(), name='privacy'),
     path('track-order/', track_order_view, name='track_order'),
-    path('checkout/', checkout_view, name='checkout'),
-    path('order-success/', lambda request: render(request, 'templates/order_success.html'), name='order_success'),
+
+    # الروابط المصححة لعملية إتمام الشراء
+    path('checkout/shipping/', checkout_shipping, name='checkout_shipping'),
+    path('checkout/payment/', checkout_payment, name='checkout_payment'),
+    path('checkout/confirm/', checkout_confirm, name='checkout_confirm'),
+    path('order-success/', order_success, name='order_success'),
+    
+    # روابط الأقسام والبحث (من ملف views.py)
+    path('category/<slug:slug>/', category_products, name='category_products'),
+    path('search/', search_results, name='search_results'),
 ]
 
 # الكود يضاف هنا، بعد انتهاء القائمة

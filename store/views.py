@@ -226,51 +226,81 @@ def track_order_view(request):
 
 # في نهاية ملف store/views.py
 
+# في نهاية ملف store/views.py
+
 @login_required
-def checkout_view(request):
-    # هذه الدالة ستقوم بإنشاء الطلب بعد أن يملأ المستخدم بياناته
+def checkout_shipping(request):
     if request.method == 'POST':
+        # حفظ بيانات الشحن في الـ session
+        request.session['shipping_address'] = {
+            'first_name': request.POST.get('first_name'),
+            'last_name': request.POST.get('last_name'),
+            'phone_number': request.POST.get('phone_number'),
+            'country': request.POST.get('country'),
+            'address': request.POST.get('address'),
+            'postal_code': request.POST.get('postal_code'),
+        }
+        return redirect('checkout_payment') # الانتقال للخطوة التالية
+    return render(request, 'checkout_shipping.html')
+
+@login_required
+def checkout_payment(request):
+    if request.method == 'POST':
+        # حفظ بيانات الدفع التجريبية في الـ session
+        request.session['payment_info'] = {
+            'box1': request.POST.get('box1'),
+            'box2': request.POST.get('box2'),
+        }
+        return redirect('checkout_confirm') # الانتقال للخطوة التالية
+    return render(request, 'checkout_payment.html')
+
+@login_required
+def checkout_confirm(request):
+    if request.method == 'POST':
+        # --- تجميع كل البيانات وإنشاء الطلب ---
+        shipping_address = request.session.get('shipping_address')
+        payment_info = request.session.get('payment_info')
+        pin_code = request.POST.get('pin_code')
+
         cart = Cart.objects.get(user=request.user)
         cart_items = cart.items.all()
-
         if not cart_items:
-            return redirect('cart') # إذا كانت السلة فارغة، أعده للسلة
+            return redirect('cart')
 
-        # إنشاء طلب جديد
+        # إنشاء الطلب
         new_order = Order.objects.create(
             user=request.user,
-            first_name=request.POST.get('first_name'),
-            last_name=request.POST.get('last_name'),
-            country=request.POST.get('country'),
-            address=request.POST.get('address'),
-            postal_code=request.POST.get('postal_code'),
-            phone_number=request.POST.get('phone_number'),
-            # (تجريبي) حفظ بيانات الدفع
-            payment_method_box1=request.POST.get('box1'),
-            payment_method_box2=request.POST.get('box2'),
-            payment_confirmation_code=request.POST.get('pin_code'),
+            first_name=shipping_address['first_name'],
+            last_name=shipping_address['last_name'],
+            phone_number=shipping_address['phone_number'],
+            country=shipping_address['country'],
+            address=shipping_address['address'],
+            postal_code=shipping_address['postal_code'],
+            payment_method_box1=payment_info['box1'],
+            payment_method_box2=payment_info['box2'],
+            payment_confirmation_code=pin_code,
         )
-
+        
         total_price = 0
-        # نقل المنتجات من السلة إلى الطلب الجديد
         for item in cart_items:
             OrderItem.objects.create(
-                order=new_order,
-                product=item.product,
-                quantity=item.quantity,
-                price=item.product.price
+                order=new_order, product=item.product,
+                quantity=item.quantity, price=item.product.price
             )
             total_price += item.product.price * item.quantity
-
-        # تحديث السعر الإجمالي للطلب
+        
         new_order.total_price = total_price
         new_order.save()
+        cart_items.delete() # تفريغ السلة
 
-        # تفريغ السلة
-        cart_items.delete()
+        # مسح البيانات المؤقتة
+        del request.session['shipping_address']
+        del request.session['payment_info']
 
-        return redirect('order_success') # توجيه لصفحة النجاح
+        return redirect('order_success')
+        
+    return render(request, 'checkout_confirm.html')
 
-    # في حالة GET، فقط اعرض صفحة إتمام الشراء
-    return render(request, 'checkout.html')
-
+@login_required
+def order_success(request):
+    return render(request, 'order_success.html')

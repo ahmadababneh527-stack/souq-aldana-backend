@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}معلومات الدفع{% endblock %}
+{% block content %}
+<div class="auth-form-container">
+    <h2>الخطوة 2: معلومات الدفع (تجريبية)</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group"><label>المربع الأول:</label><input type="text" name="box1"></div>
+        <div class="form-group"><label>المربع الثاني:</label><input type="text" name="box2"></div>
+        <button type="submit" class="btn-primary">التالي &larr;</button>
+    </form>
+</div>
+{% endblock %}
