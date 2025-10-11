@@ -272,4 +272,5 @@ def checkout_view(request):
         return redirect('order_success') # توجيه لصفحة النجاح
 
     # في حالة GET، فقط اعرض صفحة إتمام الشراء
-    return render(request, 'templates/checkout.html')
+    return render(request, 'checkout.html')
+
