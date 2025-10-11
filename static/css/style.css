@@ -980,6 +980,7 @@ input[type=number]::-webkit-outer-spin-button {
     padding-right: 40px; 
 }
 
+
 /* === تحسينات تصميم صفحة إتمام الشراء === */
 .card-icons {
     font-size: 2.2rem;
@@ -991,4 +992,24 @@ input[type=number]::-webkit-outer-spin-button {
 .expiry-fields {
     display: flex;
     gap: 10px;
+}
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+.form-row .form-group {
+    flex: 1;
+}
+.card-field {
+    position: relative;
+}
+.card-field i {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+.card-field .form-control {
+    padding-right: 40px; 
 }

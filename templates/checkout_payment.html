@@ -8,22 +8,42 @@
     <form method="POST" action="{% url 'checkout_payment' order_id=order.id %}">
         {% csrf_token %}
 
+        <div class="card-icons">
+            <i class="fab fa-cc-visa"></i>
+            <i class="fab fa-cc-mastercard"></i>
+            <i class="fab fa-cc-amex"></i>
+            <i class="fab fa-cc-discover"></i>
+        </div>
+
         <div class="form-group">
             <label for="card_number">رقم البطاقة</label>
             <div class="card-field">
                 <i class="fas fa-credit-card"></i>
-                <input type="text" id="card_number" name="card_number" class="form-control" placeholder="xxxx xxxx xxxx xxxx" required>
+                <input type="text" id="card_number" name="card_number" class="form-control" placeholder="xxxx xxxx xxxx xxxx" maxlength="19" required>
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group">
-                <label for="expiry_date">تاريخ الانتهاء</label>
-                <input type="text" id="expiry_date" name="expiry_date" class="form-control" placeholder="MM / YY" required>
+                <label>تاريخ انتهاء الصلاحية</label>
+                <div class="expiry-fields">
+                    <select name="expiry_month" class="form-control" required>
+                        <option value="">الشهر</option>
+                        {% for i in "01,02,03,04,05,06,07,08,09,10,11,12"|split:"," %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="expiry_year" class="form-control" required>
+                        <option value="">السنة</option>
+                        {% for i in "2025,2026,2027,2028,2029,2030,2031,2032"|split:"," %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <label for="cvv">CVV</label>
-                <input type="text" id="cvv" name="cvv" class="form-control" placeholder="123" required>
+                <input type="text" id="cvv" name="cvv" class="form-control" placeholder="رمز مكون من 3 أو 4 أرقام" maxlength="4" required>
             </div>
         </div>
         

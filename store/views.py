@@ -287,8 +287,8 @@ def checkout_payment(request, order_id):
     if request.method == 'POST':
         # حفظ بيانات الدفع التجريبية الجديدة في الـ session
         request.session['payment_info'] = {
-            'card_number_mock': request.POST.get('card_number')[-4:], # نحفظ آخر 4 أرقام فقط للأمان
-            'expiry_date_mock': request.POST.get('expiry_date'),
+            'card_number_mock': request.POST.get('card_number')[-4:], # نحفظ آخر 4 أرقام فقط
+            'expiry_date_mock': f"{request.POST.get('expiry_month')} / {request.POST.get('expiry_year')}",
         }
         return redirect('checkout_confirm', order_id=order.id)
     return render(request, 'checkout_payment.html', {'order': order})
