@@ -4,7 +4,7 @@
 <div class="auth-form-container">
     <h2>الخطوة 3: تأكيد التحويل</h2>
     <p>سيتم الدفع عند الاستلام. هذه مجرد خطوة تجريبية.</p>
-    <form method="POST">
+    <form method="POST" action="{% url 'checkout_confirm' order_id=order.id %}">
         {% csrf_token %}
         <div class="form-group"><label>رمز التأكيد (أدخل أي 6 أرقام):</label><input type="text" name="pin_code" maxlength="6" required></div>
         <button type="submit" class="btn-primary">تأكيد الطلب</button>

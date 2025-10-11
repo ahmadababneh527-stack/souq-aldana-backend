@@ -3,7 +3,7 @@
 {% block content %}
 <div class="auth-form-container">
     <h2>الخطوة 1: عنوان التوصيل</h2>
-    <form method="POST">
+    <form method="POST" action="{% url 'checkout_shipping' order_id=order.id %}">
         {% csrf_token %}
         <div class="form-group"><label>الاسم الأول:</label><input type="text" name="first_name" required></div>
         <div class="form-group"><label>الاسم الأخير:</label><input type="text" name="last_name" required></div>

@@ -15,12 +15,13 @@ from store.views import (
     TermsView, 
     PrivacyView,
     track_order_view,
+    create_order_view, # <-- تأكد من إضافة هذا
     checkout_shipping, 
     checkout_payment, 
     checkout_confirm,
     order_success,
-    category_products, # للتأكد من وجودها
-    search_results     # للتأكد من وجودها
+    category_products,
+    search_results
 )
 
 urlpatterns = [
@@ -40,16 +41,17 @@ urlpatterns = [
     path('terms/', TermsView.as_view(), name='terms'),
     path('privacy/', PrivacyView.as_view(), name='privacy'),
     path('track-order/', track_order_view, name='track_order'),
-
-    # الروابط المصححة لعملية إتمام الشراء
-    path('checkout/shipping/', checkout_shipping, name='checkout_shipping'),
-    path('checkout/payment/', checkout_payment, name='checkout_payment'),
-    path('checkout/confirm/', checkout_confirm, name='checkout_confirm'),
-    path('order-success/', order_success, name='order_success'),
     
-    # روابط الأقسام والبحث (من ملف views.py)
+    # روابط الأقسام والبحث
     path('category/<slug:slug>/', category_products, name='category_products'),
-    path('search/', search_results, name='search_results'),
+    path('api/search/', search_results, name='search_results'), # <-- تم تصحيح المسار
+
+    # --- الروابط المصححة لعملية إتمام الشراء ---
+    path('checkout/start/', create_order_view, name='create_order'),
+    path('checkout/shipping/<int:order_id>/', checkout_shipping, name='checkout_shipping'),
+    path('checkout/payment/<int:order_id>/', checkout_payment, name='checkout_payment'),
+    path('checkout/confirm/<int:order_id>/', checkout_confirm, name='checkout_confirm'),
+    path('order-success/', order_success, name='order_success'),
 ]
 
 # الكود يضاف هنا، بعد انتهاء القائمة
