@@ -8,6 +8,10 @@ from django_countries import countries
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 
+from django.core.cache import cache
+from datetime import timedelta
+from django.utils import timezone
+from django.contrib.admin.views.decorators import staff_member_required
 
 from django.db.models import Q # تأكد من إضافة هذا السطر في الأعلى مع بقية الـ imports
 from .models import Product, User, Cart, CartItem, Review, Category, Order, OrderItem
@@ -312,3 +316,23 @@ def order_success(request):
     الخطوة الأخيرة: عرض رسالة النجاح.
     """
     return render(request, 'order_success.html')
+
+# في نهاية ملف store/views.py
+
+@staff_member_required
+def active_users_view(request):
+    active_users = cache.get('active_users', {})
+    # تحديد الزوار الذين كانوا نشطين في آخر 5 دقائق
+    five_minutes_ago = timezone.now() - timedelta(minutes=5)
+
+    active_now_keys = [
+        key for key, last_seen in active_users.items() 
+        if last_seen > five_minutes_ago
+    ]
+
+    count = len(active_now_keys)
+
+    context = {
+        'active_users_count': count
+    }
+    return render(request, 'admin/active_users.html', context)

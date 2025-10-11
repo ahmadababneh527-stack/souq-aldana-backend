@@ -43,6 +43,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'store.middleware.ActiveUserMiddleware',
+
 ]
 
 ROOT_URLCONF = 'souq.urls'
@@ -121,3 +123,12 @@ AUTH_USER_MODEL = 'store.User'
 MEDIA_URL = '/media/'
 # استخدم المسار من متغير البيئة في Render، أو المسار المحلي كخيار افتراضي
 MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
+
+# في نهاية ملف souq/settings.py
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}

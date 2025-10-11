@@ -1,0 +1,8 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<div>
+    <h1>عدد الزوار النشطين حالياً</h1>
+    <p style="font-size: 2rem; font-weight: bold;">{{ active_users_count }}</p>
+    <p>(الزوار الذين تفاعلوا مع الموقع في آخر 5 دقائق)</p>
+</div>
+{% endblock %}

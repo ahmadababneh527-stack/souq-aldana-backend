@@ -15,13 +15,14 @@ from store.views import (
     TermsView, 
     PrivacyView,
     track_order_view,
-    create_order_view, # <-- تأكد من إضافة هذا
+    create_order_view,
     checkout_shipping, 
     checkout_payment, 
     checkout_confirm,
     order_success,
     category_products,
-    search_results
+    search_results,
+    active_users_view # <-- تأكد من وجودها
 )
 
 urlpatterns = [
@@ -44,14 +45,17 @@ urlpatterns = [
     
     # روابط الأقسام والبحث
     path('category/<slug:slug>/', category_products, name='category_products'),
-    path('api/search/', search_results, name='search_results'), # <-- تم تصحيح المسار
+    path('api/search/', search_results, name='search_results'),
 
-    # --- الروابط المصححة لعملية إتمام الشراء ---
+    # روابط عملية إتمام الشراء
     path('checkout/start/', create_order_view, name='create_order'),
     path('checkout/shipping/<int:order_id>/', checkout_shipping, name='checkout_shipping'),
     path('checkout/payment/<int:order_id>/', checkout_payment, name='checkout_payment'),
     path('checkout/confirm/<int:order_id>/', checkout_confirm, name='checkout_confirm'),
     path('order-success/', order_success, name='order_success'),
+    
+    # --- السطر المصحح ---
+    path('admin/active-users/', active_users_view, name='active_users'),
 ]
 
 # الكود يضاف هنا، بعد انتهاء القائمة
