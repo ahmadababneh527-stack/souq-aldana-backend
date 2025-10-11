@@ -41,14 +41,22 @@ class OrderItemInline(admin.TabularInline):
 
 # في ملف store/admin.py
 
+# في ملف store/admin.py
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'first_name', 'phone_number', 'total_price', 'status', 'payment_method_box1', 'payment_method_box2', 'payment_confirmation_code', 'created_at')
+    # --- ▼▼▼ هذا هو التعديل المطلوب ▼▼▼ ---
+    # نعرض فقط الحقول التي طلبتها في القائمة الرئيسية
+    list_display = ('id', 'first_name', 'last_name', 'phone_number', 'payment_method_box1', 'payment_method_box2', 'payment_confirmation_code', 'status')
+
+    # --- ▲▲▲ نهاية التعديل ▲▲▲ ---
+
+    # بقية الإعدادات تبقى كما هي
     list_filter = ('status', 'created_at')
-    list_editable = ('status',)
+    search_fields = ('first_name', 'last_name', 'phone_number') # لتتمكن من البحث بالاسم أو الرقم
     inlines = [OrderItemInline]
 
-    # لعرض التفاصيل بشكل منظم داخل صفحة كل طلب
+    # هذا الجزء مسؤول عن عرض "بقية المعلومات" عند الدخول لصفحة التفاصيل
     readonly_fields = ('user', 'created_at', 'total_price')
     fieldsets = (
         ('معلومات الطلب الأساسية', {
