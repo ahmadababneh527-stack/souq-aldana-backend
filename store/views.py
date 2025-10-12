@@ -117,7 +117,6 @@ class AddToCartAPIView(APIView):
         cart_item.save()
         
         return Response({'message': f"تمت إضافة '{product.name}' إلى السلة بنجاح."}, status=status.HTTP_200_OK)
-
 class ProfileAPIView(APIView):
     """
     لجلب وتحديث بيانات الملف الشخصي للمستخدم.
@@ -127,7 +126,7 @@ class ProfileAPIView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         
-        # ✨ أضفنا هذه الأسطر لمنع التخزين المؤقت (Caching) ✨
+        # ✨ هذا الجزء هو الذي يحل المشكلة ✨
         headers = {
             'Cache-Control': 'no-cache, no-store, must-revalidate',
             'Pragma': 'no-cache',
