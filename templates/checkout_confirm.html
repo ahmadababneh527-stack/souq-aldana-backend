@@ -1,40 +1,51 @@
 {% extends 'base.html' %}
-{% block title %}تأكيد الدفع{% endblock %}
+{% load static %}
+
+{% block title %}تم تأكيد الطلب{% endblock %}
+
 {% block content %}
-<div class="auth-form-container">
-    <h2>الخطوة 3: تأكيد التحويل</h2>
-    <p>سيتم الدفع عند الاستلام. هذه مجرد خطوة تجريبية.</p>
-    <form method="POST" action="{% url 'checkout_confirm' order_id=order.id %}">
-        {% csrf_token %}
-        <div class="form-group"><label>رمز التأكيد (أدخل أي 6 أرقام):</label><input type="text" name="pin_code" id="pin_code" maxlength="6" required></div>
+<div class="order-success-container">
+    <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+        </svg>
+    </div>
 
-        <button type="submit" class="btn-primary">تأكيد الطلب</button>
-    </form>
+    <h2>شكرًا لك! تم استلام طلبك بنجاح.</h2>
+    <p class="order-subtext">سيتم التواصل معك قريبًا لتأكيد تفاصيل الشحن.</p>
+
+    <div class="order-summary-box">
+        <h3>ملخص الطلب</h3>
+        <div class="order-details">
+            <p><strong>رقم الطلب:</strong> #{{ order.id }}</p>
+            <p><strong>تاريخ الطلب:</strong> {{ order.created_at|date:"d M Y" }}</p>
+            <p><strong>الإجمالي:</strong> {{ order.total_price }} درهم</p>
+        </div>
+
+        <div class="order-items-list">
+            {% for item in order.items.all %}
+            <div class="order-item-card">
+                <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
+                <div class="item-info">
+                    <p class="item-name">{{ item.product.name }}</p>
+                    <p class="item-quantity">الكمية: {{ item.quantity }}</p>
+                </div>
+                <p class="item-price">{{ item.price }} درهم</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="shipping-details">
+            <h4>سيتم الشحن إلى:</h4>
+            <p>{{ order.first_name }} {{ order.last_name }}</p>
+            <p>{{ order.address }}, {{ order.country }}</p>
+            <p>الهاتف: {{ order.phone_number }}</p>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <a href="{% url 'index' %}" class="btn-primary">متابعة التسوق</a>
+        <a href="{% url 'track_order' %}" class="btn-secondary">تتبع طلباتك</a>
+    </div>
 </div>
-{% block scripts %}
-{{ block.super }}
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // الحصول على العناصر
-    const pinCodeInput = document.getElementById('pin_code');
-    const confirmForm = document.querySelector('form');
-
-    // دالة لمنع إدخال أي شيء غير الأرقام
-    function allowNumbersOnly(event) {
-        this.value = this.value.replace(/\D/g, '');
-    }
-
-    // تطبيق الدالة على حقل إدخال الرمز
-    pinCodeInput.addEventListener('input', allowNumbersOnly);
-
-    // الحفاظ على وظيفة عرض Spinner عند الإرسال
-    if (confirmForm) {
-        confirmForm.addEventListener('submit', function() {
-            if (typeof showSpinner === 'function') {
-                showSpinner();
-            }
-        });
-    }
-});
-</script>
 {% endblock %}
