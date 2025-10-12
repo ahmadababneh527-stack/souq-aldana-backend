@@ -42,7 +42,8 @@
                 </div>
             </div>
 
-            <button class="add-to-cart-btn">أضف إلى السلة</button>
+            <button class="add-to-cart-btn" data-product-id="{{ product.id }}">أضف إلى السلة</button>
+
             <div id="add-to-cart-status"></div>
         </div>
     </div>
@@ -83,5 +84,4 @@
 
 {% block scripts %}
     {{ block.super }}
-    <script src="{% static 'js/product-detail.js' %}"></script>
 {% endblock %}

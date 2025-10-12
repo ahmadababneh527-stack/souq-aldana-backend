@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="product-info">
                         <h4><a href="/products/${product.id}/">${product.name}</a></h4>
                         ${priceHTML} 
+                        
                         <button class="add-to-cart-btn" data-product-id="${product.id}">أضف إلى السلة</button>
                     </div>
                 </div>`;
