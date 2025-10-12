@@ -30,31 +30,30 @@ class ProductSerializer(serializers.ModelSerializer):
             'images', 'reviews', 'createdAt'
         ]
 
+# في ملف store/serializers.py
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'username', 'email', # <-- تم حذف كلمة المرور
+            'id', 'username', 'email',
             'first_name', 'last_name', 'date_of_birth', 'gender',
             'country', 'address', 'postal_code', 'phone_number'
         ]
-        # ملاحظة: لم نعد بحاجة لـ extra_kwargs هنا لأنه لا يوجد حقل password
-        # لكن يمكن إبقاؤه إذا كنت تستخدم هذا السيريالايزر لإنشاء مستخدمين أيضًا
-        extra_kwargs = {'password': {'write_only': True}}
+        # extra_kwargs = {'password': {'write_only': True}} # <-- ✨ تم حذف هذا السطر لأنه يسبب المشكلة
 
     # دالة لإنشاء مستخدم جديد مع تشفير كلمة المرور
+    # سنبقي على هذه الدالة لأنها مهمة لعملية التسجيل
     def create(self, validated_data):
+        # نستخرج كلمة المرور من البيانات الأولية للطلب
         password = self.initial_data.get('password')
+        # ننشئ المستخدم بدون كلمة المرور أولاً
         user = User.objects.create(**validated_data)
+        # إذا كانت كلمة المرور موجودة، نقوم بتشفيرها وحفظها
         if password:
             user.set_password(password)
             user.save()
         return user
-
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
-
 # --- CartItemSerializer (تمت إعادته) ---
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
