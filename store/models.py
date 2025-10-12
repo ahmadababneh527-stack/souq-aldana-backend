@@ -93,7 +93,7 @@ class Order(models.Model):
     
     first_name = models.CharField("الاسم الأول", max_length=100, blank=True)
     last_name = models.CharField("الاسم الأخير", max_length=100, blank=True)
-    phone_number = models.CharField("رقم الهاتف", max_length=20, blank=True)
+    phone_number = models.CharField("رقم الهاتف", max_length=30, blank=True)
     country = models.CharField("الدولة", max_length=100, blank=True)
     address = models.CharField("العنوان", max_length=255, blank=True)
     postal_code = models.CharField("الرمز البريدي", max_length=20, blank=True)

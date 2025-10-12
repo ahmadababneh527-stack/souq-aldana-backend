@@ -19,15 +19,17 @@
                     <option value="+971">الإمارات (+971)</option>
                     <option value="+20">مصر (+20)</option>
                     <option value="+961">لبنان (+961)</option>
-                    </select>
+                </select>
                 
                 <input type="tel" id="local_phone_number" name="local_phone_number" class="form-control" placeholder="791234567" required>
             </div>
             <input type="hidden" id="full_phone_number" name="phone_number">
         </div>
+
         <div class="form-group"><label>الدولة:</label><input type="text" name="country" required></div>
         <div class="form-group"><label>العنوان (الشارع، المبنى):</label><input type="text" name="address" required></div>
-        <div class="form-group"><label>الرمز البريدي:</label><input type="text" name="postal_code"></div>
+        <div class="form-group"><label>الرمز البريدي:</label><input type="text" name="postal_code" id="postal_code"></div>
+
         <button type="submit" class="btn-primary">التالي &larr;</button>
     </form>
 </div>
@@ -36,36 +38,34 @@
 {% block scripts %}
     {{ block.super }}
     <script>
-        // --- الكود القديم الخاص بك لعرض Spinner ---
-        // لقد قمنا بدمجه مع الكود الجديد في الأسفل
-        // document.querySelector('form').addEventListener('submit', function() {
-        //     showSpinner();
-        // });
-
-        // --- الكود الجديد الذي يدمج كل شيء ---
         document.addEventListener('DOMContentLoaded', () => {
+            // --- الحصول على كل العناصر اللازمة ---
             const countryCodeSelect = document.getElementById('country_code');
             const localPhoneInput = document.getElementById('local_phone_number');
             const fullPhoneNumberInput = document.getElementById('full_phone_number');
             const shippingForm = document.querySelector('form');
+            const postalCodeInput = document.getElementById('postal_code');
 
-            // --- المهمة الأولى: دمج الرقم الكامل ---
+            // --- 1. دالة لدمج رقم الهاتف مع رمز الدولة ---
             function updateFullPhoneNumber() {
                 const countryCode = countryCodeSelect.value;
                 const localPhone = localPhoneInput.value;
                 fullPhoneNumberInput.value = countryCode + localPhone;
             }
 
-            // استدعاء الدالة عند تغيير رمز الدولة أو كتابة الرقم
+            // --- 2. دالة لمنع إدخال أي شيء غير الأرقام ---
+            function allowNumbersOnly(event) {
+                this.value = this.value.replace(/\D/g, '');
+            }
+
+            // --- 3. تطبيق الدوال على العناصر ---
             countryCodeSelect.addEventListener('change', updateFullPhoneNumber);
             localPhoneInput.addEventListener('input', updateFullPhoneNumber);
-
-            // --- المهمة الثانية: السماح بالأرقام فقط ---
-            localPhoneInput.addEventListener('input', function(event) {
-                this.value = this.value.replace(/\D/g, '');
-            });
             
-            // --- المهمة الثالثة: عرض Spinner عند الإرسال ---
+            localPhoneInput.addEventListener('input', allowNumbersOnly);
+            postalCodeInput.addEventListener('input', allowNumbersOnly); // تطبيق المنع على الرمز البريدي
+            
+            // --- 4. عرض Spinner عند إرسال النموذج ---
             if(shippingForm) {
                 shippingForm.addEventListener('submit', function() {
                     // تأكد من وجود دالة showSpinner في ملفاتك العامة
@@ -75,7 +75,7 @@
                 });
             }
 
-            // تحديث القيمة الأولية عند تحميل الصفحة
+            // --- 5. تحديث قيمة الرقم الكامل عند تحميل الصفحة أول مرة ---
             updateFullPhoneNumber();
         });
     </script>
