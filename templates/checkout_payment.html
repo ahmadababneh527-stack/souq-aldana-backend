@@ -6,7 +6,8 @@
 {% block content %}
 <div class="auth-form-container">
     <h2>الخطوة 2: معلومات الدفع (تجريبية)</h2>
-    <form method="POST" action="{% url 'checkout_payment' order_id=order.id %}">
+    <form id="payment-form" method="POST" action="{% url 'checkout_payment' order_id=order.id %}">
+
         {% csrf_token %}
 
         <div class="card-icons">
@@ -53,6 +54,12 @@
                         <option value="2030">2030</option>
                         <option value="2031">2031</option>
                         <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
                     </select>
                 </div>
             </div>
@@ -88,7 +95,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // الحصول على العناصر التي سنتعامل معها
-    const paymentForm = document.querySelector('form'); // نفترض وجود فورم واحد في الصفحة
+    const paymentForm = document.querySelector('#payment-form');
+ // نفترض وجود فورم واحد في الصفحة
     const overlay = document.getElementById('processing-overlay');
     const timerElement = document.getElementById('countdown-timer');
 
