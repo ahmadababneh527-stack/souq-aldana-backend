@@ -1091,3 +1091,118 @@ input[type=number]::-webkit-outer-spin-button {
     font-weight: bold;
     color: #000;
 }
+
+
+
+/* ================================================= */
+/* ========= CSS لتصميم صفحة نجاح الطلب ========== */
+/* ================================================= */
+
+.order-success-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.order-success-container .success-icon svg {
+    width: 60px;
+    height: 60px;
+    color: #28a745;
+    margin-bottom: 20px;
+}
+
+.order-success-container h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.order-subtext {
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 30px;
+}
+
+.order-summary-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 25px;
+    text-align: right; /* محاذاة لليمين */
+    margin-bottom: 30px;
+}
+
+.order-summary-box h3 {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+}
+
+.order-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.order-item-card {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.order-item-card:last-child {
+    border-bottom: none;
+}
+
+.order-item-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-left: 15px;
+}
+
+.order-item-card .item-info {
+    flex-grow: 1;
+}
+
+.item-name {
+    font-weight: bold;
+    margin: 0;
+}
+
+.item-quantity {
+    color: #777;
+    font-size: 0.9em;
+}
+
+.item-price {
+    font-weight: bold;
+}
+
+.shipping-details {
+    margin-top: 25px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+}
+
+.shipping-details h4 {
+    margin-bottom: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.action-buttons .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 8px;
+}
