@@ -22,7 +22,7 @@ router.register(r'cart', CartViewSet, basename='cart')
 router.register(r'cart-items', CartItemViewSet, basename='cart-item')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    # 🎯 نضع الروابط المحددة أولاً
     path('login/', LoginAPIView.as_view(), name='api-login'),
     path('cart/add/', AddToCartAPIView.as_view(), name='add-to-cart'),
     path('profile/', ProfileAPIView.as_view(), name='api-profile'),
@@ -31,5 +31,6 @@ urlpatterns = [
     path('category/<slug:slug>/', category_products, name='category_products'),
     path('search/', views.search_results, name='search_results'),
     
-
+    # 🎯 ثم نضع الروابط العامة للـ router في النهاية
+    path('', include(router.urls)),
 ]
