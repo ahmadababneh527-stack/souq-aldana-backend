@@ -116,7 +116,14 @@ class ProfileAPIView(APIView):
 
     def get(self, request):
         serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+        
+        # ✨ أضفنا هذه الأسطر لمنع التخزين المؤقت (Caching) ✨
+        headers = {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+        }
+        return Response(serializer.data, headers=headers)
     
     def patch(self, request):
         user = request.user
