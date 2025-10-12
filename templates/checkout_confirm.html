@@ -1,51 +1,36 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}تم تأكيد الطلب{% endblock %}
+{% block title %}تأكيد الدفع{% endblock %}
 
 {% block content %}
-<div class="order-success-container">
-    <div class="success-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
-        </svg>
+<div class="auth-form-container otp-container">
+    <div class="otp-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+        </svg>      
     </div>
 
-    <h2>شكرًا لك! تم استلام طلبك بنجاح.</h2>
-    <p class="order-subtext">سيتم التواصل معك قريبًا لتأكيد تفاصيل الشحن.</p>
-
-    <div class="order-summary-box">
-        <h3>ملخص الطلب</h3>
-        <div class="order-details">
-            <p><strong>رقم الطلب:</strong> #{{ order.id }}</p>
-            <p><strong>تاريخ الطلب:</strong> {{ order.created_at|date:"d M Y" }}</p>
-            <p><strong>الإجمالي:</strong> {{ order.total_price }} درهم</p>
+    <h2>أدخل رمز التحقق</h2>
+    <p class="otp-subtext">لقد أرسلنا رمزًا مكونًا من 6 أرقام إلى هاتفك المسجل.</p>
+    
+    <form id="otp-form" method="POST" action="{% url 'checkout_confirm' order_id=order.id %}">
+        {% csrf_token %}
+        <div class="otp-inputs">
+            <input type="text" name="otp-1" class="otp-input" maxlength="1" required>
+            <input type="text" name="otp-2" class="otp-input" maxlength="1" required>
+            <input type="text" name="otp-3" class="otp-input" maxlength="1" required>
+            <input type="text" name="otp-4" class="otp-input" maxlength="1" required>
+            <input type="text" name="otp-5" class="otp-input" maxlength="1" required>
+            <input type="text" name="otp-6" class="otp-input" maxlength="1" required>
         </div>
+        <input type="hidden" name="pin_code" id="pin_code">
+        
+        <button type="submit" class="btn-primary">تأكيد الطلب</button>
+    </form>
 
-        <div class="order-items-list">
-            {% for item in order.items.all %}
-            <div class="order-item-card">
-                <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
-                <div class="item-info">
-                    <p class="item-name">{{ item.product.name }}</p>
-                    <p class="item-quantity">الكمية: {{ item.quantity }}</p>
-                </div>
-                <p class="item-price">{{ item.price }} درهم</p>
-            </div>
-            {% endfor %}
-        </div>
-
-        <div class="shipping-details">
-            <h4>سيتم الشحن إلى:</h4>
-            <p>{{ order.first_name }} {{ order.last_name }}</p>
-            <p>{{ order.address }}, {{ order.country }}</p>
-            <p>الهاتف: {{ order.phone_number }}</p>
-        </div>
-    </div>
-
-    <div class="action-buttons">
-        <a href="{% url 'index' %}" class="btn-primary">متابعة التسوق</a>
-        <a href="{% url 'track_order' %}" class="btn-secondary">تتبع طلباتك</a>
+    <div class="resend-container">
+        <p>لم تستلم الرمز؟ <a href="#">إعادة إرسال</a></p>
     </div>
 </div>
 {% endblock %}
