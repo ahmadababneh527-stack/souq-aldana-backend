@@ -24,7 +24,7 @@ router.register(r'cart-items', CartItemViewSet, basename='cart-item')
 urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginAPIView.as_view(), name='api-login'),
-    path('add-to-cart/', AddToCartAPIView.as_view(), name='add-to-cart'),
+    path('cart/add/', AddToCartAPIView.as_view(), name='add-to-cart'),
     path('profile/', ProfileAPIView.as_view(), name='api-profile'),
     path('products/<int:product_id>/reviews/', ReviewListCreateAPIView.as_view(), name='product-reviews'),
     path('countries/', CountryListView.as_view(), name='country-list'),
