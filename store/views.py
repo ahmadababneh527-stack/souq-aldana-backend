@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from rest_framework import viewsets, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from django_countries import countries
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -40,6 +40,16 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    # ✨ هذا هو الجزء الجديد الذي يحل المشكلة ✨
+    def get_permissions(self):
+        if self.action == 'create':
+            # اسمح لأي شخص بإنشاء حساب جديد
+            permission_classes = [AllowAny]
+        else:
+            # اطلب تسجيل الدخول لباقي الإجراءات
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
 class CartViewSet(viewsets.ReadOnlyModelViewSet):
     """
