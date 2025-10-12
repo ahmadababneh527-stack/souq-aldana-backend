@@ -34,3 +34,69 @@
     </div>
 </div>
 {% endblock %}
+
+
+{% block scripts %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const otpForm = document.getElementById('otp-form');
+    const inputs = document.querySelectorAll('.otp-input');
+    const hiddenInput = document.getElementById('pin_code');
+
+    inputs.forEach((input, index) => {
+        // --- وظيفة الانتقال التلقائي للحقل التالي ---
+        input.addEventListener('keyup', (e) => {
+            // الانتقال للأمام عند إدخال رقم
+            if (e.key >= 0 && e.key <= 9 && index < inputs.length - 1) {
+                if(inputs[index + 1]) {
+                    inputs[index + 1].focus();
+                }
+            } 
+            // الرجوع للخلف عند ضغط Backspace في حقل فارغ
+            else if (e.key === 'Backspace' && index > 0) {
+                 if(inputs[index - 1]) {
+                    inputs[index - 1].focus();
+                }
+            }
+        });
+
+        // --- وظيفة دعم اللصق ---
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pasteData = e.clipboardData.getData('text');
+            // تأكد أن النص الملصق هو 6 أرقام
+            if (/^\d{6}$/.test(pasteData)) {
+                for (let i = 0; i < pasteData.length; i++) {
+                    if(inputs[i]) {
+                       inputs[i].value = pasteData[i];
+                    }
+                }
+                if(inputs[5]) {
+                    inputs[5].focus(); // التركيز على آخر حقل بعد اللصق
+                }
+            }
+        });
+        
+        // --- وظيفة منع إدخال الأحرف ---
+        input.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+        });
+    });
+
+    // --- وظيفة تجميع الرمز قبل إرسال الفورم ---
+    otpForm.addEventListener('submit', (e) => {
+        let otpValue = '';
+        inputs.forEach(input => {
+            otpValue += input.value;
+        });
+        hiddenInput.value = otpValue; // تعبئة الحقل المخفي بالرمز الكامل
+        
+        // استدعاء Spinner إذا كانت موجودة
+        if (typeof showSpinner === 'function') {
+            showSpinner();
+        }
+    });
+});
+</script>
+{% endblock %}
