@@ -82,38 +82,16 @@ class LoginAPIView(APIView):
     لمعالجة طلبات تسجيل الدخول.
     """
     def post(self, request):
-        # القيمة المدخلة قد تكون اسم مستخدم أو بريد إلكتروني
-        identifier = request.data.get('username')
+        username = request.data.get('username')
         password = request.data.get('password')
-
-        if not identifier or not password:
-            return Response({'error': 'يجب توفير اسم المستخدم/الإيميل وكلمة المرور.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # 1. حاول تسجيل الدخول بافتراض أن المدخل هو اسم مستخدم
-        user = authenticate(username=identifier, password=password)
-
-        # 2. إذا فشلت المحاولة الأولى، تحقق مما إذا كان المدخل بريدًا إلكترونيًا
-        if user is None:
-            try:
-                # ابحث عن مستخدم يمتلك هذا البريد الإلكتروني
-                user_by_email = User.objects.get(email=identifier)
-                # حاول تسجيل الدخول مرة أخرى باستخدام اسم المستخدم الفعلي لهذا الحساب
-                user = authenticate(username=user_by_email.username, password=password)
-            except User.DoesNotExist:
-                # إذا لم يتم العثور على بريد إلكتروني مطابق، فستفشل المصادقة
-                pass 
-
-        # 3. تحقق من نتيجة المصادقة النهائية
+        user = authenticate(username=username, password=password)
         if user:
-            # نجح تسجيل الدخول
             return Response({
                 'message': 'تم تسجيل الدخول بنجاح.',
                 'first_name': user.first_name,
                 'last_name': user.last_name,
                 'email': user.email
             }, status=status.HTTP_200_OK)
-
-        # فشل تسجيل الدخول في كل الحالات
         return Response({'error': 'بيانات الاعتماد غير صالحة.'}, status=status.HTTP_400_BAD_REQUEST)
 
 class AddToCartAPIView(APIView):
