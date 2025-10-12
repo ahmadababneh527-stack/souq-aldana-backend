@@ -1,8 +1,37 @@
-// في ملف static/js/main.js (النسخة النهائية - تستخدم الدوال العامة)
+// في ملف static/js/main.js (النسخة النهائية والمصححة)
 
+// --- الدوال العامة (يفضل وضعها في ملف منفصل مثل utils.js لكن لا بأس بوجودها هنا الآن) ---
+function showSpinner() {
+    const spinner = document.getElementById('spinner-overlay');
+    if (spinner) spinner.classList.add('show');
+}
+
+function hideSpinner() {
+    const spinner = document.getElementById('spinner-overlay');
+    if (spinner) spinner.classList.remove('show');
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    if (!notification) return;
+    
+    notification.textContent = message;
+    notification.className = 'notification show';
+    notification.classList.add(type);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+
+
+// --- المنطق الرئيسي للصفحة ---
 document.addEventListener('DOMContentLoaded', () => {
     const productsGrid = document.querySelector('.products-grid');
+    // ✨ تحسين: جلب التوكن مرة واحدة عند تحميل الصفحة
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
+    // --- 1. جلب وعرض المنتجات ---
     async function fetchAndDisplayProducts() {
         if (!productsGrid) return;
         
@@ -47,11 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- 2. معالجة حدث إضافة المنتج إلى السلة ---
     if (productsGrid) {
         productsGrid.addEventListener('click', async (event) => {
+            // التأكد من أن العنصر المضغوط عليه هو زر الإضافة للسلة
             if (event.target.classList.contains('add-to-cart-btn')) {
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
                 
+                // تحقق مبدئي من تسجيل الدخول (تجربة مستخدم جيدة)
                 if (!localStorage.getItem('userEmail')) {
                     showNotification('يرجى تسجيل الدخول أولاً.', 'error');
                     setTimeout(() => { window.location.href = '/login/'; }, 2000);
@@ -61,16 +92,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productId = event.target.dataset.productId;
                 showSpinner();
                 try {
-                    const response = await fetch('/api/add-to-cart/', {
+                    // ✨ الإصلاح: تم تصحيح الرابط هنا
+                    const response = await fetch('/api/cart/add/', { 
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'X-CSRFToken': csrfToken // استخدام التوكن الذي تم جلبه في الأعلى
+                        },
                         body: JSON.stringify({ product_id: productId, quantity: 1 }),
                     });
 
                     const data = await response.json();
                     if (response.ok) {
-                        showNotification('تمت إضافة المنتج إلى السلة!', 'success');
-                        // إرسال إشارة عامة بأن السلة قد تم تحديثها
+                        showNotification('تمت إضافة المنتج إلى السلة بنجاح!', 'success');
+                        // إرسال إشارة عامة بأن السلة قد تم تحديثها (ميزة متقدمة وممتازة!)
                         document.dispatchEvent(new CustomEvent('cartUpdated'));
                     } else {
                         showNotification(`حدث خطأ: ${data.error || 'فشل'}`, 'error');
@@ -84,5 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- 3. بدء تشغيل جلب المنتجات ---
     fetchAndDisplayProducts();
 });
