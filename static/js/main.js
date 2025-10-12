@@ -54,10 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     : 'https://placehold.co/300x300?text=No+Image';
 
                 let priceHTML = `<p class="product-price">${product.price} درهم</p>`;
-                if (product.original_price && parseFloat(product.original_price) > parseFloat(product.price)) {
-                    priceHTML = `<p class="product-price offer">${product.price} درهم</p><p class="original-price">${product.original_price} درهم</p>`;
-                }
-
+               // --- هذا هو الكود الصحيح ---
+                       if (product.original_price && parseFloat(product.original_price) > parseFloat(product.price)) {
+    // ✨ التعديل: غيرنا <p> إلى <span> هنا
+                     priceHTML = `<p class="product-price offer">${product.price} درهم</p><span class="original-price">${product.original_price} درهم</span>`;
+                     }
                 const productCardHTML = `
                 <div class="product-card">
                     <a href="/products/${product.id}/"><img src="${imageUrl}" alt="${product.name}"></a>
