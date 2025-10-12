@@ -28,8 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'store.apps.StoreConfig',
-    'django_countries', # <-- أضف هذا السطر
+    'store.apps.StoreConfig', # <-- أبقِ على هذا السطر
+    'django_countries',
+    # 'store',  <-- احذف هذا السطر المكرر
 ]
 
 MIDDLEWARE = [

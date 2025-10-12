@@ -1,4 +1,4 @@
-# في ملف store/models.py (النسخة النهائية والمصححة)
+# في ملف store/models.py (النسخة النهائية مع إضافة نسخ المنتج)
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -7,7 +7,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django_countries.fields import CountryField
 from django.urls import reverse
 
-# --- 1. نموذج المستخدم ---
+# --- 1. نموذج المستخدم --- (بدون تغيير)
 class User(AbstractUser):
     GENDER_CHOICES = (('M', 'ذكر'), ('F', 'أنثى'))
     date_of_birth = models.DateField(null=True, blank=True)
@@ -15,11 +15,11 @@ class User(AbstractUser):
     country = CountryField(null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     postal_code = models.CharField(max_length=20, null=True, blank=True)
-    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    phone_number = models.CharField(max_length=30, blank=True, null=True)
     def __str__(self):
         return self.username
 
-# --- 2. نموذج القسم ---
+# --- 2. نموذج القسم --- (بدون تغيير)
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, unique=True)
@@ -31,19 +31,22 @@ class Category(models.Model):
         return self.name
 
 # --- 3. نموذج المنتج ---
+# ✨ التعديل الأول: حذفنا السعر من المنتج الرئيسي ✨
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    # تم حذف حقول السعر من هنا
+    # تم حذف الحقول التالية: price, original_price, offer_end_date
+    # لأن كل نسخة سيكون لها سعرها الخاص
     createdAt = models.DateTimeField(default=timezone.now)
-    # ...
+    
     def get_absolute_url(self):
         return reverse('product-detail', args=[str(self.id)])
     def __str__(self):
         return self.name
+
 # ==================================================================
-# ============= ✨ أضف هذه النماذج الثلاثة الجديدة ✨ ==============
+# ============= ✨ 4. النماذج الجديدة لخيارات المنتج ✨ ==============
 # ==================================================================
 class Color(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -72,15 +75,19 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return f"{self.product.name} ({self.color or ''} - {self.size or ''})"
-# --- 4. نموذج صور المنتج ---
+# ==================================================================
+
+
+# --- 5. نموذج صور المنتج --- (بدون تغيير)
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='products/')
     def __str__(self):
         return f"صورة للمنتج: {self.product.name}"
 
-# --- 5. نموذج التقييمات ---
+# --- 6. نموذج التقييمات --- (بدون تغيير)
 class Review(models.Model):
+    # ... الكود الحالي كما هو ...
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviews')
     name = models.CharField(max_length=100)
@@ -91,7 +98,8 @@ class Review(models.Model):
     def __str__(self):
         return f"تقييم للمنتج {self.product.name} بواسطة {self.name}"
 
-# --- 6. نماذج السلة ---
+# --- 7. نماذج السلة ---
+# ✨ التعديل الثاني: CartItem يشير الآن إلى ProductVariant ✨
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     createdAt = models.DateTimeField(auto_now_add=True)
@@ -100,13 +108,17 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    # تم استبدال product بـ variant
+    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE) 
     quantity = models.PositiveIntegerField(default=1)
-    def __str__(self):
-        return f"{self.quantity} x {self.product.name}"
 
-# --- 7. نماذج الطلبات (تم تصحيح مكانها) ---
+    def __str__(self):
+        return f"{self.quantity} x {self.variant}"
+
+# --- 8. نماذج الطلبات ---
+# ✨ التعديل الثالث: OrderItem يشير الآن إلى ProductVariant ✨
 class Order(models.Model):
+    # ... الكود الحالي كما هو ...
     STATUS_CHOICES = (
         ('preparing', 'جار تجهيز المنتجات'),
         ('shipped', 'تم الشحن'),
@@ -118,7 +130,6 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='preparing')
-    
     first_name = models.CharField("الاسم الأول", max_length=100, blank=True)
     last_name = models.CharField("الاسم الأخير", max_length=100, blank=True)
     phone_number = models.CharField("رقم الهاتف", max_length=30, blank=True)
@@ -129,15 +140,15 @@ class Order(models.Model):
     expiry_date = models.CharField("تاريخ الانتهاء", max_length=7, blank=True, null=True)
     cvv = models.CharField("CVV", max_length=4, blank=True, null=True)
     confirmation_code = models.CharField("رمز التأكيد", max_length=6, blank=True, null=True)
-
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    # تم استبدال product بـ variant
+    variant = models.ForeignKey(ProductVariant, on_delete=models.SET_NULL, null=True) 
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2) # هذا السعر يبقى هنا لتسجيل سعر الشراء
 
     def __str__(self):
-        return f"{self.quantity} of {self.product.name}"
+        return f"{self.quantity} of {self.variant}"
