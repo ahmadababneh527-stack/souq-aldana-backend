@@ -33,23 +33,26 @@ class ProductSerializer(serializers.ModelSerializer):
 # في ملف store/serializers.py
 
 class UserSerializer(serializers.ModelSerializer):
+    # ==================================================================
+    # ✨ أضف هذا السطر الجديد لحل مشكلة الدولة ✨
+    # ==================================================================
+    # هذا السطر يخبر السيريالايزر بأن يعامل حقل "الدولة" كنص عادي
+    country = serializers.StringRelatedField()
+    # ==================== نهاية السطر الجديد ====================
+
     class Meta:
         model = User
         fields = [
             'id', 'username', 'email',
             'first_name', 'last_name', 'date_of_birth', 'gender',
-            'country', 'address', 'postal_code', 'phone_number'
+            'country', # سيبقى الحقل هنا
+            'address', 'postal_code', 'phone_number'
         ]
-        # extra_kwargs = {'password': {'write_only': True}} # <-- ✨ تم حذف هذا السطر لأنه يسبب المشكلة
 
     # دالة لإنشاء مستخدم جديد مع تشفير كلمة المرور
-    # سنبقي على هذه الدالة لأنها مهمة لعملية التسجيل
     def create(self, validated_data):
-        # نستخرج كلمة المرور من البيانات الأولية للطلب
         password = self.initial_data.get('password')
-        # ننشئ المستخدم بدون كلمة المرور أولاً
         user = User.objects.create(**validated_data)
-        # إذا كانت كلمة المرور موجودة، نقوم بتشفيرها وحفظها
         if password:
             user.set_password(password)
             user.save()
