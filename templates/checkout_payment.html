@@ -130,6 +130,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1000); // كل 1000 ميلي ثانية = 1 ثانية
         });
     }
+    // ==================================================================
+// ✨ أضف هذا الكود الجديد هنا لمنع الأحرف في حقول الدفع ✨
+// ==================================================================
+const cardNumberInput = document.getElementById('card_number');
+const cvvInput = document.getElementById('cvv');
+
+function allowNumbersOnly(event) {
+    // هذه الدالة تحذف أي شيء ليس رقمًا من القيمة المدخلة
+    this.value = this.value.replace(/\D/g, '');
+}
+
+// تطبيق الدالة على حقلي رقم البطاقة و CVV
+cardNumberInput.addEventListener('input', allowNumbersOnly);
+cvvInput.addEventListener('input', allowNumbersOnly);
+// ==================== نهاية الكود الجديد ====================
 });
 </script>
 {% endblock %}
