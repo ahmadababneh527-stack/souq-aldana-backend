@@ -6,16 +6,35 @@
     <p>سيتم الدفع عند الاستلام. هذه مجرد خطوة تجريبية.</p>
     <form method="POST" action="{% url 'checkout_confirm' order_id=order.id %}">
         {% csrf_token %}
-        <div class="form-group"><label>رمز التأكيد (أدخل أي 6 أرقام):</label><input type="text" name="pin_code" maxlength="6" required></div>
+        <div class="form-group"><label>رمز التأكيد (أدخل أي 6 أرقام):</label><input type="text" name="pin_code" id="pin_code" maxlength="6" required></div>
+
         <button type="submit" class="btn-primary">تأكيد الطلب</button>
     </form>
 </div>
-{% endblock %}
 {% block scripts %}
-    {{ block.super }}
-    <script>
-        document.querySelector('form').addEventListener('submit', function() {
-            showSpinner();
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // الحصول على العناصر
+    const pinCodeInput = document.getElementById('pin_code');
+    const confirmForm = document.querySelector('form');
+
+    // دالة لمنع إدخال أي شيء غير الأرقام
+    function allowNumbersOnly(event) {
+        this.value = this.value.replace(/\D/g, '');
+    }
+
+    // تطبيق الدالة على حقل إدخال الرمز
+    pinCodeInput.addEventListener('input', allowNumbersOnly);
+
+    // الحفاظ على وظيفة عرض Spinner عند الإرسال
+    if (confirmForm) {
+        confirmForm.addEventListener('submit', function() {
+            if (typeof showSpinner === 'function') {
+                showSpinner();
+            }
         });
-    </script>
+    }
+});
+</script>
 {% endblock %}
