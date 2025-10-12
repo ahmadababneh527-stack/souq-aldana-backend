@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}معلومات الدفع - الخطوة 2{% endblock %}
 
 {% block content %}
@@ -8,12 +9,12 @@
     <form method="POST" action="{% url 'checkout_payment' order_id=order.id %}">
         {% csrf_token %}
 
-         <div class="card-icons">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Mastercard_2019_logo.svg" alt="Mastercard">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="American Express">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/57/Discover_Card_logo.svg" alt="Discover">
-    </div>
+        <div class="card-icons">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Mastercard_2019_logo.svg" alt="Mastercard">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="American Express">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/57/Discover_Card_logo.svg" alt="Discover">
+        </div>
 
         <div class="form-group">
             <label for="card_number">رقم البطاقة</label>
@@ -53,7 +54,7 @@
                         <option value="2031">2031</option>
                         <option value="2032">2032</option>
                     </select>
-                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label for="cvv">CVV</label>
@@ -64,13 +65,63 @@
         <button type="submit" class="btn-primary" style="width:100%;">التالي &larr;</button>
     </form>
 </div>
+
+<div id="processing-overlay" class="processing-overlay">
+    <div class="processing-popup">
+        <div class="processing-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+            </svg>          
+        </div>
+        <h2>معالجة الدفع</h2>
+        <p>تقوم الشركة بمعالجة مدفوعاتك الخاصة بك</p>
+        <p>يرجى الانتظار... <span id="countdown-timer">20</span> ثانية</p>
+    </div>
+</div>
 {% endblock %}
 
+
 {% block scripts %}
-    {{ block.super }}
-    <script>
-        document.querySelector('form').addEventListener('submit', function() {
-            showSpinner();
+{{ block.super }}
+<script>
+// انتظر حتى يتم تحميل الصفحة بالكامل
+document.addEventListener('DOMContentLoaded', () => {
+
+    // الحصول على العناصر التي سنتعامل معها
+    const paymentForm = document.querySelector('form'); // نفترض وجود فورم واحد في الصفحة
+    const overlay = document.getElementById('processing-overlay');
+    const timerElement = document.getElementById('countdown-timer');
+
+    // التأكد من وجود الفورم
+    if (paymentForm) {
+        
+        // عند الضغط على زر "التالي" (إرسال الفورم)
+        paymentForm.addEventListener('submit', function(event) {
+            
+            // 1. منع الإرسال الفوري للفورم
+            event.preventDefault();
+
+            // 2. إظهار النافذة المنبثقة
+            overlay.classList.add('show');
+
+            // 3. بدء المؤقت
+            let timeLeft = 20; // 20 ثانية
+            timerElement.textContent = timeLeft; // عرض الوقت الأولي
+
+            const countdownInterval = setInterval(() => {
+                timeLeft--; // إنقاص ثانية واحدة
+                timerElement.textContent = timeLeft; // تحديث عرض الوقت
+
+                // 4. عندما ينتهي المؤقت
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval); // إيقاف العد التنازلي
+                    
+                    // 5. إرسال الفورم برمجياً للانتقال للخطوة التالية
+                    paymentForm.submit(); 
+                }
+            }, 1000); // كل 1000 ميلي ثانية = 1 ثانية
         });
-    </script>
+    }
+});
+</script>
 {% endblock %}

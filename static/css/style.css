@@ -1022,3 +1022,72 @@ input[type=number]::-webkit-outer-spin-button {
 .card-field .form-control {
     padding-right: 40px; 
 }
+
+
+/* ================================================================== */
+/* ============= CSS الخاص بنافذة معالجة الدفع المنبثقة ============== */
+/* ================================================================== */
+
+/* الطبقة التي تغطي الشاشة */
+.processing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    /* تكون مخفية بشكل افتراضي */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* لجعلها تظهر عند الحاجة */
+.processing-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* تصميم النافذة نفسها */
+.processing-popup {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.processing-overlay.show .processing-popup {
+    transform: scale(1);
+}
+
+.processing-popup h2 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.processing-popup p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* تصميم أيقونة الدرع الأخضر */
+.processing-icon svg {
+    width: 80px;
+    height: 80px;
+    color: #28a745; /* لون أخضر */
+}
+
+#countdown-timer {
+    font-weight: bold;
+    color: #000;
+}
