@@ -1278,3 +1278,37 @@ input[type=number]::-webkit-outer-spin-button {
     height: 100%;
 }
 
+
+
+
+
+/* كود CSS لضمان عمل خط الشطب وإضافة التنسيقات */
+
+/* هذا هو الكلاس المسؤول عن خط الشطب */
+.original-price {
+    text-decoration: line-through;
+    color: #888; /* لون رمادي باهت للسعر القديم */
+    font-size: 0.9em; /* تصغير حجم الخط قليلاً */
+}
+
+/* تنسيق النصوص التوضيحية */
+.price-label {
+    color: #555;
+    margin-left: 5px; /* مسافة بسيطة بعد النص */
+    font-size: 0.9em;
+}
+
+/* تنسيق السعر الحالي ليكون بارزًا */
+.current-price, .product-price.offer {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #c0392b; /* لون أحمر للعرض الخاص */
+}
+
+/* تنسيق الحاوية لكل سطر من السعر */
+.price-wrapper {
+    display: flex;
+    align-items: baseline; /* لمحاذاة النصوص والأسعار بشكل جيد */
+    margin-bottom: 5px;
+}
+

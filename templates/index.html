@@ -7,14 +7,50 @@
     {% csrf_token %} 
     <section class="featured-products">
         <h3>أبرز المنتجات</h3>
+        
         <div class="products-grid">
-            </div>
-    </section>
+            {% for product in products %}
+                <div class="product-card">
+                    <a href="{{ product.get_absolute_url }}">
+                        <div class="product-image-container">
+                            {% if product.images.first %}
+                                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <img src="https://placehold.co/300x300?text=No+Image" alt="لا توجد صورة">
+                            {% endif %}
+                        </div>
+                        <div class="product-card-content">
+                            <h4 class="product-name">{{ product.name }}</h4>
+
+                            {% with first_variant=product.variants.first %}
+                                {% if first_variant %}
+                                    <div class="product-card-pricing">
+                                        {% if first_variant.original_price and first_variant.original_price > first_variant.price %}
+                                            <div class="price-wrapper">
+                                                <span class="price-label">قبل:</span>
+                                                <span class="original-price">{{ first_variant.original_price|floatformat:2 }} درهم</span>
+                                            </div>
+                                            <div class="price-wrapper">
+                                                <span class="price-label">بعد:</span>
+                                                <span class="current-price">{{ first_variant.price|floatformat:2 }} درهم</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="price-wrapper">
+                                                <span class="current-price">{{ first_variant.price|floatformat:2 }} درهم</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                            
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        </section>
 {% endblock %}
 
 {% block scripts %}
     {{ block.super }}
-    {% endblock %}
-
-
-    
+{% endblock %}

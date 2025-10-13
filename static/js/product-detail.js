@@ -40,19 +40,38 @@ document.addEventListener('DOMContentLoaded', () => {
             priceSection.innerHTML = `<p>حدث خطأ في تحميل بيانات المنتج.</p>`;
         }
     }
-
-    function displayInitialPrice() {
-        if (productData && productData.variants && productData.variants.length > 0) {
-            const firstVariant = productData.variants[0];
-            let priceHTML = `<span class="product-price offer">${firstVariant.price} درهم</span>`;
-            if (firstVariant.original_price && parseFloat(firstVariant.original_price) > parseFloat(firstVariant.price)) {
-                priceHTML += `<span class="original-price">${firstVariant.original_price} درهم</span>`;
-            }
-            priceSection.innerHTML = priceHTML;
+function displayInitialPrice() {
+    if (productData && productData.variants && productData.variants.length > 0) {
+        const firstVariant = productData.variants[0]; // نأخذ سعر أول نسخة كعرض افتراضي
+        
+        // ✨ هذا هو الجزء الذي تم تعديله ✨
+        let priceHTML = '';
+        if (firstVariant.original_price && parseFloat(firstVariant.original_price) > parseFloat(firstVariant.price)) {
+            // حالة وجود خصم
+            priceHTML = `
+                <div class="price-wrapper">
+                    <span class="price-label">السعر قبل الخصم:</span>
+                    <span class="original-price">${parseFloat(firstVariant.original_price).toFixed(2)} درهم</span>
+                </div>
+                <div class="price-wrapper">
+                    <span class="price-label">السعر بعد الخصم:</span>
+                    <span class="product-price offer">${parseFloat(firstVariant.price).toFixed(2)} درهم</span>
+                </div>
+            `;
         } else {
-             priceSection.innerHTML = `<p>السعر غير متوفر</p>`;
+            // حالة عدم وجود خصم
+            priceHTML = `
+                <div class="price-wrapper">
+                    <span class="product-price">${parseFloat(firstVariant.price).toFixed(2)} درهم</span>
+                </div>
+            `;
         }
+        priceSection.innerHTML = priceHTML;
+        
+    } else {
+        priceSection.innerHTML = `<p>السعر غير متوفر</p>`;
     }
+}
 
     // --- 3. عرض خيارات الألوان المتاحة ---
     function renderColorOptions() {
