@@ -1,5 +1,4 @@
 from django.views.generic import TemplateView, DetailView
-from django.contrib.auth import authenticate
 from rest_framework import viewsets, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from django_countries import countries
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 
 from django.core.cache import cache
 from datetime import timedelta
@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.contrib.admin.views.decorators import staff_member_required
 
 from django.db.models import Q # تأكد من إضافة هذا السطر في الأعلى مع بقية الـ imports
-from .models import Product, User, Cart, CartItem, Review, Category, Order, OrderItem
+from .models import Product, User, Cart, CartItem, Review, Category, Order, OrderItem, ProductVariant
 from .serializers import (
     ProductSerializer, UserSerializer, CartSerializer, 
     CartItemSerializer, ReviewSerializer
@@ -87,6 +87,12 @@ class CartItemViewSet(viewsets.ModelViewSet):
 # === API Views (لوظائف محددة) ===
 # =======================================
 
+# في بداية ملف store/views.py، تأكد من وجود login في سطر الاستيراد
+
+# ... (باقي الكود) ...
+
+
+# استبدل هذا الكلاس بالكامل في ملف views.py
 class LoginAPIView(APIView):
     """
     لمعالجة طلبات تسجيل الدخول.
@@ -94,19 +100,25 @@ class LoginAPIView(APIView):
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
-        user = authenticate(username=username, password=password)
-        if user:
+        
+        # الخطوة 1: التحقق من صحة بيانات المستخدم
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
+            # ✨ هذا هو السطر الجديد والمهم الذي يحل المشكلة ✨
+            login(request, user)
+            # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
+            
             return Response({
                 'message': 'تم تسجيل الدخول بنجاح.',
                 'first_name': user.first_name,
                 'last_name': user.last_name,
                 'email': user.email
             }, status=status.HTTP_200_OK)
-        return Response({'error': 'بيانات الاعتماد غير صالحة.'}, status=status.HTTP_400_BAD_REQUEST)
-
-# في ملف store/views.py
-# تأكد من استيراد ProductVariant في الأعلى مع باقي النماذج
-from .models import Product, User, Cart, CartItem, Review, Category, Order, OrderItem, ProductVariant
+            
+        # إذا كانت البيانات غير صحيحة
+        return Response({'error': 'بيانات الاعتماد غير صالحة.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class AddToCartAPIView(APIView):
     """
