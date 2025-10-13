@@ -1226,3 +1226,15 @@ input[type=number]::-webkit-outer-spin-button {
     border: 2px solid var(--primary-color);
     opacity: 1;
 }
+
+
+.cart-product-info > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-variant-details {
+    font-size: 0.85em;
+    color: #777;
+    margin-top: 4px;
+}

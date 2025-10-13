@@ -1,4 +1,4 @@
-// في ملف static/js/cart.js (النسخة النهائية مع إصلاح النصوص)
+// في ملف static/js/cart.js
 
 function showSpinner() {
     const spinner = document.getElementById('spinner-overlay');
@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (response.status === 401 || response.status === 403) {
                 mainContainer.innerHTML = '<h3>يرجى <a href="/login/">تسجيل الدخول</a> لعرض سلة المشتريات.</h3>';
+                hideSpinner();
                 return;
             }
             if (!response.ok) {
@@ -62,35 +63,55 @@ document.addEventListener('DOMContentLoaded', () => {
             cartItemsBody.innerHTML = '';
             let grandTotal = 0;
 
+            // ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
+            // ✨ يبدأ التعديل هنا: داخل حلقة forEach ✨
             cart.items.forEach(item => {
-                const imageUrl = item.product.images && item.product.images.length > 0
-                    ? item.product.images[0].image
-                    : 'https://placehold.co/100x100?text=No+Image';
+                const variant = item.variant;
+                const product = variant.product;
 
-                const itemTotal = item.product.price * item.quantity;
+                // 1. الحصول على الصورة والاسم من المسار الصحيح
+                const imageUrl = product.images && product.images.length > 0
+                    ? product.images[0].image
+                    : 'https://placehold.co/100x100?text=No+Image';
+                const productName = product.name;
+
+                // 2. الحصول على السعر من الـ variant
+                const itemTotal = parseFloat(variant.price) * item.quantity;
                 grandTotal += itemTotal;
+                
+                // 3. (تحسين) جلب تفاصيل اللون والمقاس لعرضها
+                let variantDetails = [];
+                if (variant.color) {
+                    variantDetails.push(variant.color.name);
+                }
+                if (variant.size) {
+                    variantDetails.push(variant.size.name);
+                }
+                const variantText = variantDetails.length > 0 
+                    ? `<small class="cart-variant-details">${variantDetails.join(' / ')}</small>` 
+                    : '';
 
                 const row = document.createElement('tr');
-                
-                // ▼▼▼ هذا هو الجزء الذي تم تعديله ▼▼▼
-         // في ملف static/js/cart.js
-
-row.innerHTML = `
-    <td data-label="المنتج:">
-        <div class="cart-product-info">
-            <img src="${imageUrl}" alt="${item.product.name}">
-            <span>${item.product.name}</span>
-        </div>
-    </td>
-    <td data-label="السعر:"><span>${parseFloat(item.product.price).toFixed(2)} درهم</span></td>
-    <td data-label="الكمية:"><span>${item.quantity}</span></td>
-    <td data-label="الإجمالي:"><span>${itemTotal.toFixed(2)} درهم</span></td>
-    <td data-label="إزالة:"><button class="remove-from-cart-btn" data-item-id="${item.id}">حذف</button></td>
-`;
-                // ▲▲▲ نهاية الجزء المعدل ▲▲▲
+                // 4. تحديث HTML ليعكس المسارات الجديدة والتفاصيل
+                row.innerHTML = `
+                    <td data-label="المنتج:">
+                        <div class="cart-product-info">
+                            <img src="${imageUrl}" alt="${productName}">
+                            <div>
+                                <span>${productName}</span>
+                                ${variantText}
+                            </div>
+                        </div>
+                    </td>
+                    <td data-label="السعر:"><span>${parseFloat(variant.price).toFixed(2)} درهم</span></td>
+                    <td data-label="الكمية:"><span>${item.quantity}</span></td>
+                    <td data-label="الإجمالي:"><span>${itemTotal.toFixed(2)} درهم</span></td>
+                    <td data-label="إزالة:"><button class="remove-from-cart-btn" data-item-id="${item.id}">حذف</button></td>
+                `;
 
                 cartItemsBody.appendChild(row);
             });
+            // ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
             
             cartTotalSpan.textContent = grandTotal.toFixed(2);
 
@@ -114,6 +135,8 @@ row.innerHTML = `
                     });
                     if (response.ok) {
                         displayCart();
+                        // أرسل إشارة لتحديث عدد السلة في الهيدر
+                        document.dispatchEvent(new CustomEvent('cartUpdated'));
                     } else {
                         showNotification(`فشل حذف المنتج.`, 'error');
                     }
