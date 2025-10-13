@@ -9,35 +9,51 @@
         <div class="product-gallery-container">
             <div class="main-image-wrapper">
                 {% if product.images.all %}
-    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
-{% else %}
-    <img src="https://placehold.co/500x500?text=No+Image" alt="لا توجد صورة">
-{% endif %}
+                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <img src="https://placehold.co/500x500?text=No+Image" alt="لا توجد صورة">
+                {% endif %}
             </div>
-              <div class="thumbnail-gallery" id="thumbnail-gallery">
-    {% for image in product.images.all %}
-        <img src="{{ image.image.url }}" alt="صورة مصغرة" class="thumbnail-image">
-    {% endfor %}
-</div>
-        </div>
+            <div class="thumbnail-gallery" id="thumbnail-gallery">
+                {% for image in product.images.all %}
+                    <img src="{{ image.image.url }}" alt="صورة مصغرة" class="thumbnail-image">
+                {% endfor %}
+            </div>
+
+            {% with embed_url=product.get_embed_url %}
+                {% if embed_url %}
+                <div class="product-video-container">
+                    <h3>فيديو المنتج</h3>
+                    <div class="video-wrapper">
+                        <iframe 
+                            src="{{ embed_url }}" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+                {% endif %}
+            {% endwith %}
+            </div>
         
         <div class="product-details-container">
             <h1>{{ product.name }}</h1>
             
             <div id="price-section" class="price-section">
-    </div>
+            </div>
 
-           <p class="product-description">{{ product.description }}</p>
+            <p class="product-description">{{ product.description }}</p>
             <div class="variant-selector">
-    <div id="color-options-container" class="variant-group" style="display: none;">
-        <label>اللون:</label>
-        <div id="color-options" class="variant-options"></div>
-    </div>
-    <div id="size-options-container" class="variant-group" style="display: none;">
-        <label>المقاس:</label>
-        <div id="size-options" class="variant-options"></div>
-    </div>
-</div>
+                <div id="color-options-container" class="variant-group" style="display: none;">
+                    <label>اللون:</label>
+                    <div id="color-options" class="variant-options"></div>
+                </div>
+                <div id="size-options-container" class="variant-group" style="display: none;">
+                    <label>المقاس:</label>
+                    <div id="size-options" class="variant-options"></div>
+                </div>
+            </div>
             <div class="quantity-selector">
                 <label for="quantity">الكمية:</label>
                 <div class="quantity-controls">
@@ -47,8 +63,8 @@
                 </div>
             </div>
 
-              <button id="add-to-cart-btn" class="add-to-cart-btn" disabled>اختر الخيارات أولاً</button>
-              <div id="variant-status" class="variant-status"></div>
+            <button id="add-to-cart-btn" class="add-to-cart-btn" disabled>اختر الخيارات أولاً</button>
+            <div id="variant-status" class="variant-status"></div>
         </div>
     </div>
 
@@ -82,7 +98,7 @@
         {% endif %}
 
         <div class="reviews-list" id="reviews-list">
-            </div>
+        </div>
     </section>
 {% endblock %}
 

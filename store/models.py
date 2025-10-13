@@ -32,22 +32,41 @@ class Category(models.Model):
 
 # --- 3. نموذج المنتج ---
 # ✨ التعديل الأول: حذفنا السعر من المنتج الرئيسي ✨
+# في ملف store/models.py
+
+# ... (باقي الـ imports كما هي)
+
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    # تم حذف الحقول التالية: price, original_price, offer_end_date
-    # لأن كل نسخة سيكون لها سعرها الخاص
     createdAt = models.DateTimeField(default=timezone.now)
     
+    # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
+    # ✨ 1. أضف هذا الحقل الجديد لحفظ رابط الفيديو ✨
+    video_url = models.URLField(max_length=255, blank=True, null=True, verbose_name="رابط فيديو المنتج (يوتيوب)")
+    # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
+
     def get_absolute_url(self):
         return reverse('product-detail', args=[str(self.id)])
+    
     def __str__(self):
         return self.name
 
-# ==================================================================
-# ============= ✨ 4. النماذج الجديدة لخيارات المنتج ✨ ==============
-# ==================================================================
+    # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
+    # ✨ 2. أضف هذه الدالة لتحويل رابط يوتيوب العادي ✨
+    def get_embed_url(self):
+        """
+        يحول رابط يوتيوب مثل 'https://www.youtube.com/watch?v=VIDEO_ID'
+        إلى رابط صالح للتضمين 'https://www.youtube.com/embed/VIDEO_ID'
+        """
+        if self.video_url and 'youtube.com/watch' in self.video_url:
+            video_id = self.video_url.split('v=')[-1]
+            return f'https://www.youtube.com/embed/{video_id}'
+        # يمكنك إضافة دعم لمواقع أخرى مثل Vimeo هنا إذا أردت
+        return None
+    # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
+    
 class Color(models.Model):
     name = models.CharField(max_length=50, unique=True)
     hex_code = models.CharField(max_length=7, blank=True, null=True) # e.g., #FF5733
