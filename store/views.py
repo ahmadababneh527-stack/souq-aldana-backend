@@ -93,23 +93,25 @@ class CartItemViewSet(viewsets.ModelViewSet):
 
 
 # استبدل هذا الكلاس بالكامل في ملف views.py
+# استبدل الكلاس بالكامل في ملف views.py
+
 class LoginAPIView(APIView):
     """
     لمعالجة طلبات تسجيل الدخول.
     """
+    # ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+    # ✨ هذا هو السطر الجديد الذي يحل المشكلة نهائياً ✨
+    permission_classes = [AllowAny]
+    # ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
         
-        # الخطوة 1: التحقق من صحة بيانات المستخدم
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
-            # ✨ هذا هو السطر الجديد والمهم الذي يحل المشكلة ✨
             login(request, user)
-            # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
-            
             return Response({
                 'message': 'تم تسجيل الدخول بنجاح.',
                 'first_name': user.first_name,
@@ -117,7 +119,6 @@ class LoginAPIView(APIView):
                 'email': user.email
             }, status=status.HTTP_200_OK)
             
-        # إذا كانت البيانات غير صحيحة
         return Response({'error': 'بيانات الاعتماد غير صالحة.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class AddToCartAPIView(APIView):
