@@ -1,28 +1,23 @@
-# في ملف store/serializers.py
+# store/serializers.py
 
 from rest_framework import serializers
-# ✨ 1. استيراد النماذج الجديدة ✨
 from .models import (
     Product, User, Cart, CartItem, ProductImage, Review,
     Color, Size, ProductVariant
 )
 
-# --- Serializer للصور --- (بدون تغيير)
+# --- Serializers الأساسية (تبقى كما هي) ---
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
         fields = ['id', 'image']
 
-# --- Serializer للتقييمات --- (بدون تغيير)
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Review
         fields = ['id', 'user', 'rating', 'comment', 'created_at']
 
-# ==================================================================
-# ============= ✨ 2. إضافة Serializers جديدة للخيارات ==============
-# ==================================================================
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
@@ -34,33 +29,25 @@ class SizeSerializer(serializers.ModelSerializer):
         fields = ['name']
 
 class ProductVariantSerializer(serializers.ModelSerializer):
-    # عرض تفاصيل اللون والمقاس بدلًا من مجرد ID
     color = ColorSerializer(read_only=True)
     size = SizeSerializer(read_only=True)
     class Meta:
         model = ProductVariant
         fields = ['id', 'color', 'size', 'price', 'original_price', 'stock']
-# ==================================================================
 
-
-# --- ProductSerializer (محدّث ليعرض النسخ المتاحة) ---
-# ✨ 3. تعديل ProductSerializer ✨
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
-    # إضافة سطر لجلب كل النسخ المرتبطة بالمنتج
     variants = ProductVariantSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
         fields = [
             'id', 'name', 'description', 
-            # تم حذف السعر من هنا
             'images', 'reviews', 'createdAt',
-            'variants' # إضافة النسخ إلى قائمة الحقول
+            'variants'
         ]
 
-# --- UserSerializer --- (بدون تغيير)
 class UserSerializer(serializers.ModelSerializer):
     country = serializers.StringRelatedField()
     class Meta:
@@ -79,27 +66,59 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
         return user
 
-# --- CartItemSerializer (محدّث ليشير إلى نسخة المنتج) ---
-# في ملف store/serializers.py
+# ==================================================================
+# =================== ✨ هذا هو الكود الذي تم إصلاحه ✨ ===================
+# ==================================================================
 
-# --- CartItemSerializer (النسخة النهائية والمصححة) ---
+# Serializer جديد ومخصص لعرض بيانات المنتج والنسخة معًا داخل السلة
+class CartItemVariantSerializer(serializers.ModelSerializer):
+    """
+    هذا الـ serializer يدمج معلومات المنتج (الاسم والصورة)
+    مع معلومات نسخة المنتج (السعر، اللون، المقاس) في كائن واحد.
+    """
+    # جلب الاسم من المنتج الأب
+    name = serializers.CharField(source='product.name')
+    # جلب الصورة الأولى للمنتج الأب
+    image = serializers.SerializerMethodField()
+    color = ColorSerializer(read_only=True)
+    size = SizeSerializer(read_only=True)
+
+    class Meta:
+        model = ProductVariant
+        fields = ['id', 'name', 'price', 'color', 'size', 'image']
+
+    def get_image(self, variant):
+        request = self.context.get('request')
+        first_image = variant.product.images.first()
+        if first_image and request:
+            return request.build_absolute_uri(first_image.image.url)
+        return None
+
+
+# تعديل CartItemSerializer ليستخدم الـ serializer الجديد
 class CartItemSerializer(serializers.ModelSerializer):
-    # أنشأنا Serializer داخلي لعرض تفاصيل المنتج المطلوبة فقط
-    class ProductInfoSerializer(serializers.ModelSerializer):
-        images = ProductImageSerializer(many=True, read_only=True)
-        class Meta:
-            model = Product
-            fields = ['id', 'name', 'price', 'images'] # <-- الحقول التي يحتاجها JavaScript
-
-    # الآن، نقوم بتضمين تفاصيل المنتج باستخدام الـ Serializer الجديد
-    product = ProductInfoSerializer(read_only=True)
+    # أبقينا على اسم الحقل "product" لأن JavaScript يتوقعه بهذا الاسم
+    # ولكننا نخبره أن مصدر البيانات هو حقل "variant"
+    product = CartItemVariantSerializer(source='variant', read_only=True)
+    total_price = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
-        fields = ['id', 'product', 'quantity'] # <-- نعيد استخدام product هنا
-# --- CartSerializer --- (بدون تغيير)
+        fields = ['id', 'product', 'quantity', 'total_price']
+
+    def get_total_price(self, cart_item):
+        # حساب السعر الإجمالي للعنصر (الكمية * سعر نسخة المنتج)
+        return cart_item.quantity * cart_item.variant.price
+
+# تعديل CartSerializer ليحسب السعر الإجمالي للسلة
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, read_only=True)
+    grand_total = serializers.SerializerMethodField()
+
     class Meta:
         model = Cart
-        fields = ['id', 'user', 'createdAt', 'items']
+        fields = ['id', 'user', 'createdAt', 'items', 'grand_total']
+    
+    def get_grand_total(self, cart):
+        # حساب السعر الإجمالي لكل العناصر في السلة
+        return sum(item.quantity * item.variant.price for item in cart.items.all())

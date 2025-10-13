@@ -62,6 +62,16 @@ class CartViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
 
+    # ✨ قم بإضافة هذه الدالة
+    def get_serializer_context(self):
+        """
+        تمرير الـ request context إلى الـ serializer
+        لتمكينه من بناء روابط الصور الكاملة.
+        """
+        return {'request': self.request}
+
+# ... (باقي الكود)
+
 class CartItemViewSet(viewsets.ModelViewSet):
     """
     لإدارة العناصر داخل السلة (مثل الحذف).
