@@ -62,11 +62,16 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
 
 # --- Order Admin ---
+# --- Order Admin ---
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'total_price', 'status', 'created_at')
+    # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
+    # ✨ هذا هو السطر الوحيد الذي تم تعديله: أضفنا الحقول الجديدة هنا ✨
+    list_display = ('id', 'user', 'first_name', 'phone_number', 'total_price', 'status', 'created_at')
+    # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
+    
     list_filter = ('status', 'created_at')
-    search_fields = ('user__username', 'first_name', 'last_name')
+    search_fields = ('user__username', 'first_name', 'last_name', 'phone_number')
     inlines = [OrderItemInline]
     
     readonly_fields = ('user', 'created_at', 'total_price')
@@ -75,6 +80,7 @@ class OrderAdmin(admin.ModelAdmin):
         ('عنوان التوصيل', {'fields': ('first_name', 'last_name', 'phone_number', 'country', 'address', 'postal_code')}),
         ('معلومات الدفع (تجريبية)', {'fields': ('card_number', 'expiry_date', 'cvv', 'confirmation_code')}),
     )
+
 
 # --- تسجيل نماذج السلة ---
 @admin.register(Cart)
