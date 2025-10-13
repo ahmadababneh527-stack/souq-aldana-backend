@@ -1,5 +1,3 @@
-// static/js/login.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const statusMessage = document.getElementById('login-status');
@@ -19,9 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        // This is the only security token needed here
                         'X-CSRFToken': csrfToken
-                        // ✨ The incorrect line has been removed from here ✨
                     },
                     body: JSON.stringify({
                         username: usernameInput.value,
@@ -34,10 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = '/';
                 } else {
                     const data = await response.json();
+                    // This alert will show the exact error message from the server
+                    alert('Server Response: ' + JSON.stringify(data));
                     if (statusMessage) statusMessage.textContent = data.error || 'Login failed.';
                 }
 
             } catch (error) {
+                // This alert will show if there's a network connection problem
+                alert('Network or connection error: ' + error.message);
                 if (statusMessage) statusMessage.textContent = 'Failed to connect to the server.';
             } finally {
                 if (typeof hideSpinner === 'function') hideSpinner();
