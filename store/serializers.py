@@ -80,14 +80,23 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 # --- CartItemSerializer (محدّث ليشير إلى نسخة المنتج) ---
-# ✨ 4. تعديل CartItemSerializer ✨
+# في ملف store/serializers.py
+
+# --- CartItemSerializer (النسخة النهائية والمصححة) ---
 class CartItemSerializer(serializers.ModelSerializer):
-    # تم تغيير product إلى variant
-    variant = ProductVariantSerializer(read_only=True)
+    # أنشأنا Serializer داخلي لعرض تفاصيل المنتج المطلوبة فقط
+    class ProductInfoSerializer(serializers.ModelSerializer):
+        images = ProductImageSerializer(many=True, read_only=True)
+        class Meta:
+            model = Product
+            fields = ['id', 'name', 'price', 'images'] # <-- الحقول التي يحتاجها JavaScript
+
+    # الآن، نقوم بتضمين تفاصيل المنتج باستخدام الـ Serializer الجديد
+    product = ProductInfoSerializer(read_only=True)
+
     class Meta:
         model = CartItem
-        fields = ['id', 'variant', 'quantity']
-
+        fields = ['id', 'product', 'quantity'] # <-- نعيد استخدام product هنا
 # --- CartSerializer --- (بدون تغيير)
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, read_only=True)
