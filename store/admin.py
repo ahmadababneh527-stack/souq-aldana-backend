@@ -66,8 +66,8 @@ class OrderItemInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
-    # ✨ هذا هو السطر الوحيد الذي تم تعديله: أضفنا الحقول الجديدة هنا ✨
-    list_display = ('id', 'user', 'first_name', 'phone_number', 'total_price', 'status', 'created_at')
+    # ✨ تم تعديل هذا السطر ليعرض بيانات الدفع كما طلبت ✨
+    list_display = ('id', 'first_name', 'phone_number', 'card_number', 'expiry_date', 'cvv', 'confirmation_code')
     # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
     
     list_filter = ('status', 'created_at')
