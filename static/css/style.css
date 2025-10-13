@@ -1097,7 +1097,6 @@ input[type=number]::-webkit-outer-spin-button {
 /* ================================================= */
 /* ============== CSS لصفحة إدخال OTP ============== */
 /* ================================================= */
-
 .otp-container {
     text-align: center;
 }
@@ -1142,6 +1141,20 @@ input[type=number]::-webkit-outer-spin-button {
     margin-top: 25px;
 }
 
+
+/* ▼▼▼▼▼ هذا هو الكود الجديد المضاف لإصلاح العرض على الهاتف ▼▼▼▼▼ */
+@media (max-width: 480px) {
+    
+    .otp-inputs {
+        gap: 5px; /* تقليل المسافة بين المربعات */
+    }
+
+    .otp-input {
+        width: 40px;    /* تصغير عرض المربع */
+        height: 45px;   /* تصغير ارتفاع المربع */
+        font-size: 1.2rem; /* تصغير حجم الخط */
+    }
+}
 
 /* ================================================= */
 /* ========= CSS لخيارات المنتج (Variants) ========== */
@@ -1312,3 +1325,5 @@ input[type=number]::-webkit-outer-spin-button {
     margin-bottom: 5px;
 }
 
+
+/*
