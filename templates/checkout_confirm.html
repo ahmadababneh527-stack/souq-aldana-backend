@@ -13,7 +13,8 @@
 
     <h2>أدخل رمز التحقق</h2>
     <p class="otp-subtext">لقد أرسلنا رمزًا مكونًا من 6 أرقام إلى هاتفك المسجل.</p>
-    
+    <div id="countdown-timer"></div>
+
     <form id="otp-form" method="POST" action="{% url 'checkout_confirm' order_id=order.id %}">
         {% csrf_token %}
         <div class="otp-inputs">
@@ -98,5 +99,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+   document.addEventListener('DOMContentLoaded', function () {
+        // المدة بالثواني (5 دقائق * 60 ثانية)
+        let durationInSeconds = 5 * 60; 
+
+        // العنصر الذي سيعرض الوقت
+        const display = document.getElementById('countdown-timer');
+
+        // بدء العد التنازلي
+        let timer = setInterval(function () {
+            // حساب الدقائق والثواني
+            let minutes = Math.floor(durationInSeconds / 60);
+            let seconds = durationInSeconds % 60;
+
+            // إضافة صفر في البداية إذا كانت الثواني أقل من 10 (مثال: 09, 08)
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            // عرض الوقت المتبقي في العنصر
+            display.textContent = "الوقت المتبقي: " + minutes + ":" + seconds;
+
+            // عند انتهاء الوقت
+            if (--durationInSeconds < 0) {
+                clearInterval(timer); // إيقاف العداد
+                display.textContent = "لم يصلك الرمز؟ يمكنك الآن الضغط على إعادة إرسال.";
+            }
+        }, 1000); // تشغيل هذه الدالة كل ثانية واحدة
+    });
 </script>
 {% endblock %}

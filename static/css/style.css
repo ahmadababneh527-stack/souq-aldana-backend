@@ -1325,4 +1325,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 
-/*
+#countdown-timer {
+    margin-top: 15px; /* لإضافة مسافة من النص الذي فوقه */
+    font-size: 1.1rem; /* حجم خط مناسب */
+    font-weight: bold; /* لجعل الخط عريضًا وواضحًا */
+    color: #333; /* لون رمادي غامق */
+}
