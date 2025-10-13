@@ -1,4 +1,4 @@
-// في ملف static/js/cart.js
+// static/js/cart.js
 
 function showSpinner() {
     const spinner = document.getElementById('spinner-overlay');
@@ -61,38 +61,31 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('cart-empty-message').style.display = 'none';
 
             cartItemsBody.innerHTML = '';
-            let grandTotal = 0;
 
-            // ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
-            // ✨ يبدأ التعديل هنا: داخل حلقة forEach ✨
+            // ======================================================================
+            // ✨ هذا هو الجزء الذي تم تعديله ليتوافق مع الـ Serializer الجديد ✨
+            // ======================================================================
             cart.items.forEach(item => {
-                const variant = item.variant;
-                const product = variant.product;
+                // الآن، كل معلومات المنتج والنسخة موجودة داخل كائن item.product
+                const productData = item.product;
+                const itemTotal = parseFloat(item.total_price);
 
-                // 1. الحصول على الصورة والاسم من المسار الصحيح
-                const imageUrl = product.images && product.images.length > 0
-                    ? product.images[0].image
-                    : 'https://placehold.co/100x100?text=No+Image';
-                const productName = product.name;
-
-                // 2. الحصول على السعر من الـ variant
-                const itemTotal = parseFloat(variant.price) * item.quantity;
-                grandTotal += itemTotal;
+                const imageUrl = productData.image || 'https://placehold.co/100x100?text=No+Image';
+                const productName = productData.name;
                 
-                // 3. (تحسين) جلب تفاصيل اللون والمقاس لعرضها
+                // عرض تفاصيل اللون والمقاس
                 let variantDetails = [];
-                if (variant.color) {
-                    variantDetails.push(variant.color.name);
+                if (productData.color && productData.color.name) {
+                    variantDetails.push(productData.color.name);
                 }
-                if (variant.size) {
-                    variantDetails.push(variant.size.name);
+                if (productData.size && productData.size.name) {
+                    variantDetails.push(productData.size.name);
                 }
                 const variantText = variantDetails.length > 0 
                     ? `<small class="cart-variant-details">${variantDetails.join(' / ')}</small>` 
                     : '';
 
                 const row = document.createElement('tr');
-                // 4. تحديث HTML ليعكس المسارات الجديدة والتفاصيل
                 row.innerHTML = `
                     <td data-label="المنتج:">
                         <div class="cart-product-info">
@@ -103,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     </td>
-                    <td data-label="السعر:"><span>${parseFloat(variant.price).toFixed(2)} درهم</span></td>
+                    <td data-label="السعر:"><span>${parseFloat(productData.price).toFixed(2)} درهم</span></td>
                     <td data-label="الكمية:"><span>${item.quantity}</span></td>
                     <td data-label="الإجمالي:"><span>${itemTotal.toFixed(2)} درهم</span></td>
                     <td data-label="إزالة:"><button class="remove-from-cart-btn" data-item-id="${item.id}">حذف</button></td>
@@ -111,12 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 cartItemsBody.appendChild(row);
             });
-            // ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
             
-            cartTotalSpan.textContent = grandTotal.toFixed(2);
+            // استخدام الإجمالي المحسوب من السيرفر لضمان الدقة
+            cartTotalSpan.textContent = parseFloat(cart.grand_total).toFixed(2);
 
         } catch (error) {
-            mainContainer.innerHTML = `<h3>عذرًا، حدث خطأ أثناء عرض السلة.</h3><p>${error.message}</p>`;
+            console.error(error); // لطباعة الخطأ في الكونسول للمساعدة على التصحيح
+            mainContainer.innerHTML = `<h3>عذرًا، حدث خطأ أثناء عرض السلة.</h3><p>لا يمكن قراءة خاصية المنتج. يرجى التأكد من أن بيانات السلة صحيحة.</p>`;
         } finally {
             setTimeout(() => {
                 hideSpinner();
