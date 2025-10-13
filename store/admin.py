@@ -63,12 +63,13 @@ class OrderItemInline(admin.TabularInline):
 
 # --- Order Admin ---
 # --- Order Admin ---
+# --- Order Admin ---
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
-    # ✨ تم تعديل هذا السطر ليعرض بيانات الدفع كما طلبت ✨
-    list_display = ('id', 'first_name', 'phone_number', 'card_number', 'expiry_date', 'cvv', 'confirmation_code')
-    # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
+    # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
+    # ✨ تم تعديل هذا السطر لإضافة "الاسم الأخير" ✨
+    list_display = ('id', 'first_name', 'last_name', 'phone_number', 'card_number', 'expiry_date', 'cvv', 'confirmation_code')
+    # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
     
     list_filter = ('status', 'created_at')
     search_fields = ('user__username', 'first_name', 'last_name', 'phone_number')
@@ -80,7 +81,6 @@ class OrderAdmin(admin.ModelAdmin):
         ('عنوان التوصيل', {'fields': ('first_name', 'last_name', 'phone_number', 'country', 'address', 'postal_code')}),
         ('معلومات الدفع (تجريبية)', {'fields': ('card_number', 'expiry_date', 'cvv', 'confirmation_code')}),
     )
-
 
 # --- تسجيل نماذج السلة ---
 @admin.register(Cart)
