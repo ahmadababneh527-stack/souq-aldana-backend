@@ -1220,3 +1220,9 @@ input[type=number]::-webkit-outer-spin-button {
     color: #dc3545;
     font-weight: bold;
 }
+
+
+.thumbnail-image.active {
+    border: 2px solid var(--primary-color);
+    opacity: 1;
+}

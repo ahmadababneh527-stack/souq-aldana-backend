@@ -94,29 +94,52 @@ class LoginAPIView(APIView):
             }, status=status.HTTP_200_OK)
         return Response({'error': 'بيانات الاعتماد غير صالحة.'}, status=status.HTTP_400_BAD_REQUEST)
 
+# في ملف store/views.py
+# تأكد من استيراد ProductVariant في الأعلى مع باقي النماذج
+from .models import Product, User, Cart, CartItem, Review, Category, Order, OrderItem, ProductVariant
+
 class AddToCartAPIView(APIView):
     """
-    لإضافة منتج إلى السلة.
+    لإضافة نسخة منتج (variant) إلى السلة.
     """
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
-        product_id = request.data.get('product_id')
+        # ✨ تم التغيير من product_id إلى variant_id ✨
+        variant_id = request.data.get('variant_id')
         quantity = int(request.data.get('quantity', 1))
+
+        if not variant_id:
+            return Response({'error': 'لم يتم تحديد نسخة المنتج.'}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            product = Product.objects.get(id=product_id)
-        except Product.DoesNotExist:
-            return Response({'error': 'المنتج غير موجود.'}, status=status.HTTP_404_NOT_FOUND)
-        
+            # نبحث الآن عن ProductVariant بدلًا من Product
+            variant = ProductVariant.objects.get(id=variant_id)
+        except ProductVariant.DoesNotExist:
+            return Response({'error': 'هذه النسخة من المنتج غير موجودة.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # التحقق من الكمية في المخزون
+        if variant.stock < quantity:
+            return Response({'error': 'الكمية المطلوبة غير متوفرة في المخزون.'}, status=status.HTTP_400_BAD_REQUEST)
+
         cart, _ = Cart.objects.get_or_create(user=request.user)
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        
+
+        # نبحث عن cart_item مرتبط بالـ variant
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, variant=variant)
+
         if not created:
-            cart_item.quantity += quantity
+            # إذا كان العنصر موجودًا بالفعل، قم بزيادة الكمية
+            new_quantity = cart_item.quantity + quantity
+            if variant.stock < new_quantity:
+                return Response({'error': 'الكمية الإجمالية في السلة تتجاوز المخزون المتاح.'}, status=status.HTTP_400_BAD_REQUEST)
+            cart_item.quantity = new_quantity
         else:
+            # إذا كان عنصرًا جديدًا، قم بتعيين الكمية
             cart_item.quantity = quantity
+
         cart_item.save()
-        
-        return Response({'message': f"تمت إضافة '{product.name}' إلى السلة بنجاح."}, status=status.HTTP_200_OK)
+
+        return Response({'message': f"تمت إضافة '{variant.product.name}' إلى السلة بنجاح."}, status=status.HTTP_200_OK)
 class ProfileAPIView(APIView):
     """
     لجلب وتحديث بيانات الملف الشخصي للمستخدم.

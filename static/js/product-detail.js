@@ -184,14 +184,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 10. الحفاظ على وظائف معرض الصور ---
-    if (mainImage && thumbnails.length > 0) {
-        thumbnails.forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                mainImage.src = this.src;
-            });
-        });
-    }
+if (mainImage && thumbnails.length > 0) {
+    thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+            // تغيير الصورة الرئيسية
+            mainImage.src = this.src;
 
+            // ✨ إضافة: إزالة التحديد من كل الصور ✨
+            thumbnails.forEach(t => t.classList.remove('active'));
+
+            // ✨ إضافة: تحديد الصورة التي تم النقر عليها ✨
+            this.classList.add('active');
+        });
+    });
+    // ✨ إضافة: تحديد أول صورة كصورة نشطة عند تحميل الصفحة ✨
+    if (thumbnails.length > 0) {
+        thumbnails[0].classList.add('active');
+    }
+}
     // --- 11. الحفاظ على وظائف التقييمات (لم تتغير) ---
     async function loadProductReviews() {
         // ... (كود تحميل التقييمات)
