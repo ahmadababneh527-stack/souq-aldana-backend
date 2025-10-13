@@ -321,13 +321,19 @@ def checkout_payment(request, order_id):
         return redirect('checkout_confirm', order_id=order.id)
     return render(request, 'checkout_payment.html', {'order': order})
 
+# في ملف store/views.py
+
 @login_required
 def checkout_confirm(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     if request.method == 'POST':
+        # معلومات العنوان والدفع تم حفظها بالفعل في الخطوات السابقة.
+        # هنا، نحن فقط بحاجة لحفظ رمز التأكيد النهائي.
         order.confirmation_code = request.POST.get('pin_code')
         order.save()
-        return redirect('order_success')
+
+        return redirect('order_success') # توجيه لصفحة النجاح
+
     return render(request, 'checkout_confirm.html', {'order': order})
 
 @login_required
