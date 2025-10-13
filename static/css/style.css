@@ -1141,3 +1141,82 @@ input[type=number]::-webkit-outer-spin-button {
 .resend-container {
     margin-top: 25px;
 }
+
+
+/* ================================================= */
+/* ========= CSS لخيارات المنتج (Variants) ========== */
+/* ================================================= */
+
+.variant-group {
+    margin-bottom: 20px;
+}
+
+.variant-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.variant-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* تصميم أزرار المقاس */
+.size-btn {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.size-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.size-btn.selected {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+
+.size-btn:disabled {
+    background-color: #f9f9f9;
+    color: #ccc;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+/* تصميم دوائر اللون */
+.color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #ccc;
+    transition: all 0.2s ease;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.color-swatch.selected {
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+/* رسالة حالة المخزون */
+.variant-status {
+    margin-top: 10px;
+    font-size: 0.9em;
+    min-height: 1.2em;
+}
+
+.variant-status.out-of-stock {
+    color: #dc3545;
+    font-weight: bold;
+}

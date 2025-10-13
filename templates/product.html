@@ -24,15 +24,20 @@
         <div class="product-details-container">
             <h1>{{ product.name }}</h1>
             
-            <div class="price-section">
-                <span class="product-price offer">{{ product.price }} درهم</span>
-                {% if product.original_price and product.original_price > product.price %}
-    <span class="original-price">{{ product.original_price }} درهم</span>
-{% endif %}
-            </div>
+            <div id="price-section" class="price-section">
+    </div>
 
            <p class="product-description">{{ product.description }}</p>
-            
+            <div class="variant-selector">
+    <div id="color-options-container" class="variant-group" style="display: none;">
+        <label>اللون:</label>
+        <div id="color-options" class="variant-options"></div>
+    </div>
+    <div id="size-options-container" class="variant-group" style="display: none;">
+        <label>المقاس:</label>
+        <div id="size-options" class="variant-options"></div>
+    </div>
+</div>
             <div class="quantity-selector">
                 <label for="quantity">الكمية:</label>
                 <div class="quantity-controls">
@@ -42,9 +47,8 @@
                 </div>
             </div>
 
-            <button class="add-to-cart-btn" data-product-id="{{ product.id }}">أضف إلى السلة</button>
-
-            <div id="add-to-cart-status"></div>
+              <button id="add-to-cart-btn" class="add-to-cart-btn" disabled>اختر الخيارات أولاً</button>
+              <div id="variant-status" class="variant-status"></div>
         </div>
     </div>
 
@@ -84,4 +88,9 @@
 
 {% block scripts %}
     {{ block.super }}
+    <script>
+        // تمرير معرّف المنتج من Django إلى الجافاسكريبت
+        const PRODUCT_ID = "{{ product.id }}";
+    </script>
+    <script src="{% static 'js/product-detail.js' %}"></script>
 {% endblock %}
