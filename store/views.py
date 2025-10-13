@@ -285,6 +285,8 @@ def track_order_view(request):
 
 # store/views.py
 
+# store/views.py
+
 @login_required
 def create_order_view(request):
     cart = get_object_or_404(Cart, user=request.user)
@@ -295,24 +297,21 @@ def create_order_view(request):
     new_order = Order.objects.create(user=request.user)
     total_price = 0
     
-    # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
-    # ✨ تم تعديل هذا الجزء ليقرأ البيانات من الـ variant ✨
-    # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
     for item in cart_items:
-        # إنشاء عنصر طلب جديد وربطه بالمنتج الأساسي
+        # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
+        # ✨ التعديل الأخير والمهم هنا: تغيير product إلى variant ✨
+        # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
         OrderItem.objects.create(
             order=new_order, 
-            product=item.variant.product,  # <-- التعديل الأول: جلب المنتج من نسخة المنتج
+            variant=item.variant,          # <-- هذا هو السطر الذي تم إصلاحه
             quantity=item.quantity, 
-            price=item.variant.price       # <-- التعديل الثاني: جلب السعر من نسخة المنتج
+            price=item.variant.price
         )
-        # حساب السعر الإجمالي بناءً على أسعار نسخ المنتجات
-        total_price += item.variant.price * item.quantity # <-- التعديل الثالث
+        total_price += item.variant.price * item.quantity
     
     new_order.total_price = total_price
     new_order.save()
     
-    # حذف عناصر السلة بعد إنشاء الطلب بنجاح
     cart_items.delete()
 
     return redirect('checkout_shipping', order_id=new_order.id)
