@@ -48,27 +48,51 @@ class ProductSerializer(serializers.ModelSerializer):
             'variants'
         ]
 
+# In store/serializers.py
+
 class UserSerializer(serializers.ModelSerializer):
+    # 1. Add a password confirmation field that is write-only
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     country = serializers.StringRelatedField()
+    
     class Meta:
         model = User
         fields = [
             'id', 'username', 'email', 'first_name', 'last_name', 
+            'password', 'password2', # Add the new password fields
             'date_of_birth', 'gender', 'country', 'address', 
             'postal_code', 'phone_number'
         ]
+        # 2. Make the main password field write-only as well
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def validate(self, data):
+        """
+        3. Check that the two password fields match.
+        """
+        password = data.get('password')
+        password2 = data.get('password2')
+        if password != password2:
+            raise serializers.ValidationError({"password": "كلمتا المرور غير متطابقتين."})
+        
+        # You can add more validation here, e.g., for email uniqueness if needed
+        if User.objects.filter(email=data.get('email')).exists():
+            raise serializers.ValidationError({"email": "هذا البريد الإلكتروني مسجل بالفعل."})
+            
+        return data
 
     def create(self, validated_data):
-        password = self.initial_data.get('password')
-        user = User.objects.create(**validated_data)
-        if password:
-            user.set_password(password)
-            user.save()
+        """
+        4. Use the proper create_user method to handle password hashing.
+        """
+        # We don't need password2 to create the user, so we remove it
+        validated_data.pop('password2') 
+        
+        # create_user handles hashing automatically
+        user = User.objects.create_user(**validated_data)
         return user
-
-# ==================================================================
-# =================== ✨ هذا هو الكود الذي تم إصلاحه ✨ ===================
-# ==================================================================
 
 # Serializer جديد ومخصص لعرض بيانات المنتج والنسخة معًا داخل السلة
 class CartItemVariantSerializer(serializers.ModelSerializer):
