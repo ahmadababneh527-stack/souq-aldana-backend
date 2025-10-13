@@ -9,23 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const sizeOptionsDiv = document.getElementById('size-options');
     const addToCartBtn = document.getElementById('add-to-cart-btn');
     const variantStatusDiv = document.getElementById('variant-status');
-    
-    // عناصر التحكم بالكمية
     const decreaseBtn = document.getElementById('decrease-quantity');
     const increaseBtn = document.getElementById('increase-quantity');
     const quantityInput = document.getElementById('quantity');
-
-    // عناصر معرض الصور
     const mainImage = document.getElementById('main-product-image');
     const thumbnails = document.querySelectorAll('.thumbnail-image');
-
-    // عناصر التقييمات
-    const reviewsList = document.getElementById('reviews-list');
-    const reviewsCount = document.getElementById('reviews-count');
-    const reviewForm = document.getElementById('review-form');
-    
-    // المتغيرات العامة
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
     let productData = null;
     let selectedColor = null;
     let selectedSize = null;
@@ -34,17 +24,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 2. جلب بيانات المنتج والنسخ المتاحة من الـ API ---
     async function fetchProductData() {
         try {
-            // نستخدم PRODUCT_ID الذي تم تمريره من القالب
             const response = await fetch(`/api/products/${PRODUCT_ID}/`);
             if (!response.ok) throw new Error('فشل تحميل المنتج');
             productData = await response.json();
             
-            // استدعاء الدوال لعرض الخيارات
+            // استدعاء دالة عرض السعر الأولي فور تحميل البيانات
+            displayInitialPrice(); 
+            
             renderColorOptions();
-            updateUI(); // استدعاء أولي لتحديد الحالة الابتدائية
+            updateButtonState(); // استدعاء لتحديد حالة الزر الابتدائية
         } catch (error) {
             console.error(error);
             priceSection.innerHTML = `<p>حدث خطأ في تحميل بيانات المنتج.</p>`;
+        }
+    }
+
+    // --- دالة جديدة: لعرض السعر الأولي للمنتج ---
+    function displayInitialPrice() {
+        if (productData && productData.variants && productData.variants.length > 0) {
+            const firstVariant = productData.variants[0]; // نأخذ سعر أول نسخة
+            let priceHTML = `<span class="product-price offer">${firstVariant.price} درهم</span>`;
+            if (firstVariant.original_price && parseFloat(firstVariant.original_price) > parseFloat(firstVariant.price)) {
+                priceHTML += `<span class="original-price">${firstVariant.original_price} درهم</span>`;
+            }
+            priceSection.innerHTML = priceHTML;
+        } else {
+             priceSection.innerHTML = `<p>السعر غير متوفر</p>`;
         }
     }
 
@@ -52,14 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderColorOptions() {
         if (!productData || !productData.variants) return;
         const colors = [...new Set(productData.variants.map(v => v.color?.name).filter(Boolean))];
-        
         if (colors.length > 0) {
             colorOptionsContainer.style.display = 'block';
             colorOptionsDiv.innerHTML = colors.map(colorName => {
                 const variant = productData.variants.find(v => v.color?.name === colorName);
                 return `<div class="color-swatch" data-color="${colorName}" style="background-color: ${variant.color.hex_code};" title="${colorName}"></div>`;
             }).join('');
-            
             colorOptionsDiv.querySelectorAll('.color-swatch').forEach(swatch => {
                 swatch.addEventListener('click', () => handleColorSelection(swatch));
             });
@@ -71,29 +74,23 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedColor = selectedSwatch.dataset.color;
         colorOptionsDiv.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
         selectedSwatch.classList.add('selected');
-        selectedSize = null;
-        selectedVariant = null;
+        selectedSize = null; // إعادة تعيين المقاس عند تغيير اللون
         renderSizeOptions();
-        updateUI();
+        updateButtonState();
     }
 
     // --- 5. عرض خيارات المقاسات المتاحة للون المختار ---
     function renderSizeOptions() {
-        const sizesForColor = productData.variants
-            .filter(v => v.color?.name === selectedColor)
-            .map(v => v.size)
-            .filter(Boolean);
-
+        const sizesForColor = productData.variants.filter(v => v.color?.name === selectedColor).map(v => v.size).filter(Boolean);
         const uniqueSizes = [...new Map(sizesForColor.map(item => [item['name'], item])).values()];
 
         if (uniqueSizes.length > 0) {
             sizeOptionsContainer.style.display = 'block';
             sizeOptionsDiv.innerHTML = uniqueSizes.map(size => {
                 const variant = productData.variants.find(v => v.color?.name === selectedColor && v.size?.name === size.name);
-                const isDisabled = variant.stock === 0;
+                const isDisabled = !variant || variant.stock === 0;
                 return `<button class="size-btn" data-size="${size.name}" ${isDisabled ? 'disabled' : ''}>${size.name}</button>`;
             }).join('');
-            
             sizeOptionsDiv.querySelectorAll('.size-btn').forEach(btn => {
                 btn.addEventListener('click', () => handleSizeSelection(btn));
             });
@@ -107,20 +104,25 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedSize = selectedBtn.dataset.size;
         sizeOptionsDiv.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
         selectedBtn.classList.add('selected');
-        updateUI();
+        updateButtonState();
     }
 
-    // --- 7. تحديث واجهة المستخدم (السعر، زر الإضافة، حالة المخزون) ---
-    function updateUI() {
-        selectedVariant = productData.variants.find(v => v.color?.name === selectedColor && v.size?.name === selectedSize);
+    // --- 7. تحديث حالة الزر والمخزون ---
+    function updateButtonState() {
+        // نتحقق أولاً من وجود المتطلبات الأساسية
+        const hasColorOptions = productData.variants.some(v => v.color);
+        const hasSizeOptions = productData.variants.some(v => v.size);
+
+        if ((hasColorOptions && !selectedColor) || (hasSizeOptions && !selectedSize)) {
+            selectedVariant = null;
+        } else {
+            selectedVariant = productData.variants.find(v => 
+                (!hasColorOptions || v.color?.name === selectedColor) &&
+                (!hasSizeOptions || v.size?.name === selectedSize)
+            );
+        }
         
         if (selectedVariant) {
-            let priceHTML = `<span class="product-price offer">${selectedVariant.price} درهم</span>`;
-            if (selectedVariant.original_price && parseFloat(selectedVariant.original_price) > parseFloat(selectedVariant.price)) {
-                priceHTML += `<span class="original-price">${selectedVariant.original_price} درهم</span>`;
-            }
-            priceSection.innerHTML = priceHTML;
-
             if (selectedVariant.stock > 0) {
                 variantStatusDiv.textContent = `متوفر (${selectedVariant.stock} قطعة)`;
                 variantStatusDiv.className = 'variant-status';
@@ -133,8 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 addToCartBtn.disabled = true;
             }
         } else {
-            priceSection.innerHTML = productData.variants.length > 0 ? '<p>الرجاء اختيار الخيارات المتاحة لعرض السعر</p>' : '';
-            addToCartBtn.textContent = 'اختر الخيارات أولاً';
+            addToCartBtn.textContent = 'اختر الخيارات لإضافة';
             addToCartBtn.disabled = true;
             variantStatusDiv.textContent = '';
         }
@@ -148,10 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/api/cart/add/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
                 body: JSON.stringify({
                     variant_id: selectedVariant.id,
                     quantity: quantityInput.value
@@ -184,35 +182,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 10. الحفاظ على وظائف معرض الصور ---
-if (mainImage && thumbnails.length > 0) {
-    thumbnails.forEach(thumb => {
-        thumb.addEventListener('click', function() {
-            // تغيير الصورة الرئيسية
-            mainImage.src = this.src;
-
-            // ✨ إضافة: إزالة التحديد من كل الصور ✨
-            thumbnails.forEach(t => t.classList.remove('active'));
-
-            // ✨ إضافة: تحديد الصورة التي تم النقر عليها ✨
-            this.classList.add('active');
+    if (mainImage && thumbnails.length > 0) {
+        thumbnails.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                mainImage.src = this.src;
+                thumbnails.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
         });
-    });
-    // ✨ إضافة: تحديد أول صورة كصورة نشطة عند تحميل الصفحة ✨
-    if (thumbnails.length > 0) {
         thumbnails[0].classList.add('active');
     }
-}
-    // --- 11. الحفاظ على وظائف التقييمات (لم تتغير) ---
-    async function loadProductReviews() {
-        // ... (كود تحميل التقييمات)
-    }
-    if (reviewForm) {
-        reviewForm.addEventListener('submit', async (event) => {
-            // ... (كود إرسال التقييم)
-        });
-    }
     
-    // --- 12. بدء كل شيء ---
+    // --- 11. بدء كل شيء ---
     fetchProductData();
-    // loadProductReviews(); // يمكنك تفعيل هذا السطر إذا أردت تحميل التقييمات أيضًا
 });
