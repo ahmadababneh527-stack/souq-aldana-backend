@@ -1,4 +1,4 @@
-// في ملف static/js/product-detail.js
+// static/js/product-detail.js
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. الحصول على العناصر الأساسية من الصفحة ---
@@ -12,7 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const decreaseBtn = document.getElementById('decrease-quantity');
     const increaseBtn = document.getElementById('increase-quantity');
     const quantityInput = document.getElementById('quantity');
-    const mainImage = document.getElementById('main-product-image');
+    // ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
+    // ✨ هذا هو السطر الذي تم إصلاحه: نحن نبحث عن الصورة داخل الـ div الخاص بها ✨
+    const mainImage = document.querySelector('.main-image-wrapper img');
+    // ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
     const thumbnails = document.querySelectorAll('.thumbnail-image');
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     
@@ -28,21 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('فشل تحميل المنتج');
             productData = await response.json();
             
-            // استدعاء دالة عرض السعر الأولي فور تحميل البيانات
             displayInitialPrice(); 
             
             renderColorOptions();
-            updateButtonState(); // استدعاء لتحديد حالة الزر الابتدائية
+            updateButtonState();
         } catch (error) {
             console.error(error);
             priceSection.innerHTML = `<p>حدث خطأ في تحميل بيانات المنتج.</p>`;
         }
     }
 
-    // --- دالة جديدة: لعرض السعر الأولي للمنتج ---
     function displayInitialPrice() {
         if (productData && productData.variants && productData.variants.length > 0) {
-            const firstVariant = productData.variants[0]; // نأخذ سعر أول نسخة
+            const firstVariant = productData.variants[0];
             let priceHTML = `<span class="product-price offer">${firstVariant.price} درهم</span>`;
             if (firstVariant.original_price && parseFloat(firstVariant.original_price) > parseFloat(firstVariant.price)) {
                 priceHTML += `<span class="original-price">${firstVariant.original_price} درهم</span>`;
@@ -74,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedColor = selectedSwatch.dataset.color;
         colorOptionsDiv.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
         selectedSwatch.classList.add('selected');
-        selectedSize = null; // إعادة تعيين المقاس عند تغيير اللون
+        selectedSize = null;
         renderSizeOptions();
         updateButtonState();
     }
@@ -109,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 7. تحديث حالة الزر والمخزون ---
     function updateButtonState() {
-        // نتحقق أولاً من وجود المتطلبات الأساسية
         const hasColorOptions = productData.variants.some(v => v.color);
         const hasSizeOptions = productData.variants.some(v => v.size);
 
@@ -190,7 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.classList.add('active');
             });
         });
-        thumbnails[0].classList.add('active');
+        if (thumbnails[0]) {
+           thumbnails[0].classList.add('active');
+        }
     }
     
     // --- 11. بدء كل شيء ---
