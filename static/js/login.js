@@ -26,19 +26,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    // On success, redirect to the homepage
+                    // ▼▼▼▼▼ هذا هو التعديل الوحيد والمهم ▼▼▼▼▼
+                    const userData = await response.json();
+                    
+                    // حفظ بيانات المستخدم في الذاكرة المحلية للمتصفح
+                    localStorage.setItem('userFirstName', userData.first_name);
+                    localStorage.setItem('userLastName', userData.last_name);
+                    localStorage.setItem('userEmail', userData.email);
+
+                    // إعادة التوجيه للصفحة الرئيسية
                     window.location.href = '/';
+                    // ▲▲▲▲▲ نهاية التعديل ▲▲▲▲▲
+                    
                 } else {
                     const data = await response.json();
-                    // This alert will show the exact error message from the server
-                    alert('Server Response: ' + JSON.stringify(data));
-                    if (statusMessage) statusMessage.textContent = data.error || 'Login failed.';
+                    if (statusMessage) statusMessage.textContent = data.error || 'فشل تسجيل الدخول.';
                 }
 
             } catch (error) {
-                // This alert will show if there's a network connection problem
-                alert('Network or connection error: ' + error.message);
-                if (statusMessage) statusMessage.textContent = 'Failed to connect to the server.';
+                if (statusMessage) statusMessage.textContent = 'فشل الاتصال بالخادم.';
             } finally {
                 if (typeof hideSpinner === 'function') hideSpinner();
             }
