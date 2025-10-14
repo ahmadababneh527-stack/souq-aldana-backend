@@ -1,5 +1,3 @@
-// في ملف static/js/main.js
-
 // --- الدوال العامة ---
 function showSpinner() {
     const spinner = document.getElementById('spinner-overlay');
@@ -64,6 +62,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     priceHTML = `<p class="product-price offer">${displayPrice} درهم</p><span class="original-price">${originalPrice} درهم</span>`;
                 }
 
+                // ▼▼▼▼▼ هذا هو الكود الجديد الذي تمت إضافته ▼▼▼▼▼
+                let stockHTML = '';
+                if (product.total_stock > 0) {
+                    stockHTML = `<p class="product-stock">الكمية المتاحة: ${product.total_stock}</p>`;
+                } else {
+                    stockHTML = `<p class="product-stock out-of-stock">نفدت الكمية</p>`;
+                }
+                // ▲▲▲▲▲ نهاية الكود الجديد ▲▲▲▲▲
+
                 // تحويل الزر إلى رابط لصفحة المنتج
                 const buttonHTML = `<a href="/products/${product.id}/" class="add-to-cart-btn">عرض الخيارات</a>`;
 
@@ -73,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="product-info">
                         <h4><a href="/products/${product.id}/">${product.name}</a></h4>
                         ${priceHTML} 
-                        ${buttonHTML}
+                        ${stockHTML} ${buttonHTML}
                     </div>
                 </div>`;
                 productsGrid.innerHTML += productCardHTML;
