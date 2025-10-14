@@ -1331,3 +1331,17 @@ input[type=number]::-webkit-outer-spin-button {
     font-weight: bold; /* لجعل الخط عريضًا وواضحًا */
     color: #333; /* لون رمادي غامق */
 }
+
+/* Styling for the Announcement Bar */
+.announcement-bar {
+    background-color: #0d8a6a; /* استخدمت اللون الأخضر الأساسي لموقعك */
+    color: #ffffff;           /* لون النص أبيض ليبرز */
+    text-align: center;
+    padding: 10px 15px;      /* مساحة داخلية حول النص */
+    font-size: 0.9rem;       /* حجم خط مناسب */
+}
+
+.announcement-bar p {
+    margin: 0;               /* لإزالة أي هوامش افتراضية */
+    font-weight: 500;
+}
