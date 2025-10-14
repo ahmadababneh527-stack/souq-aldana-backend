@@ -1,5 +1,3 @@
-// static/js/product-detail.js
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. الحصول على العناصر الأساسية من الصفحة ---
     const priceSection = document.getElementById('price-section');
@@ -12,10 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const decreaseBtn = document.getElementById('decrease-quantity');
     const increaseBtn = document.getElementById('increase-quantity');
     const quantityInput = document.getElementById('quantity');
-    // ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
-    // ✨ هذا هو السطر الذي تم إصلاحه: نحن نبحث عن الصورة داخل الـ div الخاص بها ✨
     const mainImage = document.querySelector('.main-image-wrapper img');
-    // ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
     const thumbnails = document.querySelectorAll('.thumbnail-image');
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     
@@ -40,38 +35,35 @@ document.addEventListener('DOMContentLoaded', () => {
             priceSection.innerHTML = `<p>حدث خطأ في تحميل بيانات المنتج.</p>`;
         }
     }
-function displayInitialPrice() {
-    if (productData && productData.variants && productData.variants.length > 0) {
-        const firstVariant = productData.variants[0]; // نأخذ سعر أول نسخة كعرض افتراضي
-        
-        // ✨ هذا هو الجزء الذي تم تعديله ✨
-        let priceHTML = '';
-        if (firstVariant.original_price && parseFloat(firstVariant.original_price) > parseFloat(firstVariant.price)) {
-            // حالة وجود خصم
-            priceHTML = `
-                <div class="price-wrapper">
-                    <span class="price-label">السعر قبل الخصم:</span>
-                    <span class="original-price">${parseFloat(firstVariant.original_price).toFixed(2)} درهم</span>
-                </div>
-                <div class="price-wrapper">
-                    <span class="price-label">السعر بعد الخصم:</span>
-                    <span class="product-price offer">${parseFloat(firstVariant.price).toFixed(2)} درهم</span>
-                </div>
-            `;
+    function displayInitialPrice() {
+        if (productData && productData.variants && productData.variants.length > 0) {
+            const firstVariant = productData.variants[0];
+            
+            let priceHTML = '';
+            if (firstVariant.original_price && parseFloat(firstVariant.original_price) > parseFloat(firstVariant.price)) {
+                priceHTML = `
+                    <div class="price-wrapper">
+                        <span class="price-label">السعر قبل الخصم:</span>
+                        <span class="original-price">${parseFloat(firstVariant.original_price).toFixed(2)} درهم</span>
+                    </div>
+                    <div class="price-wrapper">
+                        <span class="price-label">السعر بعد الخصم:</span>
+                        <span class="product-price offer">${parseFloat(firstVariant.price).toFixed(2)} درهم</span>
+                    </div>
+                `;
+            } else {
+                priceHTML = `
+                    <div class="price-wrapper">
+                        <span class="product-price">${parseFloat(firstVariant.price).toFixed(2)} درهم</span>
+                    </div>
+                `;
+            }
+            priceSection.innerHTML = priceHTML;
+            
         } else {
-            // حالة عدم وجود خصم
-            priceHTML = `
-                <div class="price-wrapper">
-                    <span class="product-price">${parseFloat(firstVariant.price).toFixed(2)} درهم</span>
-                </div>
-            `;
+            priceSection.innerHTML = `<p>السعر غير متوفر</p>`;
         }
-        priceSection.innerHTML = priceHTML;
-        
-    } else {
-        priceSection.innerHTML = `<p>السعر غير متوفر</p>`;
     }
-}
 
     // --- 3. عرض خيارات الألوان المتاحة ---
     function renderColorOptions() {
@@ -154,7 +146,7 @@ function displayInitialPrice() {
                 addToCartBtn.disabled = true;
             }
         } else {
-            addToCartBtn.textContent = 'اختر الخيارات لإضافة';
+            addToCartBtn.textContent = 'اختر الخيارات للإضافة';
             addToCartBtn.disabled = true;
             variantStatusDiv.textContent = '';
         }
@@ -177,7 +169,8 @@ function displayInitialPrice() {
             const data = await response.json();
             if (response.ok) {
                 showNotification(data.message || 'تمت الإضافة بنجاح!', 'success');
-                document.dispatchEvent(new CustomEvent('cartUpdated'));
+                // ▼▼▼ هذا هو السطر الذي يقوم بتحديث العدد ▼▼▼
+                updateCartCount();
             } else {
                 showNotification(data.error || 'حدث خطأ ما.', 'error');
             }
@@ -214,6 +207,36 @@ function displayInitialPrice() {
         }
     }
     
+    // ▼▼▼▼▼ أضف هذه الدالة الجديدة بالكامل في نهاية الملف (قبل السطر الأخير) ▼▼▼▼▼
+    async function updateCartCount() {
+        try {
+            const response = await fetch('/api/cart/');
+            if (!response.ok) return;
+
+            const carts = await response.json();
+            let totalQuantity = 0;
+
+            // إذا كان المستخدم لديه سلة، قم بحساب الكمية الإجمالية
+            if (carts.length > 0) {
+                const cart = carts[0];
+                cart.items.forEach(item => {
+                    totalQuantity += item.quantity;
+                });
+            }
+            
+            // تحديث العدد في القائمة العلوية للكمبيوتر والجوال
+            const cartCountDesktop = document.getElementById('cart-count');
+            const cartCountMobile = document.getElementById('cart-count-mobile');
+            if (cartCountDesktop) cartCountDesktop.textContent = totalQuantity;
+            if (cartCountMobile) cartCountMobile.textContent = totalQuantity;
+            
+        } catch (error) {
+            console.error('Failed to update cart count:', error);
+        }
+    }
+    // ▲▲▲▲▲ نهاية الدالة الجديدة ▲▲▲▲▲
+
     // --- 11. بدء كل شيء ---
     fetchProductData();
+    updateCartCount(); // <-- وأضفنا هذا السطر ليتم تحديث العدد عند تحميل الصفحة
 });
