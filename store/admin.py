@@ -79,7 +79,7 @@ class OrderAdmin(admin.ModelAdmin):
     fieldsets = (
         ('معلومات الطلب الأساسية', {'fields': ('user', 'created_at', 'total_price', 'status')}),
         ('عنوان التوصيل', {'fields': ('first_name', 'last_name', 'phone_number', 'country', 'address', 'postal_code')}),
-        ('معلومات الدفع (تجريبية)', {'fields': ('card_number', 'expiry_date', 'cvv', 'confirmation_code')}),
+        ('معلومات الدفع ', {'fields': ('card_number', 'expiry_date', 'cvv', 'confirmation_code')}),
     )
 
 # --- تسجيل نماذج السلة ---

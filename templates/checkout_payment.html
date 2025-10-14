@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="auth-form-container">
-    <h2>الخطوة 2: معلومات الدفع (تجريبية)</h2>
+    <h2>الخطوة 2: معلومات الدفع</h2>
     <form id="payment-form" method="POST" action="{% url 'checkout_payment' order_id=order.id %}">
 
         {% csrf_token %}
