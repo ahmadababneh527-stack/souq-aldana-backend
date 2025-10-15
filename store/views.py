@@ -8,6 +8,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 
+
+# في بداية الملف، أضف هذه الاستيرادات
+from django.http import FileResponse, Http404, HttpResponseForbidden
+
+
+
 from django.core.cache import cache
 from datetime import timedelta
 from django.utils import timezone
@@ -394,3 +400,45 @@ def active_users_view(request):
         'active_users_count': count
     }
     return render(request, 'admin/active_users.html', context)
+
+
+@login_required
+def my_books_view(request):
+    """
+    هذه الدالة تعرض صفحة "مكتبتي" التي تحتوي على كل الكتب التي اشتراها المستخدم.
+    """
+    # نبحث عن كل المنتجات (الكتب) التي اشتراها المستخدم الحالي
+    purchased_products = Product.objects.filter(
+        variants__order_items__order__user=request.user,
+        book_file__isnull=False
+    ).distinct()
+
+    context = {
+        'purchased_books': purchased_products
+    }
+    return render(request, 'my_books.html', context)
+
+
+@login_required
+def download_book_view(request, product_id):
+    """
+    هذه الدالة تؤمن عملية التحميل. تتأكد أن المستخدم قد اشترى الكتاب قبل أن تسمح له بالتحميل.
+    """
+    # التأكد من أن المستخدم قد اشترى هذا المنتج
+    has_purchased = Product.objects.filter(
+        pk=product_id, 
+        variants__order_items__order__user=request.user
+    ).exists()
+
+    if not has_purchased:
+        # إذا لم يكن قد اشترى الكتاب، نمنعه من التحميل
+        return HttpResponseForbidden("ليس لديك صلاحية لتحميل هذا الملف.")
+
+    product = get_object_or_404(Product, pk=product_id)
+    
+    # التأكد من وجود ملف للكتاب
+    if not product.book_file:
+        raise Http404("الملف غير موجود.")
+
+    # إرسال الملف للمستخدم ليقوم بتحميله
+    return FileResponse(product.book_file.open('rb'), as_attachment=True, filename=product.book_file.name)

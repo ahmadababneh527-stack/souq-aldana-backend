@@ -39,9 +39,11 @@
                     </li>
                     <li><a href="{% url 'cart' %}">سلة المشتريات (<span id="cart-count">0</span>)</a></li>
                      <li><a href="{% url 'track_order' %}">متابعة طلبي</a></li>
-                    <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
-                    <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
-                    <li id="user-info" style="display: none;">
+                     <li><a href="{% url 'my_books' %}">مكتبتي</a></li> <li><a href="{% url 'track_order' %}"><i class="fas fa-shipping-fast"></i> متابعة طلبي</a></li>
+                     <li><a href="{% url 'my_books' %}"><i class="fas fa-book"></i> مكتبتي</a></li>
+                     <li id="signup-link"><a href="{% url 'signup' %}">إنشاء حساب</a></li>
+                     <li id="login-link"><a href="{% url 'login' %}">تسجيل الدخول</a></li>
+                     <li id="user-info" style="display: none;">
                         <span id="user-display"></span>
                         <a href="#" id="logout-link">تسجيل الخروج</a>
                     </li>

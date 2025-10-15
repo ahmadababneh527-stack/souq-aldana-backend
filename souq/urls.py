@@ -22,6 +22,8 @@ from store.views import (
     order_success,
     category_products,
     search_results,
+    my_books_view,
+    download_book_view,
     active_users_view # <-- تأكدنا من وجودها
 )
 
@@ -54,6 +56,9 @@ urlpatterns = [
     path('checkout/payment/<int:order_id>/', checkout_payment, name='checkout_payment'),
     path('checkout/confirm/<int:order_id>/', checkout_confirm, name='checkout_confirm'),
     path('order-success/', order_success, name='order_success'),
+
+    path('my-books/', my_books_view, name='my_books'),
+    path('download/book/<int:product_id>/', download_book_view, name='download_book'),
 ]
 
 # الكود يضاف هنا، بعد انتهاء القائمة

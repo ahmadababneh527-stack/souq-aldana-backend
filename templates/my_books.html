@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}مكتبتي{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 40px 15px;">
+    <h2>مكتبتي</h2>
+    <p>هنا تجد جميع الكتب الإلكترونية التي قمت بشرائها.</p>
+
+    {% if purchased_books %}
+        <table class="table" style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #eee;">
+                    <th style="padding: 10px; text-align: right;">اسم الكتاب</th>
+                    <th style="padding: 10px; text-align: center;">إجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in purchased_books %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px;">{{ book.name }}</td>
+                        <td style="padding: 10px; text-align: center;">
+                            <a href="{% url 'download_book' book.id %}" class="btn-primary" style="text-decoration: none;">تحميل</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="margin-top: 20px;">لم تقم بشراء أي كتب إلكترونية بعد.</p>
+    {% endif %}
+</div>
+{% endblock %}
