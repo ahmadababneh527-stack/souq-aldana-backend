@@ -159,3 +159,6 @@ REST_FRAMEWORK = {
     ]
 }
 
+# إعدادات خاصة بالملفات المرفوعة (الصور، الكتب، إلخ)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

@@ -146,21 +146,122 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 7. تحديث حالة الزر والمخزون ---
     function updateButtonState() {
-        // ... (الكود هنا يبقى كما هو بدون تغيير) ...
+        const hasColorOptions = productData.variants.some(v => v.color);
+        const hasSizeOptions = productData.variants.some(v => v.size);
+
+        if ((hasColorOptions && !selectedColor) || (hasSizeOptions && !selectedSize)) {
+            selectedVariant = null;
+        } else {
+            selectedVariant = productData.variants.find(v => 
+                (!hasColorOptions || v.color?.name === selectedColor) &&
+                (!hasSizeOptions || v.size?.name === selectedSize)
+            );
+        }
+        
+        if (selectedVariant) {
+            if (selectedVariant.stock > 0) {
+                variantStatusDiv.textContent = `متوفر (${selectedVariant.stock} قطعة)`;
+                variantStatusDiv.className = 'variant-status';
+                addToCartBtn.textContent = 'أضف إلى السلة';
+                addToCartBtn.disabled = false;
+            } else {
+                variantStatusDiv.textContent = 'نفدت الكمية';
+                variantStatusDiv.className = 'variant-status out-of-stock';
+                addToCartBtn.textContent = 'نفدت الكمية';
+                addToCartBtn.disabled = true;
+            }
+        } else {
+            addToCartBtn.textContent = 'اختر الخيارات للإضافة';
+            addToCartBtn.disabled = true;
+            variantStatusDiv.textContent = '';
+        }
     }
     
     // --- 8. إضافة النسخة المحددة إلى السلة ---
     addToCartBtn.addEventListener('click', async () => {
-        // ... (الكود هنا يبقى كما هو بدون تغيير) ...
+        if (!selectedVariant || !csrfToken) return;
+
+        showSpinner();
+        try {
+            const response = await fetch('/api/cart/add/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                body: JSON.stringify({
+                    variant_id: selectedVariant.id,
+                    quantity: quantityInput.value
+                })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                showNotification(data.message || 'تمت الإضافة بنجاح!', 'success');
+                // ▼▼▼ هذا هو السطر الذي يقوم بتحديث العدد ▼▼▼
+                updateCartCount();
+            } else {
+                showNotification(data.error || 'حدث خطأ ما.', 'error');
+            }
+        } catch (error) {
+            showNotification('فشل الاتصال بالخادم.', 'error');
+        } finally {
+            hideSpinner();
+        }
     });
 
-    // ... (باقي دوال التحكم بالكمية ومعرض الصور تبقى كما هي) ...
-
-    async function updateCartCount() {
-        // ... (الكود هنا يبقى كما هو بدون تغيير) ...
+    // --- 9. الحفاظ على وظائف التحكم بالكمية ---
+    if (decreaseBtn && increaseBtn && quantityInput) {
+        decreaseBtn.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) quantityInput.value = currentValue - 1;
+        });
+        increaseBtn.addEventListener('click', () => {
+            let currentValue = parseInt(quantityInput.value);
+            quantityInput.value = currentValue + 1;
+        });
     }
+
+    // --- 10. الحفاظ على وظائف معرض الصور ---
+    if (mainImage && thumbnails.length > 0) {
+        thumbnails.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                mainImage.src = this.src;
+                thumbnails.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        if (thumbnails[0]) {
+           thumbnails[0].classList.add('active');
+        }
+    }
+    
+    // ▼▼▼▼▼ أضف هذه الدالة الجديدة بالكامل في نهاية الملف (قبل السطر الأخير) ▼▼▼▼▼
+    async function updateCartCount() {
+        try {
+            const response = await fetch('/api/cart/');
+            if (!response.ok) return;
+
+            const carts = await response.json();
+            let totalQuantity = 0;
+
+            // إذا كان المستخدم لديه سلة، قم بحساب الكمية الإجمالية
+            if (carts.length > 0) {
+                const cart = carts[0];
+                cart.items.forEach(item => {
+                    totalQuantity += item.quantity;
+                });
+            }
+            
+            // تحديث العدد في القائمة العلوية للكمبيوتر والجوال
+            const cartCountDesktop = document.getElementById('cart-count');
+            const cartCountMobile = document.getElementById('cart-count-mobile');
+            if (cartCountDesktop) cartCountDesktop.textContent = totalQuantity;
+            if (cartCountMobile) cartCountMobile.textContent = totalQuantity;
+            
+        } catch (error) {
+            console.error('Failed to update cart count:', error);
+        }
+    }
+    // ▲▲▲▲▲ نهاية الدالة الجديدة ▲▲▲▲▲
 
     // --- 11. بدء كل شيء ---
     fetchProductData();
-    updateCartCount();
+    updateCartCount(); // <-- وأضفنا هذا السطر ليتم تحديث العدد عند تحميل الصفحة
 });

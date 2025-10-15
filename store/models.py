@@ -45,13 +45,16 @@ class Product(models.Model):
     createdAt = models.DateTimeField(default=timezone.now)
     video_url = models.URLField(max_length=255, blank=True, null=True, verbose_name="رابط فيديو المنتج (يوتيوب)")
     
-    # ▼▼▼▼▼ الإضافات الجديدة الخاصة بالكتب ▼▼▼▼▼
+    # --- حقول الكتب ---
     author = models.CharField("المؤلف", max_length=200, null=True, blank=True)
     publisher = models.CharField("الناشر", max_length=200, null=True, blank=True)
     publication_date = models.DateField("تاريخ النشر", null=True, blank=True)
     page_count = models.PositiveIntegerField("عدد الصفحات", null=True, blank=True)
     isbn = models.CharField("ISBN", max_length=20, null=True, blank=True)
-    # ▲▲▲▲▲ نهاية الإضافات الجديدة ▲▲▲▲▲
+    
+    # ▼▼▼ هذا هو الحقل الجديد الذي أضفناه لرفع الملفات ▼▼▼
+    book_file = models.FileField("ملف الكتاب (PDF, EPUB)", upload_to='books/', null=True, blank=True)
+    # ▲▲▲ نهاية الحقل الجديد ▲▲▲
 
     def get_absolute_url(self):
         return reverse('product-detail', args=[str(self.id)])
