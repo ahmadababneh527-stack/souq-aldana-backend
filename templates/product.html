@@ -43,7 +43,18 @@
             <div id="price-section" class="price-section">
             </div>
 
-            <p class="product-description">{{ product.description }}</p>
+            <p class="product-description">{{ product.description|linebreaksbr }}</p>
+
+            <div id="book-details-section" style="display: none; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                <h3 class="details-title" style="margin-bottom: 10px;">تفاصيل الكتاب</h3>
+                <ul class="book-details-list" style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 8px;"><strong>المؤلف:</strong> <span id="product-author"></span></li>
+                    <li style="margin-bottom: 8px;"><strong>الناشر:</strong> <span id="product-publisher"></span></li>
+                    <li style="margin-bottom: 8px;"><strong>تاريخ النشر:</strong> <span id="product-publication-date"></span></li>
+                    <li style="margin-bottom: 8px;"><strong>عدد الصفحات:</strong> <span id="product-page-count"></span></li>
+                    <li style="margin-bottom: 8px;"><strong>الرقم الدولي (ISBN):</strong> <span id="product-isbn"></span></li>
+                </ul>
+            </div>
             <div class="variant-selector">
                 <div id="color-options-container" class="variant-group" style="display: none;">
                     <label>اللون:</label>

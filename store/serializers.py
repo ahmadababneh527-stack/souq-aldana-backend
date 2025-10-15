@@ -37,8 +37,6 @@ class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
     variants = ProductVariantSerializer(many=True, read_only=True)
-    
-    # --- This is the new field ---
     total_stock = serializers.SerializerMethodField()
 
     class Meta:
@@ -46,17 +44,14 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'description', 
             'images', 'reviews', 'createdAt',
-            'variants',
-            'total_stock' # <-- The field name is added here
+            'variants', 'total_stock',
+            
+            # ▼▼▼ أضفنا هذه الحقول الجديدة هنا ▼▼▼
+            'author', 'publisher', 'publication_date', 'page_count', 'isbn'
         ]
 
     def get_total_stock(self, product):
-        """
-        This function calculates the sum of stock from all product variants.
-        """
         return sum(variant.stock for variant in product.variants.all())
-    # --- End of the new additions ---
-
 
 class UserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)

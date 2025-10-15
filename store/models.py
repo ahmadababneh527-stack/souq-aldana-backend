@@ -36,16 +36,22 @@ class Category(models.Model):
 
 # ... (باقي الـ imports كما هي)
 
+# في ملف store/models.py
+
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
     createdAt = models.DateTimeField(default=timezone.now)
-    
-    # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
-    # ✨ 1. أضف هذا الحقل الجديد لحفظ رابط الفيديو ✨
     video_url = models.URLField(max_length=255, blank=True, null=True, verbose_name="رابط فيديو المنتج (يوتيوب)")
-    # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
+    
+    # ▼▼▼▼▼ الإضافات الجديدة الخاصة بالكتب ▼▼▼▼▼
+    author = models.CharField("المؤلف", max_length=200, null=True, blank=True)
+    publisher = models.CharField("الناشر", max_length=200, null=True, blank=True)
+    publication_date = models.DateField("تاريخ النشر", null=True, blank=True)
+    page_count = models.PositiveIntegerField("عدد الصفحات", null=True, blank=True)
+    isbn = models.CharField("ISBN", max_length=20, null=True, blank=True)
+    # ▲▲▲▲▲ نهاية الإضافات الجديدة ▲▲▲▲▲
 
     def get_absolute_url(self):
         return reverse('product-detail', args=[str(self.id)])
@@ -53,19 +59,11 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    # ✨▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼✨
-    # ✨ 2. أضف هذه الدالة لتحويل رابط يوتيوب العادي ✨
     def get_embed_url(self):
-        """
-        يحول رابط يوتيوب مثل 'https://www.youtube.com/watch?v=VIDEO_ID'
-        إلى رابط صالح للتضمين 'https://www.youtube.com/embed/VIDEO_ID'
-        """
         if self.video_url and 'youtube.com/watch' in self.video_url:
             video_id = self.video_url.split('v=')[-1]
             return f'https://www.youtube.com/embed/{video_id}'
-        # يمكنك إضافة دعم لمواقع أخرى مثل Vimeo هنا إذا أردت
         return None
-    # ✨▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲✨
     
 class Color(models.Model):
     name = models.CharField(max_length=50, unique=True)
